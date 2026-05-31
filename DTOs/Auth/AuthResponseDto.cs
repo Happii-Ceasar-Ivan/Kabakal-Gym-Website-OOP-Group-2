@@ -24,6 +24,10 @@ public sealed record AuthResponseDto(
     /// <summary>Normalized (lowercase) email address.</summary>
     string   Email,
 
+    string   FirstName,
+
+    string   LastName,
+
     /// <summary>"Admin" or "Member" — drives frontend RBAC routing.</summary>
     string   Role
 );

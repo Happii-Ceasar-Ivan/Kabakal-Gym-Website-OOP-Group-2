@@ -66,10 +66,12 @@ public sealed class AuthService : IAuthService
         // 2. Build the User entity (Role defaults to Member; IsActive = true)
         var user = new User
         {
-            UserId   = Guid.NewGuid(),
-            Email    = normalizedEmail,
-            Role     = UserRoles.Member,
-            IsActive = true,
+            UserId    = Guid.NewGuid(),
+            Email     = normalizedEmail,
+            FirstName = dto.FirstName.Trim(),
+            LastName  = dto.LastName.Trim(),
+            Role      = UserRoles.Member,
+            IsActive  = true,
         };
 
         // Hash AFTER UserId is assigned — PasswordHasher may embed the user ID
@@ -152,6 +154,8 @@ public sealed class AuthService : IAuthService
             ExpiresAt: expiresAt,
             UserId:    user.UserId,
             Email:     user.Email,
+            FirstName: user.FirstName,
+            LastName:  user.LastName,
             Role:      user.Role
         );
     }

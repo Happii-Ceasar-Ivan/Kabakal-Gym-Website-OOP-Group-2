@@ -15,6 +15,14 @@ public sealed class RegisterRequestDto
     [EmailAddress(ErrorMessage = "A valid email address is required.")]
     public string Email { get; set; } = string.Empty;
 
+    [Required(ErrorMessage = "First name is required.")]
+    [MaxLength(100, ErrorMessage = "First name must not exceed 100 characters.")]
+    public string FirstName { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Last name is required.")]
+    [MaxLength(100, ErrorMessage = "Last name must not exceed 100 characters.")]
+    public string LastName { get; set; } = string.Empty;
+
     [Required(ErrorMessage = "Password is required.")]
     [MinLength(8,   ErrorMessage = "Password must be at least 8 characters.")]
     [MaxLength(128, ErrorMessage = "Password must not exceed 128 characters.")]
