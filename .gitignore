@@ -1,0 +1,37 @@
+## ── .NET / ASP.NET Core ────────────────────────────────────────────────────
+bin/
+obj/
+*.user
+*.suo
+.vs/
+*.swp
+.DS_Store
+
+## ── SENSITIVE: never commit real credentials ──────────────────────────────
+# Use `dotnet user-secrets set` for local dev instead of editing appsettings files
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Staging.json
+
+# .NET User Secrets store (auto-generated on `dotnet user-secrets init`)
+secrets.json
+
+## ── Environment files ──────────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+## ── Publish output ─────────────────────────────────────────────────────────
+publish/
+**/publish/
+*.nupkg
+*.snupkg
+
+## ── EF Core migrations — keep the migrations folder tracked, but not ───────
+## ── the snapshot if it contains any connection data (it shouldn't, but ──────
+## ── leaving this note for the team) ────────────────────────────────────────
+# Migrations/ — DO track: migration history must be in source control
+
+## ── Logs ───────────────────────────────────────────────────────────────────
+*.log
+logs/
