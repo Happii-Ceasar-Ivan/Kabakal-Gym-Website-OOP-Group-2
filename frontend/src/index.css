@@ -1,0 +1,34 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Tomorrow:wght@400;600;700&display=swap');
+
+:root {
+  /* Brand Colors from Kabakal Brand PDF */
+  --bg-dark: #060407;
+  --accent-yellow: #F7F014;
+  --accent-olive: #595326;
+  --light-pink: #FFEBF3;
+  --olive-light: #BBB748;
+
+  /* Typography */
+  --font-heading: 'Tomorrow', sans-serif;
+  --font-body: 'Fira Code', monospace;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  font-family: var(--font-body);
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
