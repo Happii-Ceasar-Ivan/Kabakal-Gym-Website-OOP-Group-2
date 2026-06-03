@@ -52,7 +52,7 @@ export default function LandingPage() {
         <div className={styles.heroImageContainer}>
           {/* Using a placeholder styled to look like the reference */}
           <div className={styles.heroImagePlaceholder}>
-            <span>Gym Interior</span>
+            <span>Gym Interior Placeholder</span>
           </div>
         </div>
       </section>
