@@ -1,0 +1,306 @@
+.authPage {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: var(--bg-dark);
+}
+
+.bgImage {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.3;
+  filter: blur(8px);
+  z-index: 0;
+}
+
+.authContainer {
+  position: relative;
+  z-index: 1;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(247, 240, 20, 0.2);
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 450px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 40px rgba(247, 240, 20, 0.05);
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.heading {
+  font-family: var(--font-heading);
+  color: var(--accent-yellow);
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.subheading {
+  color: rgba(255, 235, 243, 0.7); /* muted light pink */
+  text-align: center;
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.formGroup {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.rowGroup {
+  display: flex;
+  gap: 1rem;
+}
+
+.label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.input {
+  width: 100%;
+  padding: 0.85rem 1rem;
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--accent-yellow);
+  background-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 10px rgba(247, 240, 20, 0.2);
+}
+
+.input::placeholder {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.passwordWrapper {
+  position: relative;
+}
+
+.toggleBtn {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: var(--accent-yellow);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.toggleBtn:hover {
+  color: #fff;
+}
+
+.optionsRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  font-size: 0.85rem;
+}
+
+.checkboxGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+}
+
+.checkbox {
+  accent-color: var(--accent-yellow);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.forgotLink {
+  color: var(--accent-yellow);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.3s ease;
+}
+
+.forgotLink:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.submitBtn {
+  width: 100%;
+  padding: 1rem;
+  background-color: var(--accent-yellow);
+  color: var(--bg-dark);
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submitBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(247, 240, 20, 0.4);
+}
+
+.submitBtn:active {
+  transform: translateY(0);
+}
+
+.switchMode {
+  text-align: center;
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.switchLink {
+  color: var(--accent-yellow);
+  font-weight: 700;
+  text-decoration: none;
+  margin-left: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.switchLink:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* Password Requirements Box for Register Page */
+.requirementsBox {
+  background-color: rgba(247, 240, 20, 0.05);
+  border: 1px solid rgba(247, 240, 20, 0.2);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.requirementsTitle {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--accent-yellow);
+  margin-bottom: 0.5rem;
+}
+
+.requirementsList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.requirementsList li {
+  margin-bottom: 0.3rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Inline password validation states */
+.rulePass {
+  color: #4ade80 !important;
+}
+
+.rulePass::before {
+  display: none;
+}
+
+.ruleFail {
+  color: #f87171 !important;
+}
+
+.ruleFail::before {
+  display: none;
+}
+
+.inlineHint {
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+}
+
+.inputPass {
+  border-color: #4ade80 !important;
+  box-shadow: 0 0 8px rgba(74, 222, 128, 0.2);
+}
+
+.inputFail {
+  border-color: #f87171 !important;
+  box-shadow: 0 0 8px rgba(248, 113, 113, 0.2);
+}
+
+/* Back to landing link */
+.backLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+  text-decoration: none;
+  margin-bottom: 1.5rem;
+  transition: color 0.3s ease;
+}
+
+.backLink:hover {
+  color: var(--accent-yellow);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 480px) {
+  .authContainer {
+    padding: 2rem 1.5rem;
+    border-radius: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border: none;
+  }
+  
+  .rowGroup {
+    flex-direction: column;
+    gap: 0;
+  }
+}

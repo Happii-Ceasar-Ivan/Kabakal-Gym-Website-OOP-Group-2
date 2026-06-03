@@ -1,0 +1,178 @@
+.skeletonPage {
+  background-color: var(--bg-dark);
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Pulse animation */
+.bone {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.04) 25%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.04) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Header skeleton */
+.skelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  border-bottom: 1px solid rgba(247, 240, 20, 0.1);
+}
+
+.skelLogo {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.skelLogoIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.skelLogoText {
+  width: 140px;
+  height: 24px;
+}
+
+.skelNavLinks {
+  display: flex;
+  gap: 2rem;
+}
+
+.skelNavLink {
+  width: 60px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skelLoginBtn {
+  width: 120px;
+  height: 38px;
+  border-radius: 20px;
+}
+
+/* Hero skeleton */
+.skelHero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  padding: 8rem 5%;
+  align-items: center;
+}
+
+.skelHeroContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.skelHeading {
+  width: 80%;
+  height: 40px;
+}
+
+.skelHeadingSm {
+  width: 60%;
+  height: 40px;
+}
+
+.skelParagraph {
+  width: 100%;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.skelParagraphSm {
+  width: 75%;
+  height: 16px;
+  border-radius: 4px;
+}
+
+.skelContactRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.skelContactIcon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.skelContactText {
+  width: 200px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.skelHeroImage {
+  width: 100%;
+  aspect-ratio: 4/3;
+  border-radius: 20px;
+}
+
+/* Section heading skeleton */
+.skelSectionHeading {
+  width: 240px;
+  height: 32px;
+  margin: 5rem auto 3rem;
+  border-radius: 6px;
+}
+
+/* Arsenal cards skeleton */
+.skelArsenalGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  padding: 0 5%;
+}
+
+.skelArsenalCard {
+  aspect-ratio: 4/3;
+  border-radius: 15px;
+}
+
+/* Pricing skeleton */
+.skelPricingGrid {
+  display: flex;
+  justify-content: center;
+  gap: 3rem;
+  padding: 0 5%;
+}
+
+.skelPricingCard {
+  width: 100%;
+  max-width: 350px;
+  height: 380px;
+  border-radius: 20px;
+}
+
+@media (max-width: 768px) {
+  .skelHero {
+    grid-template-columns: 1fr;
+    padding-top: 5rem;
+  }
+  .skelArsenalGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+  .skelNavLinks {
+    display: none;
+  }
+}

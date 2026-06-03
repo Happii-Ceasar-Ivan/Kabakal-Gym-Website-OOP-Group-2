@@ -1,12 +1,37 @@
 /* --- PAGE BASE --- */
 .pageContainer {
   background-color: var(--bg-dark);
+  background-image: url('https://i.imgur.com/yCHI8S6.png');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--light-pink);
   min-height: 100vh;
   width: 100%;
   position: relative;
-  overflow-x: hidden;
+  overflow-clip-margin: 0px;
+  overflow: clip;
   font-family: var(--font-body);
+  animation: contentFadeIn 0.6s ease-out;
+}
+
+/* Dark overlay so content stays readable over the background */
+.pageContainer::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(6, 4, 7, 0.85);
+  z-index: 0;
+  pointer-events: none;
+}
+
+@keyframes contentFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Background Hex Overlay */
@@ -147,25 +172,24 @@
   animation: float 6s ease-in-out infinite;
 }
 
-.heroImagePlaceholder {
+.heroImage {
   width: 100%;
   aspect-ratio: 4/3;
-  background: linear-gradient(135deg, var(--accent-olive) 0%, #1a1a1a 100%);
+  object-fit: cover;
   border-radius: 20px;
   transform: perspective(1000px) rotateY(-15deg) rotateX(5deg);
   box-shadow: 20px 20px 0px rgba(247, 240, 20, 0.2), 0 0 40px rgba(247, 240, 20, 0.1);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: var(--font-heading);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 1.5rem;
   border: 1px solid rgba(255,255,255,0.1);
+  transition: transform 0.5s ease;
 }
 
-/* --- IRON ARSENAL SECTION --- */
+.heroImage:hover {
+  transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+}
+
+/* --- IRON ARSENAL CAROUSEL --- */
 .arsenalSection {
-  padding: 5rem 5%;
+  padding: 5rem 0;
   position: relative;
   z-index: 1;
 }
@@ -176,15 +200,48 @@
   text-align: center;
   font-size: 2.5rem;
   margin-bottom: 3rem;
+  padding: 0 5%;
 }
 
-.arsenalGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+.carouselWrapper {
+  overflow: hidden;
+  width: 100%;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+.carouselTrack {
+  display: flex;
   gap: 2rem;
+  width: max-content;
+  animation: scrollCarousel 25s linear infinite;
+  padding: 1rem 0;
+}
+
+.carouselTrack:hover {
+  animation-play-state: paused;
+}
+
+@keyframes scrollCarousel {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
 }
 
 .arsenalCard {
+  flex-shrink: 0;
+  width: 280px;
   border-radius: 15px;
   overflow: hidden;
   aspect-ratio: 4/3;
@@ -206,8 +263,26 @@
   justify-content: center;
   align-items: center;
   background: linear-gradient(to bottom right, #2a2a2a, #111);
-  color: rgba(255,255,255,0.3);
+}
+
+.arsenalCardContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.arsenalName {
   font-family: var(--font-heading);
+  color: var(--accent-yellow);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.arsenalDesc {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.4);
 }
 
 /* --- MEMBERSHIP PLANS SECTION --- */
@@ -368,5 +443,8 @@
   }
   .navLinks {
     display: none;
+  }
+  .arsenalCard {
+    width: 220px;
   }
 }

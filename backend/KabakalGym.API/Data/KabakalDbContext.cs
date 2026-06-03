@@ -20,6 +20,7 @@ public class KabakalDbContext : DbContext
     public DbSet<Routine>      Routines      => Set<Routine>();
     public DbSet<RoutineList>  RoutineLists  => Set<RoutineList>();
     public DbSet<Equipment>    Equipments    => Set<Equipment>();
+    public DbSet<PasswordReset> PasswordResets => Set<PasswordReset>();
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -179,6 +180,21 @@ public class KabakalDbContext : DbContext
                 "CK_Equipments_Status",
                 "\"EquipmentStatus\" IN ('Available', 'Under Maintenance', 'Unavailable')"
             ));
+        });
+
+        // ── Table 9: PasswordResets ─────────────────────────────────────────
+        modelBuilder.Entity<PasswordReset>(entity =>
+        {
+            entity.ToTable("PasswordResets");
+            entity.HasKey(pr => pr.Id);
+
+            // Fast token lookup when user clicks the reset link
+            entity.HasIndex(pr => pr.Token)
+                  .IsUnique()
+                  .HasDatabaseName("IX_PasswordResets_Token");
+
+            entity.Property(pr => pr.CreatedAt)
+                  .HasDefaultValueSql("NOW()");
         });
     }
 }

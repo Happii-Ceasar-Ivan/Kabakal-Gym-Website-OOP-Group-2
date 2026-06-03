@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -34,15 +35,21 @@ public sealed class AuthService : IAuthService
     private readonly KabakalDbContext       _context;
     private readonly IPasswordHasher<User>  _hasher;
     private readonly JwtSettings            _jwt;
+    private readonly IEmailService          _emailService;
+    private readonly IConfiguration         _config;
 
     public AuthService(
         KabakalDbContext      context,
         IPasswordHasher<User> hasher,
-        IOptions<JwtSettings> jwtOptions)
+        IOptions<JwtSettings> jwtOptions,
+        IEmailService         emailService,
+        IConfiguration        config)
     {
-        _context = context;
-        _hasher  = hasher;
-        _jwt     = jwtOptions.Value;
+        _context      = context;
+        _hasher       = hasher;
+        _jwt          = jwtOptions.Value;
+        _emailService = emailService;
+        _config       = config;
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -138,6 +145,104 @@ public sealed class AuthService : IAuthService
         }
 
         return ServiceResult<AuthResponseDto>.Success(BuildAuthResponse(user));
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // FORGOT PASSWORD
+    // ──────────────────────────────────────────────────────────────────────
+
+    public async Task<ServiceResult<string>> ForgotPasswordAsync(ForgotPasswordRequestDto dto)
+    {
+        var normalizedEmail = dto.Email.ToLower().Trim();
+
+        // 1. Check if the user actually exists
+        var userExists = await _context.Users
+            .AsNoTracking()
+            .AnyAsync(u => u.Email == normalizedEmail);
+
+        // IMPORTANT: Always return success message to prevent email enumeration.
+        // If the email doesn't exist, we silently do nothing.
+        if (!userExists)
+            return ServiceResult<string>.Success(
+                "If an account with that email exists, a reset link has been sent."
+            );
+
+        // 2. Delete any existing tokens for this email (prevents token buildup)
+        var existingTokens = await _context.PasswordResets
+            .Where(pr => pr.UserEmail == normalizedEmail)
+            .ToListAsync();
+        _context.PasswordResets.RemoveRange(existingTokens);
+
+        // 3. Generate a cryptographically secure token
+        var tokenBytes = RandomNumberGenerator.GetBytes(32);
+        var token = Convert.ToBase64String(tokenBytes)
+            .Replace("+", "-")
+            .Replace("/", "_")
+            .TrimEnd('='); // URL-safe base64
+
+        // 4. Save token to database
+        var passwordReset = new PasswordReset
+        {
+            UserEmail = normalizedEmail,
+            Token     = token,
+            CreatedAt = DateTime.UtcNow,
+        };
+        _context.PasswordResets.Add(passwordReset);
+        await _context.SaveChangesAsync();
+
+        // 5. Build reset link and send email
+        var frontendUrl = _config["FrontendUrl"] ?? "http://localhost:5173";
+        var resetLink = $"{frontendUrl}/reset-password?token={token}";
+
+        await _emailService.SendPasswordResetEmailAsync(normalizedEmail, resetLink);
+
+        return ServiceResult<string>.Success(
+            "If an account with that email exists, a reset link has been sent."
+        );
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // RESET PASSWORD
+    // ──────────────────────────────────────────────────────────────────────
+
+    public async Task<ServiceResult<string>> ResetPasswordAsync(ResetPasswordRequestDto dto)
+    {
+        // 1. Look up the token
+        var resetRecord = await _context.PasswordResets
+            .FirstOrDefaultAsync(pr => pr.Token == dto.Token);
+
+        if (resetRecord is null)
+            return ServiceResult<string>.Fail("Invalid or expired reset token.");
+
+        // 2. Check if token is expired (1 hour window)
+        if (DateTime.UtcNow - resetRecord.CreatedAt > TimeSpan.FromHours(1))
+        {
+            // Clean up expired token
+            _context.PasswordResets.Remove(resetRecord);
+            await _context.SaveChangesAsync();
+            return ServiceResult<string>.Fail("This reset link has expired. Please request a new one.");
+        }
+
+        // 3. Find the user
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Email == resetRecord.UserEmail);
+
+        if (user is null)
+        {
+            _context.PasswordResets.Remove(resetRecord);
+            await _context.SaveChangesAsync();
+            return ServiceResult<string>.Fail("Invalid or expired reset token.");
+        }
+
+        // 4. Hash the new password and update
+        user.PasswordHash = _hasher.HashPassword(user, dto.NewPassword);
+        await _context.SaveChangesAsync();
+
+        // 5. Delete the token so it can NEVER be reused
+        _context.PasswordResets.Remove(resetRecord);
+        await _context.SaveChangesAsync();
+
+        return ServiceResult<string>.Success("Password successfully updated!");
     }
 
     // ──────────────────────────────────────────────────────────────────────

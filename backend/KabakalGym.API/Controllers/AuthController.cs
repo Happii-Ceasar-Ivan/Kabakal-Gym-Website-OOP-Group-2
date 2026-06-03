@@ -88,4 +88,54 @@ public class AuthController : ControllerBase
 
         return Ok(result.Data);
     }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // POST /api/auth/forgot-password
+    // ──────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Generates a password reset token and sends a reset link email via Resend.
+    /// ALWAYS returns 200 regardless of whether the email exists — prevents
+    /// email enumeration attacks.
+    /// Uses the stricter "ResetPolicy" rate limiter: 3 requests per 15 minutes.
+    /// </summary>
+    [HttpPost("forgot-password")]
+    [EnableRateLimiting("ResetPolicy")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _authService.ForgotPasswordAsync(dto);
+
+        // Always 200 — no information leakage
+        return Ok(new { message = result.Data });
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // POST /api/auth/reset-password
+    // ──────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Validates the reset token and updates the user's password.
+    /// The token is single-use and expires after 1 hour.
+    /// </summary>
+    [HttpPost("reset-password")]
+    [EnableRateLimiting("AuthPolicy")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequestDto dto)
+    {
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
+
+        var result = await _authService.ResetPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+            return BadRequest(new { error = result.ErrorMessage });
+
+        return Ok(new { message = result.Data });
+    }
 }

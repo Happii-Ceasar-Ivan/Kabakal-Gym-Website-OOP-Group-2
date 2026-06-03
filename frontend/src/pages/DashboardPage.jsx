@@ -1,0 +1,69 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './Dashboard.module.css';
+
+export default function DashboardPage() {
+  const navigate = useNavigate();
+
+  // Read user info from localStorage
+  const userRaw = localStorage.getItem('kabakal_user');
+  const user = userRaw ? JSON.parse(userRaw) : null;
+
+  const handleLogout = () => {
+    localStorage.removeItem('kabakal_token');
+    localStorage.removeItem('kabakal_user');
+    navigate('/login');
+  };
+
+  // If no user is logged in, redirect to login
+  if (!user) {
+    navigate('/login');
+    return null;
+  }
+
+  return (
+    <div className={styles.dashboardPage}>
+      {/* Header */}
+      <header className={styles.header}>
+        <div className={styles.logoSection}>
+          <img src="/monogram-logo.png" alt="Kabakal Gym" className={styles.logo} />
+          <h1 className={styles.brandName}>Kabakal Gym</h1>
+        </div>
+        <div className={styles.userSection}>
+          <span className={styles.greeting}>
+            Welcome, <strong>{user.firstName}</strong>!
+          </span>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            Logout
+          </button>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className={styles.main}>
+        <div className={styles.constructionCard}>
+          <div className={styles.constructionIcon}>🏗️</div>
+          <h2 className={styles.constructionTitle}>Dashboard Under Construction</h2>
+          <p className={styles.constructionText}>
+            Your training dashboard is being built by the frontend team.
+            <br />Check back soon for workout analytics, membership status, and more!
+          </p>
+          <div className={styles.userInfo}>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Name</span>
+              <span>{user.firstName} {user.lastName}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Email</span>
+              <span>{user.email}</span>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.infoLabel}>Role</span>
+              <span className={styles.roleBadge}>{user.role}</span>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+}

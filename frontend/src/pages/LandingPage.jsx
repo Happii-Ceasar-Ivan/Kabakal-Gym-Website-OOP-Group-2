@@ -1,8 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './LandingPage.module.css';
+import SkeletonLoader from '../components/SkeletonLoader';
+
+const equipmentItems = [
+  { id: 1, name: 'Bench Press', desc: 'Flat & Incline' },
+  { id: 2, name: 'Squat Rack', desc: 'Power Cage' },
+  { id: 3, name: 'Dumbbells', desc: '5–100 lbs' },
+  { id: 4, name: 'Cable Machine', desc: 'Dual Stack' },
+  { id: 5, name: 'Leg Press', desc: '45° Sled' },
+  { id: 6, name: 'Pull-Up Bar', desc: 'Multi-Grip' },
+];
 
 export default function LandingPage() {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Wait for fonts to load, then show content with a minimum skeleton time
+    const minDelay = new Promise((r) => setTimeout(r, 1200));
+    const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
+
+    Promise.all([minDelay, fontsReady]).then(() => setLoading(false));
+  }, []);
+
+  if (loading) {
+    return <SkeletonLoader />;
+  }
+
   return (
     <div className={styles.pageContainer}>
       {/* Background Honeycomb Overlay */}
@@ -29,7 +53,7 @@ export default function LandingPage() {
         <div className={styles.heroContent}>
           <h2 className={styles.heroHeading}>Kabakal, <span className={styles.highlight}>Always a Kabakal.</span></h2>
           <p className={styles.heroText}>
-            Kabakal Gym is your affordable, no-nonsense iron paradise. We stripped away the 
+            Kabakal Gym is your affordable, no-nonsense iron paradise. We stripped away the
             expensive fluff to bring you pure, heavy lifting and a community built on real gains.
           </p>
 
@@ -50,22 +74,31 @@ export default function LandingPage() {
         </div>
 
         <div className={styles.heroImageContainer}>
-          {/* Using a placeholder styled to look like the reference */}
-          <div className={styles.heroImagePlaceholder}>
-            <span>Gym Interior Placeholder</span>
-          </div>
+          <img
+            src="https://i.imgur.com/HX3M0j0.jpeg"
+            alt="Kabakal Gym Interior"
+            className={styles.heroImage}
+          />
         </div>
       </section>
 
-      {/* --- IRON ARSENAL SECTION --- */}
+      {/* --- IRON ARSENAL SECTION (Carousel) --- */}
       <section id="equipment" className={styles.arsenalSection}>
         <h2 className={styles.sectionHeading}>Our Iron Arsenal</h2>
-        <div className={styles.arsenalGrid}>
-          {[1, 2, 3, 4].map((i) => (
-            <div key={i} className={styles.arsenalCard}>
-              <div className={styles.arsenalPlaceholder}>Equip {i}</div>
-            </div>
-          ))}
+        <div className={styles.carouselWrapper}>
+          <div className={styles.carouselTrack}>
+            {/* Render items twice for seamless infinite looping */}
+            {[...equipmentItems, ...equipmentItems].map((item, idx) => (
+              <div key={idx} className={styles.arsenalCard}>
+                <div className={styles.arsenalPlaceholder}>
+                  <div className={styles.arsenalCardContent}>
+                    <span className={styles.arsenalName}>{item.name}</span>
+                    <span className={styles.arsenalDesc}>{item.desc}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 

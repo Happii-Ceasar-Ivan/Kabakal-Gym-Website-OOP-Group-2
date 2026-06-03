@@ -1,0 +1,140 @@
+.dashboardPage {
+  min-height: 100vh;
+  background-color: var(--bg-dark);
+  color: var(--light-pink);
+  font-family: var(--font-body);
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 5%;
+  background: rgba(6, 4, 7, 0.95);
+  border-bottom: 1px solid rgba(247, 240, 20, 0.2);
+}
+
+.logoSection {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo {
+  height: 36px;
+  width: auto;
+}
+
+.brandName {
+  font-family: var(--font-heading);
+  color: var(--accent-yellow);
+  font-size: 1.3rem;
+}
+
+.userSection {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.greeting {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+.logoutBtn {
+  background: transparent;
+  color: var(--accent-yellow);
+  border: 1px solid var(--accent-yellow);
+  padding: 0.4rem 1.2rem;
+  border-radius: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.logoutBtn:hover {
+  background: var(--accent-yellow);
+  color: var(--bg-dark);
+}
+
+.main {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 70px);
+  padding: 2rem;
+}
+
+.constructionCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(247, 240, 20, 0.15);
+  border-radius: 20px;
+  padding: 3rem;
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+  animation: fadeIn 0.6s ease-out;
+}
+
+.constructionIcon {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+
+.constructionTitle {
+  font-family: var(--font-heading);
+  color: var(--accent-yellow);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.constructionText {
+  font-size: 0.9rem;
+  opacity: 0.7;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+}
+
+.userInfo {
+  text-align: left;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.9rem;
+}
+
+.infoRow:last-child {
+  border-bottom: none;
+}
+
+.infoLabel {
+  color: rgba(255, 255, 255, 0.4);
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.roleBadge {
+  background: rgba(247, 240, 20, 0.1);
+  color: var(--accent-yellow);
+  padding: 0.2rem 0.8rem;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

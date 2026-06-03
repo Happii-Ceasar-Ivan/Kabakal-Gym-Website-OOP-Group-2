@@ -29,4 +29,19 @@ public interface IAuthService
     /// Returns Success(AuthResponseDto) with a JWT on success.
     /// </summary>
     Task<ServiceResult<AuthResponseDto>> LoginAsync(LoginRequestDto dto);
+
+    /// <summary>
+    /// Generates a secure reset token, stores it in PasswordResets,
+    /// and sends a reset link email via IEmailService.
+    /// Always returns Success to prevent email enumeration — even if
+    /// the email doesn't exist in the system.
+    /// </summary>
+    Task<ServiceResult<string>> ForgotPasswordAsync(ForgotPasswordRequestDto dto);
+
+    /// <summary>
+    /// Validates the reset token, hashes the new password, updates the user,
+    /// and deletes the token so it can never be reused.
+    /// Returns Fail if the token is invalid, expired, or already used.
+    /// </summary>
+    Task<ServiceResult<string>> ResetPasswordAsync(ResetPasswordRequestDto dto);
 }

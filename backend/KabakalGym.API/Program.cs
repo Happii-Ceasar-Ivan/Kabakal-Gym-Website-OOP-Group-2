@@ -52,6 +52,9 @@ builder.Services.Configure<JwtSettings>(
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+// ── Email Service (Resend) ──
+builder.Services.AddHttpClient<IEmailService, ResendEmailService>();
+
 // ── JWT Bearer Authentication ──
 // Read settings here for TokenValidationParameters — IOptions not available yet at this stage
 var jwtSettings = builder.Configuration
@@ -115,12 +118,23 @@ builder.Services.AddRateLimiter(options =>
         limiterOptions.QueueLimit           = 0;
     });
 
+    // Ultra-strict policy for password reset — protects Resend free-tier quota
+    // 3 requests / 15 minutes per IP on /api/auth/forgot-password
+    options.AddFixedWindowLimiter("ResetPolicy", limiterOptions =>
+    {
+        limiterOptions.PermitLimit          = 3;
+        limiterOptions.Window               = TimeSpan.FromMinutes(15);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit           = 0;
+    });
+
     options.OnRejected = async (context, cancellationToken) =>
     {
         context.HttpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
         context.HttpContext.Response.Headers["Retry-After"] = "60";
-        await context.HttpContext.Response.WriteAsync(
-            "Rate limit exceeded. Please slow down.", cancellationToken
+        context.HttpContext.Response.ContentType = "application/json";
+        await context.HttpContext.Response.WriteAsJsonAsync(
+            new { error = "Zamn bro Kabakal! You that forgetful?" }, cancellationToken
         );
     };
 });
@@ -132,7 +146,7 @@ builder.Services.AddCors(options =>
         policy
             .WithOrigins(
                 builder.Configuration.GetSection("AllowedOrigins")
-                    .Get<string[]>() ?? ["http://localhost:5500"]
+                    .Get<string[]>() ?? ["http://localhost:5500", "http://localhost:5173"]
             )
             .AllowAnyMethod()
             .AllowAnyHeader()
@@ -201,7 +215,13 @@ else
     });
 }
 
-app.UseHttpsRedirection();
+// Only enforce HTTPS redirection in production — in development the backend
+// listens on HTTP only, so this middleware would redirect to a non-existent
+// HTTPS port and break frontend fetch() calls.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseHttpsRedirection();
+}
 
 // CORS MUST go before Rate Limiting, otherwise browser OPTIONS (preflight) requests
 // will get rate-limited and block the frontend completely.
