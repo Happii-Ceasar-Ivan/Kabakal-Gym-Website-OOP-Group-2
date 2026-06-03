@@ -29,8 +29,8 @@ export default function LandingPage() {
         <div className={styles.heroContent}>
           <h2 className={styles.heroHeading}>Kabakal, <span className={styles.highlight}>Always a Kabakal.</span></h2>
           <p className={styles.heroText}>
-            Kabakal Gym isn't just a place to sweat. It's a community-driven
-            facility designed to bridge the gap between traditional lifting and modern analytics.
+            Kabakal Gym is your affordable, no-nonsense iron paradise. We stripped away the 
+            expensive fluff to bring you pure, heavy lifting and a community built on real gains.
           </p>
 
           <div className={styles.contactInfo}>
