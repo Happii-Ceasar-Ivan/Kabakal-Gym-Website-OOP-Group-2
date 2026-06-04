@@ -20,7 +20,7 @@ public interface IAuthService
     /// Returns Success(AuthResponseDto) with a JWT on success.
     /// Also bootstraps a default Unpaid Subscription row for the new user.
     /// </summary>
-    Task<ServiceResult<AuthResponseDto>> RegisterAsync(RegisterRequestDto dto);
+    Task<ServiceResult<string>> RegisterAsync(RegisterRequestDto dto);
 
     /// <summary>
     /// Authenticates with email + password.
@@ -44,4 +44,9 @@ public interface IAuthService
     /// Returns Fail if the token is invalid, expired, or already used.
     /// </summary>
     Task<ServiceResult<string>> ResetPasswordAsync(ResetPasswordRequestDto dto);
+
+    /// <summary>
+    /// Verifies a user's email address using the token sent to them.
+    /// </summary>
+    Task<ServiceResult<string>> VerifyEmailAsync(string token);
 }

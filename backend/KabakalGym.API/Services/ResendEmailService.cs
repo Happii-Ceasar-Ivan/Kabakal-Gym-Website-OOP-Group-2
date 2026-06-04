@@ -74,4 +74,50 @@ public sealed class ResendEmailService : IEmailService
 
         _logger.LogInformation("Password reset email sent to {Email}", toEmail);
     }
+
+    public async Task SendVerificationEmailAsync(string toEmail, string verificationLink)
+    {
+        var apiKey = _config["Resend:ApiKey"]
+            ?? throw new InvalidOperationException(
+                "[FATAL] Resend API key is not configured. " +
+                "Set it via: dotnet user-secrets set \"Resend:ApiKey\" \"re_...\""
+            );
+
+        var payload = new
+        {
+            from    = "Kabakal Gym <onboarding@resend.dev>",
+            to      = new[] { toEmail },
+            subject = "Verify Your Kabakal Gym Account",
+            html    = $@"
+                <div style='font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 2rem; background: #060407; color: #fff; border-radius: 10px;'>
+                    <h2 style='color: #F7F014;'>Welcome to Kabakal Gym!</h2>
+                    <p>We're excited to have you. Please verify your email address to complete your registration and log into your account.</p>
+                    <p>Click the button below to verify. This link expires in <strong>15 minutes</strong>.</p>
+                    <a href='{verificationLink}' style='display: inline-block; margin: 1.5rem 0; padding: 0.8rem 2rem; background: #F7F014; color: #060407; text-decoration: none; border-radius: 8px; font-weight: bold;'>
+                        Verify Email Address
+                    </a>
+                    <p style='font-size: 0.85rem; opacity: 0.7;'>If you didn't register at Kabakal Gym, you can safely ignore this email.</p>
+                    <hr style='border-color: rgba(255,255,255,0.1); margin: 1.5rem 0;'/>
+                    <p style='font-size: 0.75rem; opacity: 0.5;'>&copy; 2026 Kabakal Gym — Digitalizing Local Fitness</p>
+                </div>"
+        };
+
+        var json = JsonSerializer.Serialize(payload);
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails")
+        {
+            Content = new StringContent(json, Encoding.UTF8, "application/json")
+        };
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+
+        var response = await _httpClient.SendAsync(request);
+
+        if (!response.IsSuccessStatusCode)
+        {
+            var body = await response.Content.ReadAsStringAsync();
+            _logger.LogError("Resend API error {StatusCode}: {Body}", response.StatusCode, body);
+            throw new InvalidOperationException($"Failed to send verification email. Resend returned {response.StatusCode}.");
+        }
+
+        _logger.LogInformation("Verification email sent to {Email}", toEmail);
+    }
 }

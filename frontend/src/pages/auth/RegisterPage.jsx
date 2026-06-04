@@ -14,6 +14,7 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
+  const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [agreedToTos, setAgreedToTos] = useState(false);
   const [showTos, setShowTos] = useState(false);
@@ -56,20 +57,9 @@ export default function RegisterPage() {
         confirmPassword,
       });
 
-      // Store JWT and user info in localStorage
-      localStorage.setItem('kabakal_token', data.token);
-      localStorage.setItem('kabakal_user', JSON.stringify({
-        userId: data.userId,
-        email: data.email,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        role: data.role,
-      }));
-
-      // Navigate to dashboard
-      navigate('/dashboard');
+      setSuccessMsg(data.message || 'Registration successful! Please check your email to verify your account before logging in.');
     } catch (err) {
-      setError(err.message);
+      setError(err.message || 'An error occurred during registration.');
     } finally {
       setLoading(false);
     }
@@ -80,7 +70,18 @@ export default function RegisterPage() {
       <h1 className={styles.heading}>Join Kabakal Gym</h1>
       <p className={styles.subheading}>Create your account.</p>
 
-      <form onSubmit={handleSubmit}>
+      {successMsg ? (
+        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+          <div style={{ color: '#4caf50', fontSize: '3rem', marginBottom: '1rem' }}>✓</div>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
+            {successMsg}
+          </p>
+          <Link to="/login" className={styles.submitBtn} style={{ textDecoration: 'none', display: 'inline-block' }}>
+            GO TO LOGIN
+          </Link>
+        </div>
+      ) : (
+        <form onSubmit={handleSubmit}>
         {error && (
           <div className={styles.requirementsBox} style={{ borderColor: '#ff4444', marginBottom: '1.5rem' }}>
             <div className={styles.requirementsTitle} style={{ color: '#ff4444' }}>⚠️ {error}</div>
@@ -269,10 +270,10 @@ export default function RegisterPage() {
         )}
 
         <p className={styles.switchMode}>
-          Already a member?
-          <Link to="/login" className={styles.switchLink}>Switch Mode</Link>
+          Already have an account? <Link to="/login">Sign In</Link>
         </p>
       </form>
+      )}
     </AuthLayout>
   );
 }

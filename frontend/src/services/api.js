@@ -60,6 +60,12 @@ export async function loginUser({ email, password }) {
   });
 }
 
+export async function verifyEmail(token) {
+  return request(`/auth/verify?token=${encodeURIComponent(token)}`, {
+    method: 'GET',
+  });
+}
+
 export async function forgotPassword(email) {
   return request('/auth/forgot-password', {
     method: 'POST',

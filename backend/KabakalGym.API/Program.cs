@@ -231,13 +231,10 @@ app.UseAuthentication();        // Wired up in Sprint 2 (JWT + Identity)
 app.UseAuthorization();
 app.MapControllers();
 
-// ── 6. AUTO-MIGRATE ON STARTUP (Development Only) ─────────────────────────
-// In production, run migrations manually via: dotnet ef database update
-if (app.Environment.IsDevelopment())
-{
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<KabakalDbContext>();
-    await db.Database.MigrateAsync();
-}
+// ── 6. AUTO-MIGRATE ON STARTUP ──────────────────────────────────────────────────
+// Automatically apply pending migrations to the database.
+using var scope = app.Services.CreateScope();
+var db = scope.ServiceProvider.GetRequiredService<KabakalDbContext>();
+await db.Database.MigrateAsync();
 
 app.Run();

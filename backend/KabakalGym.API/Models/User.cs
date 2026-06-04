@@ -46,6 +46,22 @@ public class User
     /// </summary>
     public bool IsActive { get; set; } = true;
 
+    /// <summary>
+    /// True if the user has confirmed their email address.
+    /// </summary>
+    public bool IsVerified { get; set; } = false;
+
+    /// <summary>
+    /// Secure token for email verification.
+    /// </summary>
+    [MaxLength(255)]
+    public string? VerificationToken { get; set; }
+
+    /// <summary>
+    /// Expiration time for the verification token.
+    /// </summary>
+    public DateTime? VerificationTokenExpiresAt { get; set; }
+
     // ── Navigation ─────────────────────────────────────────────────────────
     public Subscription? Subscription { get; set; }
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

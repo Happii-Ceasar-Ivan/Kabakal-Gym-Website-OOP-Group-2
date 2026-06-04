@@ -56,7 +56,7 @@ public sealed class AuthService : IAuthService
     // REGISTER
     // ──────────────────────────────────────────────────────────────────────
 
-    public async Task<ServiceResult<AuthResponseDto>> RegisterAsync(RegisterRequestDto dto)
+    public async Task<ServiceResult<string>> RegisterAsync(RegisterRequestDto dto)
     {
         var normalizedEmail = dto.Email.ToLower().Trim();
 
@@ -66,7 +66,7 @@ public sealed class AuthService : IAuthService
             .AnyAsync(u => u.Email == normalizedEmail);
 
         if (emailTaken)
-            return ServiceResult<AuthResponseDto>.Fail(
+            return ServiceResult<string>.Fail(
                 "An account with this email already exists."
             );
 
@@ -79,7 +79,14 @@ public sealed class AuthService : IAuthService
             LastName  = dto.LastName.Trim(),
             Role      = UserRoles.Member,
             IsActive  = true,
+            IsVerified = false
         };
+
+        // 3. Generate Email Verification Token
+        var tokenBytes = RandomNumberGenerator.GetBytes(32);
+        user.VerificationToken = Convert.ToBase64String(tokenBytes)
+            .Replace("+", "-").Replace("/", "_").TrimEnd('=');
+        user.VerificationTokenExpiresAt = DateTime.UtcNow.AddMinutes(15);
 
         // Hash AFTER UserId is assigned — PasswordHasher may embed the user ID
         // as entropy depending on implementation version.
@@ -100,7 +107,14 @@ public sealed class AuthService : IAuthService
         _context.Subscriptions.Add(subscription);
         await _context.SaveChangesAsync();
 
-        return ServiceResult<AuthResponseDto>.Success(BuildAuthResponse(user));
+        // 5. Send Verification Email
+        var frontendUrl = _config["FrontendUrl"] ?? "http://localhost:5173";
+        var verifyLink = $"{frontendUrl}/verify?token={user.VerificationToken}";
+        
+        // Fire and forget or await the email service
+        await _emailService.SendVerificationEmailAsync(user.Email, verifyLink);
+
+        return ServiceResult<string>.Success("Registration successful. Please check your email to verify your account.");
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -122,6 +136,9 @@ public sealed class AuthService : IAuthService
         //    prevent enumeration via differential error responses.
         if (user is null || !user.IsActive)
             return ServiceResult<AuthResponseDto>.Fail(genericError);
+
+        if (!user.IsVerified)
+            return ServiceResult<AuthResponseDto>.Fail("Please check your email to verify your account before logging in.");
 
         // 3. Verify password hash (timing-safe internally)
         var verifyResult = _hasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
@@ -243,6 +260,33 @@ public sealed class AuthService : IAuthService
         await _context.SaveChangesAsync();
 
         return ServiceResult<string>.Success("Password successfully updated!");
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // VERIFY EMAIL
+    // ──────────────────────────────────────────────────────────────────────
+    
+    public async Task<ServiceResult<string>> VerifyEmailAsync(string token)
+    {
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.VerificationToken == token);
+
+        if (user == null)
+            return ServiceResult<string>.Fail("Invalid verification token.");
+
+        if (user.IsVerified)
+            return ServiceResult<string>.Fail("Email is already verified.");
+
+        if (user.VerificationTokenExpiresAt < DateTime.UtcNow)
+            return ServiceResult<string>.Fail("Verification link has expired. Please register again or contact support.");
+
+        user.IsVerified = true;
+        user.VerificationToken = null;
+        user.VerificationTokenExpiresAt = null;
+
+        await _context.SaveChangesAsync();
+
+        return ServiceResult<string>.Success("Email verified successfully! You can now log in.");
     }
 
     // ──────────────────────────────────────────────────────────────────────

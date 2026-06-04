@@ -40,7 +40,7 @@ public class AuthController : ControllerBase
     /// <returns>201 + AuthResponseDto on success; 409 if email is already taken.</returns>
     [HttpPost("register")]
     [EnableRateLimiting("AuthPolicy")]
-    [ProducesResponseType(typeof(AuthResponseDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(object),           StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(object),           StatusCodes.Status409Conflict)]
     public async Task<IActionResult> Register([FromBody] RegisterRequestDto dto)
@@ -57,7 +57,7 @@ public class AuthController : ControllerBase
             return Conflict(new { error = result.ErrorMessage });
 
         // 201 Created — new resource was successfully created
-        return StatusCode(StatusCodes.Status201Created, result.Data);
+        return StatusCode(StatusCodes.Status201Created, new { message = result.Data });
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -132,6 +132,29 @@ public class AuthController : ControllerBase
             return BadRequest(ModelState);
 
         var result = await _authService.ResetPasswordAsync(dto);
+
+        if (!result.IsSuccess)
+            return BadRequest(new { error = result.ErrorMessage });
+
+        return Ok(new { message = result.Data });
+    }
+
+    // ──────────────────────────────────────────────────────────────────────
+    // GET /api/auth/verify
+    // ──────────────────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Verifies the user's email address using the token sent to their inbox.
+    /// </summary>
+    [HttpGet("verify")]
+    [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+    {
+        if (string.IsNullOrWhiteSpace(token))
+            return BadRequest(new { error = "Verification token is required." });
+
+        var result = await _authService.VerifyEmailAsync(token);
 
         if (!result.IsSuccess)
             return BadRequest(new { error = result.ErrorMessage });

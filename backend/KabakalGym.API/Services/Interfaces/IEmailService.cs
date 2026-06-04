@@ -13,4 +13,9 @@ public interface IEmailService
     /// <param name="toEmail">Recipient email address.</param>
     /// <param name="resetLink">Full URL the user clicks to reset their password.</param>
     Task SendPasswordResetEmailAsync(string toEmail, string resetLink);
+
+    /// <summary>
+    /// Sends an email verification link during registration.
+    /// </summary>
+    Task SendVerificationEmailAsync(string toEmail, string verificationLink);
 }
