@@ -1,7 +1,7 @@
 // Central API service for all backend calls.
 // Base URL points to the .NET backend running on localhost.
 // If your backend runs on a different port, update this URL.
-const API_BASE = 'https://kabakal-gym.onrender.com/api';
+const API_BASE = 'https://kabakalgym-api-gndmbwczhre4crb0.southeastasia-01.azurewebsites.net/api';
 
 /**
  * Generic fetch wrapper that handles JSON serialization and error responses.
