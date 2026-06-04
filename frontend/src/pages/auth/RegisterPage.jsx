@@ -14,6 +14,8 @@ export default function RegisterPage() {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [agreedToTos, setAgreedToTos] = useState(false);
+  const [showTos, setShowTos] = useState(false);
 
   // Live password validation rules
   const rules = useMemo(() => ({
@@ -174,9 +176,88 @@ export default function RegisterPage() {
           </div>
         )}
 
-        <button type="submit" className={styles.submitBtn} disabled={loading}>
+        {/* Terms of Service Checkbox */}
+        <div className={styles.tosGroup}>
+          <label className={styles.tosLabel}>
+            <input
+              type="checkbox"
+              className={styles.checkbox}
+              checked={agreedToTos}
+              onChange={(e) => setAgreedToTos(e.target.checked)}
+            />
+            By registering you ACCEPT the{' '}
+            <button
+              type="button"
+              className={styles.tosLink}
+              onClick={() => setShowTos(true)}
+            >
+              Terms of Service
+            </button>
+          </label>
+        </div>
+
+        <button type="submit" className={styles.submitBtn} disabled={loading || !agreedToTos}>
           {loading ? 'Creating Account...' : 'Register'}
         </button>
+
+        {/* TOS Modal */}
+        {showTos && (
+          <div className={styles.modalOverlay} onClick={() => setShowTos(false)}>
+            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
+              <div className={styles.modalHeader}>
+                <h2 className={styles.modalTitle}>Terms of Service</h2>
+                <button
+                  type="button"
+                  className={styles.modalClose}
+                  onClick={() => setShowTos(false)}
+                >
+                  ✕
+                </button>
+              </div>
+              <div className={styles.modalBody}>
+                <h3>1. Acceptance of Terms</h3>
+                <p>By creating an account and using Kabakal Gym's services (the "Service"), you agree to be bound by these Terms of Service. If you do not agree, do not register.</p>
+
+                <h3>2. Account Registration</h3>
+                <p>You must provide accurate and complete information when creating your account. You are responsible for maintaining the confidentiality of your login credentials and for all activities under your account.</p>
+
+                <h3>3. Privacy & Data Collection</h3>
+                <p>We collect personal information (name, email, payment history) solely to operate the Service. We do not sell your data to third parties. Your data is stored securely using industry-standard encryption. For full details, refer to our Privacy Policy.</p>
+
+                <h3>4. Membership & Payments</h3>
+                <p>Membership fees are non-refundable unless otherwise stated. Kabakal Gym reserves the right to change pricing with 30 days' prior notice to active subscribers.</p>
+
+                <h3>5. User Conduct</h3>
+                <p>You agree not to misuse the Service, including but not limited to: attempting to gain unauthorized access, distributing malware, or harassing other users.</p>
+
+                <h3>6. Assumption of Risk</h3>
+                <p>Physical exercise involves inherent risks. By using Kabakal Gym's facilities, you acknowledge and accept these risks. Kabakal Gym is not liable for injuries sustained during workouts.</p>
+
+                <h3>7. Limitation of Liability</h3>
+                <p>Kabakal Gym shall not be liable for any indirect, incidental, or consequential damages arising from your use of the Service, including data loss or service interruptions.</p>
+
+                <h3>8. Termination</h3>
+                <p>Kabakal Gym reserves the right to suspend or terminate your account at any time for violation of these terms, without prior notice.</p>
+
+                <h3>9. Changes to Terms</h3>
+                <p>We may update these Terms at any time. Continued use of the Service after changes constitutes acceptance of the new Terms.</p>
+
+                <h3>10. Contact</h3>
+                <p>For questions regarding these Terms, contact us at support@kabakalgym.com or visit us at 47 Kalayaan B, Batasan Hills, Quezon City.</p>
+
+                <p style={{ marginTop: '1.5rem', opacity: 0.5, fontSize: '0.8rem' }}>Last updated: June 2026</p>
+              </div>
+              <button
+                type="button"
+                className={styles.submitBtn}
+                onClick={() => setShowTos(false)}
+                style={{ marginTop: '1rem' }}
+              >
+                I Understand
+              </button>
+            </div>
+          </div>
+        )}
 
         <p className={styles.switchMode}>
           Already a member?
