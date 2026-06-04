@@ -17,6 +17,7 @@ export default function RegisterPage() {
   const [loading, setLoading] = useState(false);
   const [agreedToTos, setAgreedToTos] = useState(false);
   const [showTos, setShowTos] = useState(false);
+  const [shakeTos, setShakeTos] = useState(false);
 
   // Live password validation rules
   const rules = useMemo(() => ({
@@ -35,6 +36,12 @@ export default function RegisterPage() {
 
     if (password !== confirmPassword) {
       setError('Passwords do not match.');
+      return;
+    }
+
+    if (!agreedToTos) {
+      setShakeTos(true);
+      setTimeout(() => setShakeTos(false), 500);
       return;
     }
 
@@ -178,7 +185,7 @@ export default function RegisterPage() {
         )}
 
         {/* Terms of Service Checkbox */}
-        <div className={styles.tosGroup}>
+        <div className={`${styles.tosGroup} ${shakeTos ? styles.shake : ''}`}>
           <label className={styles.tosLabel}>
             <input
               type="checkbox"
@@ -197,7 +204,7 @@ export default function RegisterPage() {
           </label>
         </div>
 
-        <button type="submit" className={styles.submitBtn} disabled={loading || !agreedToTos}>
+        <button type="submit" className={styles.submitBtn} disabled={loading}>
           {loading ? 'Creating Account...' : 'Register'}
         </button>
 
