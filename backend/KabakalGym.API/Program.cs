@@ -55,6 +55,10 @@ builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 // ── Email Service (Resend) ──
 builder.Services.AddHttpClient<IEmailService, ResendEmailService>();
 
+// ── Sprint 3: Subscription & Transaction Services ──
+builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();
+builder.Services.AddScoped<ITransactionService,  TransactionService>();
+
 // ── JWT Bearer Authentication ──
 // Read settings here for TokenValidationParameters — IOptions not available yet at this stage
 var jwtSettings = builder.Configuration
