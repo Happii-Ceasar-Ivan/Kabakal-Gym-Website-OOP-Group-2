@@ -283,12 +283,16 @@
 }
 
 .tosLabel {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
+  display: block;
   font-size: 0.85rem;
   color: rgba(255, 255, 255, 0.7);
   cursor: pointer;
+  line-height: 1.4;
+}
+
+.tosLabel input[type="checkbox"] {
+  margin-right: 0.6rem;
+  vertical-align: middle;
 }
 
 .tosLink {
@@ -302,6 +306,7 @@
   padding: 0;
   font-family: var(--font-body);
   transition: opacity 0.3s ease;
+  display: inline;
 }
 
 .tosLink:hover {

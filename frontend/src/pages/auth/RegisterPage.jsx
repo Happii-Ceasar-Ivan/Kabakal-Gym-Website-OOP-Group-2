@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import styles from './Auth.module.css';
@@ -201,7 +202,7 @@ export default function RegisterPage() {
         </button>
 
         {/* TOS Modal */}
-        {showTos && (
+        {showTos && createPortal(
           <div className={styles.modalOverlay} onClick={() => setShowTos(false)}>
             <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
               <div className={styles.modalHeader}>
@@ -256,7 +257,8 @@ export default function RegisterPage() {
                 I Understand
               </button>
             </div>
-          </div>
+          </div>,
+          document.body
         )}
 
         <p className={styles.switchMode}>
