@@ -97,7 +97,7 @@ export default function LoginPage() {
         </div>
 
         <button type="submit" className={styles.submitBtn} disabled={loading}>
-          {loading ? 'Authenticating...' : 'Authenticate'}
+          {loading ? 'Waking up server (this may take a few seconds)...' : 'Authenticate'}
         </button>
 
         <p className={styles.switchMode}>

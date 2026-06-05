@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import SkeletonLoader from '../components/SkeletonLoader';
+import { wakeupServer } from '../services/api';
 
 const equipmentItems = [
   { id: 1, name: 'Bench Press', desc: 'Flat & Incline' },
@@ -16,6 +17,9 @@ export default function LandingPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Silently pre-warm the Azure backend
+    wakeupServer();
+
     // Wait for fonts to load, then show content with a minimum skeleton time
     const minDelay = new Promise((r) => setTimeout(r, 1200));
     const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();

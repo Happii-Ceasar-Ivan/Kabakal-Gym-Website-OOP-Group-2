@@ -239,6 +239,8 @@ app.UseAuthentication();        // Wired up in Sprint 2 (JWT + Identity)
 app.UseAuthorization();
 app.MapControllers();
 
+app.MapGet("/api/wakeup", () => Results.Ok(new { status = "Awake", message = "Server is ready." }));
+
 // ── 6. AUTO-MIGRATE ON STARTUP ──────────────────────────────────────────────────
 // Automatically apply pending migrations to the database.
 using var scope = app.Services.CreateScope();

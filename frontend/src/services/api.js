@@ -156,3 +156,13 @@ export async function uploadEquipmentCsv(file) {
   return data;
 }
 
+// ── Server Pre-warm ──────────────────────────────────────────────────────────
+export async function wakeupServer() {
+  try {
+    // Send a lightweight, silent request to wake up the Azure free tier instance
+    await fetch(`${API_BASE}/wakeup`, { method: 'GET' });
+  } catch (err) {
+    // Ignore errors silently since this is just a pre-warm hack
+  }
+}
+

@@ -206,7 +206,7 @@ export default function RegisterPage() {
         </div>
 
         <button type="submit" className={styles.submitBtn} disabled={loading}>
-          {loading ? 'Creating Account...' : 'Register'}
+          {loading ? 'Waking up server (this may take a few seconds)...' : 'Register'}
         </button>
 
         {/* TOS Modal */}
