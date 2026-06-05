@@ -62,6 +62,24 @@ export default function DashboardPage() {
               <span className={styles.roleBadge}>{user.role}</span>
             </div>
           </div>
+          {user.role === 'Admin' && (
+            <div style={{ marginTop: '20px', textAlign: 'center' }}>
+              <button 
+                onClick={() => navigate('/admin/members')}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#ffcc00', // using a yellowish color similar to the theme
+                  color: '#000',
+                  border: 'none',
+                  borderRadius: '5px',
+                  fontWeight: 'bold',
+                  cursor: 'pointer'
+                }}
+              >
+                Go to Admin Panel
+              </button>
+            </div>
+          )}
         </div>
       </main>
     </div>

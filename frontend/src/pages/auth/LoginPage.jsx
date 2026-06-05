@@ -30,8 +30,12 @@ export default function LoginPage() {
         role: data.role,
       }));
 
-      // Navigate to dashboard
-      navigate('/dashboard');
+      // Navigate based on role
+      if (data.role === 'Admin') {
+        navigate('/admin/members');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setError(err.message);
     } finally {
