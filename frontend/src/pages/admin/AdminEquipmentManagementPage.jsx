@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv } from '../../services/api';
+import { getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv, deleteEquipment } from '../../services/api';
 import styles from './Admin.module.css';
 
 export default function AdminEquipmentManagementPage() {
@@ -63,6 +63,17 @@ export default function AdminEquipmentManagementPage() {
       fetchEquipment();
     } catch (err) {
       alert(`Operation failed: ${err.message}`);
+    }
+  };
+
+  const handleDelete = async (eqId, eqName) => {
+    if (!window.confirm(`Are you sure you want to delete "${eqName}"?`)) return;
+    
+    try {
+      await deleteEquipment(eqId);
+      fetchEquipment();
+    } catch (err) {
+      alert(`Failed to delete equipment: ${err.message}`);
     }
   };
 
@@ -143,6 +154,13 @@ export default function AdminEquipmentManagementPage() {
                 <td>{eq.isActive ? '✅ Yes' : '❌ No'}</td>
                 <td>
                   <button onClick={() => openModal(eq)} className={styles.actionBtn}>Edit</button>
+                  <button 
+                    onClick={() => handleDelete(eq.equipmentId, eq.equipmentName)} 
+                    className={styles.actionBtn} 
+                    style={{ color: '#ef4444', marginLeft: '1rem' }}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
