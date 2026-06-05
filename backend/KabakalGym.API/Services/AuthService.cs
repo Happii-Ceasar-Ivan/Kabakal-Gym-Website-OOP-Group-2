@@ -226,6 +226,7 @@ public sealed class AuthService : IAuthService
     {
         // 1. Look up the token
         var resetRecord = await _context.PasswordResets
+            .AsTracking()
             .FirstOrDefaultAsync(pr => pr.Token == dto.Token);
 
         if (resetRecord is null)
@@ -242,6 +243,7 @@ public sealed class AuthService : IAuthService
 
         // 3. Find the user
         var user = await _context.Users
+            .AsTracking()
             .FirstOrDefaultAsync(u => u.Email == resetRecord.UserEmail);
 
         if (user is null)
@@ -269,6 +271,7 @@ public sealed class AuthService : IAuthService
     public async Task<ServiceResult<string>> VerifyEmailAsync(string token)
     {
         var user = await _context.Users
+            .AsTracking()
             .FirstOrDefaultAsync(u => u.VerificationToken == token);
 
         if (user == null)
