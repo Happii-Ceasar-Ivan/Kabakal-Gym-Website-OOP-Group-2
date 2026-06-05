@@ -245,4 +245,7 @@ using var scope = app.Services.CreateScope();
 var db = scope.ServiceProvider.GetRequiredService<KabakalDbContext>();
 await db.Database.MigrateAsync();
 
+// ── 7. SEED INITIAL DATA ───────────────────────────────────────────────────────────
+await DbSeeder.SeedAdminAsync(app.Services);
+
 app.Run();
