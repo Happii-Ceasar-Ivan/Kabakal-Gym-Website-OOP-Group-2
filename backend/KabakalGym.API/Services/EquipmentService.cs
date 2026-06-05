@@ -98,4 +98,124 @@ public sealed class EquipmentService : IEquipmentService
 
         return ServiceResult<bool>.Success(true);
     }
+
+    public async Task<ServiceResult<int>> UploadEquipmentCsvAsync(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return ServiceResult<int>.Fail("File is empty.");
+
+        if (file.Length > 5 * 1024 * 1024)
+            return ServiceResult<int>.Fail("File size exceeds the 5MB limit.");
+
+        var extension = Path.GetExtension(file.FileName).ToLower();
+        if (extension != ".csv")
+            return ServiceResult<int>.Fail("Invalid file type. Only .csv is allowed.");
+
+        var newEquipments = new List<Equipment>();
+        int addedCount = 0;
+
+        using var stream = new StreamReader(file.OpenReadStream());
+        
+        // Read header
+        var headerLine = await stream.ReadLineAsync();
+        if (string.IsNullOrWhiteSpace(headerLine))
+            return ServiceResult<int>.Fail("CSV is empty or missing headers.");
+
+        // We expect: EquipmentName,EquipmentStatus,IsActive
+        
+        // Pre-fetch existing equipment names for the "x2" logic
+        var existingNames = await _context.Equipments
+            .AsNoTracking()
+            .Select(e => e.EquipmentName)
+            .ToListAsync();
+
+        // Count occurrences of base names to handle duplicates like "Treadmill x2"
+        var baseNameCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var name in existingNames)
+        {
+            // Try to extract base name and count. e.g. "Treadmill x2" -> base "Treadmill", count 2
+            var baseName = name;
+            int count = 1;
+            
+            var lastSpaceIndex = name.LastIndexOf(" x");
+            if (lastSpaceIndex != -1 && lastSpaceIndex < name.Length - 2)
+            {
+                var possibleNumber = name.Substring(lastSpaceIndex + 2);
+                if (int.TryParse(possibleNumber, out int parsedCount))
+                {
+                    baseName = name.Substring(0, lastSpaceIndex);
+                    count = parsedCount;
+                }
+            }
+
+            if (!baseNameCounts.ContainsKey(baseName))
+            {
+                baseNameCounts[baseName] = count;
+            }
+            else
+            {
+                baseNameCounts[baseName] = Math.Max(baseNameCounts[baseName], count);
+            }
+        }
+
+        string? line;
+        while ((line = await stream.ReadLineAsync()) != null)
+        {
+            if (string.IsNullOrWhiteSpace(line)) continue;
+
+            var columns = line.Split(',');
+            if (columns.Length < 1) continue;
+
+            var baseName = columns[0].Trim();
+            if (string.IsNullOrEmpty(baseName)) continue;
+
+            string finalName = baseName;
+
+            // Handle duplicate logic
+            if (baseNameCounts.ContainsKey(baseName))
+            {
+                baseNameCounts[baseName]++;
+                finalName = $"{baseName} x{baseNameCounts[baseName]}";
+            }
+            else
+            {
+                baseNameCounts[baseName] = 1;
+                // If it's the very first one, we just use the baseName
+            }
+
+            var status = columns.Length > 1 && !string.IsNullOrWhiteSpace(columns[1]) 
+                ? columns[1].Trim() 
+                : "Available";
+
+            var validStatuses = new[] { "Available", "Under Maintenance", "Unavailable" };
+            if (!validStatuses.Contains(status)) status = "Available";
+
+            bool isActive = true;
+            if (columns.Length > 2 && bool.TryParse(columns[2].Trim(), out bool parsedActive))
+            {
+                isActive = parsedActive;
+            }
+
+            var eq = new Equipment
+            {
+                EquipmentId = Guid.NewGuid(),
+                EquipmentName = finalName,
+                EquipmentStatus = status,
+                IsActive = isActive
+            };
+
+            newEquipments.Add(eq);
+            addedCount++;
+        }
+
+        if (newEquipments.Any())
+        {
+            // By using EF Core AddRange, we are protected from SQL Injection automatically
+            _context.Equipments.AddRange(newEquipments);
+            await _context.SaveChangesAsync();
+        }
+
+        return ServiceResult<int>.Success(addedCount);
+    }
 }

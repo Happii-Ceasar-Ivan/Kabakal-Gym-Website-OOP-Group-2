@@ -127,3 +127,32 @@ export async function deleteEquipment(id) {
   });
 }
 
+export async function uploadEquipmentCsv(file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const token = localStorage.getItem('kabakal_token');
+  const headers = {};
+  if (token) headers['Authorization'] = `Bearer ${token}`;
+
+  const response = await fetch(`${API_BASE}/equipment/upload`, {
+    method: 'POST',
+    headers,
+    body: formData,
+  });
+
+  let data;
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+
+  if (!response.ok) {
+    const errorMessage = data?.error || data?.title || `Upload failed: ${response.status}`;
+    throw new Error(errorMessage);
+  }
+
+  return data;
+}
+

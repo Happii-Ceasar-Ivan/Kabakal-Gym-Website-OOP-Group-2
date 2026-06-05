@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { getEquipment, createEquipment, updateEquipment } from '../../services/api';
+import { useState, useEffect, useRef } from 'react';
+import { getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv } from '../../services/api';
+import styles from './Admin.module.css';
 
 export default function AdminEquipmentManagementPage() {
   const [equipment, setEquipment] = useState([]);
@@ -11,6 +12,9 @@ export default function AdminEquipmentManagementPage() {
   
   // Default values for new equipment
   const [form, setForm] = useState({ equipmentName: '', equipmentStatus: 'Available', isActive: true });
+
+  const fileInputRef = useRef(null);
+  const [uploading, setUploading] = useState(false);
 
   const fetchEquipment = async () => {
     try {
@@ -62,60 +66,89 @@ export default function AdminEquipmentManagementPage() {
     }
   };
 
-  if (loading) return <div className="text-gray-300">Loading equipment...</div>;
-  if (error) return <div className="text-red-500">Error: {error}</div>;
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("File is too large! Maximum size is 5MB.");
+      e.target.value = '';
+      return;
+    }
+
+    try {
+      setUploading(true);
+      const result = await uploadEquipmentCsv(file);
+      alert(`Successfully uploaded ${result.count} equipment records!`);
+      fetchEquipment();
+    } catch (err) {
+      alert(`CSV Upload Failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+      e.target.value = ''; // Reset file input
+    }
+  };
+
+  if (loading) return <div>Loading equipment...</div>;
+  if (error) return <div style={{color: 'red'}}>Error: {error}</div>;
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-white">Equipment Management</h1>
-        <button 
-          onClick={() => openModal()}
-          className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg transition-colors shadow"
-        >
-          + Add Equipment
-        </button>
+      <div className={styles.pageHeader}>
+        <h1 className={styles.pageTitle}>Equipment Management</h1>
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <input 
+            type="file" 
+            accept=".csv" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload} 
+            style={{ display: 'none' }} 
+          />
+          <button 
+            onClick={() => fileInputRef.current.click()}
+            className={styles.secondaryBtn}
+            disabled={uploading}
+          >
+            {uploading ? 'Uploading...' : '📁 Upload CSV'}
+          </button>
+          <button onClick={() => openModal()} className={styles.primaryBtn}>
+            + Add Equipment
+          </button>
+        </div>
       </div>
       
-      <div className="bg-gray-800 rounded-lg shadow overflow-hidden">
-        <table className="w-full text-left text-sm text-gray-300">
-          <thead className="bg-gray-700 text-xs uppercase text-gray-400">
+      <div className={styles.tableContainer}>
+        <table className={styles.table}>
+          <thead>
             <tr>
-              <th className="px-6 py-3">Equipment Name</th>
-              <th className="px-6 py-3">Status</th>
-              <th className="px-6 py-3">Active</th>
-              <th className="px-6 py-3">Actions</th>
+              <th>Equipment Name</th>
+              <th>Status</th>
+              <th>Active</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {equipment.map((eq) => (
-              <tr key={eq.equipmentId} className="border-b border-gray-700 hover:bg-gray-750">
-                <td className="px-6 py-4 font-medium text-white">{eq.equipmentName}</td>
-                <td className="px-6 py-4">
-                  <span className={`px-2 py-1 rounded text-xs font-semibold ${
-                    eq.equipmentStatus === 'Available' ? 'bg-green-900 text-green-300' : 
-                    eq.equipmentStatus === 'Under Maintenance' ? 'bg-yellow-900 text-yellow-300' : 
-                    'bg-red-900 text-red-300'
+              <tr key={eq.equipmentId}>
+                <td>{eq.equipmentName}</td>
+                <td>
+                  <span className={`${styles.badge} ${
+                    eq.equipmentStatus === 'Available' ? styles.badgeActive : 
+                    eq.equipmentStatus === 'Under Maintenance' ? styles.badgeWarning : 
+                    styles.badgeInactive
                   }`}>
                     {eq.equipmentStatus}
                   </span>
                 </td>
-                <td className="px-6 py-4">
-                  {eq.isActive ? '✅ Yes' : '❌ No'}
-                </td>
-                <td className="px-6 py-4">
-                  <button 
-                    onClick={() => openModal(eq)}
-                    className="text-orange-500 hover:text-orange-400 font-medium"
-                  >
-                    Edit
-                  </button>
+                <td>{eq.isActive ? '✅ Yes' : '❌ No'}</td>
+                <td>
+                  <button onClick={() => openModal(eq)} className={styles.actionBtn}>Edit</button>
                 </td>
               </tr>
             ))}
             {equipment.length === 0 && (
               <tr>
-                <td colSpan="4" className="px-6 py-8 text-center text-gray-500">
+                <td colSpan="4" style={{textAlign: 'center', padding: '2rem', color: '#888'}}>
                   No equipment found. Add some!
                 </td>
               </tr>
@@ -124,66 +157,52 @@ export default function AdminEquipmentManagementPage() {
         </table>
       </div>
 
-      {/* Add/Edit Modal */}
       {isModalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-800 rounded-lg p-6 w-full max-w-md border border-gray-700">
-            <h2 className="text-2xl font-bold mb-4 text-white">
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h2 className={styles.modalTitle}>
               {editingEq ? 'Edit Equipment' : 'Add Equipment'}
             </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">Equipment Name</label>
+            <form onSubmit={handleSubmit}>
+              <div className={styles.formGroup}>
+                <label className={styles.formLabel}>Equipment Name</label>
                 <input 
                   type="text" 
                   value={form.equipmentName}
                   onChange={(e) => setForm({...form, equipmentName: e.target.value})}
-                  className="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white"
+                  className={styles.formInput}
                   required
                 />
               </div>
               
               {editingEq && (
                 <>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-1">Status</label>
+                  <div className={styles.formGroup}>
+                    <label className={styles.formLabel}>Status</label>
                     <select 
                       value={form.equipmentStatus}
                       onChange={(e) => setForm({...form, equipmentStatus: e.target.value})}
-                      className="w-full bg-gray-900 border border-gray-700 rounded p-2 text-white"
+                      className={styles.formInput}
                     >
                       <option value="Available">Available</option>
                       <option value="Under Maintenance">Under Maintenance</option>
                       <option value="Unavailable">Unavailable</option>
                     </select>
                   </div>
-                  <div className="flex items-center mt-4">
+                  <label className={styles.formCheckboxLabel}>
                     <input 
                       type="checkbox" 
-                      id="isActive"
                       checked={form.isActive}
                       onChange={(e) => setForm({...form, isActive: e.target.checked})}
-                      className="w-4 h-4 bg-gray-900 border-gray-700 rounded text-orange-500 focus:ring-orange-500"
                     />
-                    <label htmlFor="isActive" className="ml-2 text-sm font-medium text-gray-300">
-                      Active (visible in gym)
-                    </label>
-                  </div>
+                    Active (visible in gym)
+                  </label>
                 </>
               )}
               
-              <div className="flex justify-end space-x-3 mt-6">
-                <button 
-                  type="button" 
-                  onClick={closeModal}
-                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  type="submit"
-                  className="px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded transition-colors"
-                >
+              <div className={styles.modalActions}>
+                <button type="button" onClick={closeModal} className={styles.secondaryBtn}>Cancel</button>
+                <button type="submit" className={styles.primaryBtn}>
                   {editingEq ? 'Save Changes' : 'Add Equipment'}
                 </button>
               </div>

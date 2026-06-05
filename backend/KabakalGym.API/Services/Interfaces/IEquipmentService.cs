@@ -11,4 +11,5 @@ public interface IEquipmentService
     Task<ServiceResult<EquipmentDto>> CreateEquipmentAsync(CreateEquipmentDto dto);
     Task<ServiceResult<EquipmentDto>> UpdateEquipmentAsync(Guid id, UpdateEquipmentDto dto);
     Task<ServiceResult<bool>> DeleteEquipmentAsync(Guid id);
+    Task<ServiceResult<int>> UploadEquipmentCsvAsync(IFormFile file);
 }

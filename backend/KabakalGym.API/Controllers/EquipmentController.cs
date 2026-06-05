@@ -74,4 +74,18 @@ public class EquipmentController : ControllerBase
         var result = await _equipmentService.DeleteEquipmentAsync(id);
         return result.IsSuccess ? NoContent() : NotFound(new { error = result.ErrorMessage });
     }
+
+    [HttpPost("upload")]
+    [Authorize(Roles = UserRoles.Admin)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> UploadCsv(IFormFile file)
+    {
+        var result = await _equipmentService.UploadEquipmentCsvAsync(file);
+        if (!result.IsSuccess)
+        {
+            return BadRequest(new { error = result.ErrorMessage });
+        }
+        return Ok(new { count = result.Data, message = $"Successfully uploaded {result.Data} equipment records." });
+    }
 }
