@@ -79,3 +79,51 @@ export async function resetPassword({ token, newPassword, confirmNewPassword }) 
     body: JSON.stringify({ token, newPassword, confirmNewPassword }),
   });
 }
+
+// ── Admin: Member Management ──────────────────────────────────────────────
+
+export async function getMembers(page = 1, pageSize = 20, search = '') {
+  const params = new URLSearchParams({ page, pageSize });
+  if (search) params.append('search', search);
+  return request(`/members?${params.toString()}`);
+}
+
+export async function getMember(id) {
+  return request(`/members/${id}`);
+}
+
+export async function updateMember(id, data) {
+  return request(`/members/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+// ── Admin: Equipment Management ───────────────────────────────────────────
+
+export async function getEquipment(page = 1, pageSize = 20, search = '') {
+  const params = new URLSearchParams({ page, pageSize });
+  if (search) params.append('search', search);
+  return request(`/equipment?${params.toString()}`);
+}
+
+export async function createEquipment(data) {
+  return request('/equipment', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateEquipment(id, data) {
+  return request(`/equipment/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteEquipment(id) {
+  return request(`/equipment/${id}`, {
+    method: 'DELETE',
+  });
+}
+
