@@ -124,9 +124,30 @@ export async function updateEquipment(id, data) {
 }
 
 export async function deleteEquipment(id) {
-  return request(`/equipment/${id}`, {
-    method: 'DELETE',
+  return request(`/equipment/${id}`, { method: 'DELETE' });
+}
+
+// ----------------------------------------------------------------------
+// CHECK-IN & STAFF ENDPOINTS
+// ----------------------------------------------------------------------
+
+export async function getQrPayload() {
+  return request('/checkin/qr', { method: 'GET' });
+}
+
+export async function verifyCheckIn(qrPayload, latitude, longitude) {
+  return request('/checkin/verify', {
+    method: 'POST',
+    body: JSON.stringify({ qrPayload, latitude, longitude }),
   });
+}
+
+export async function getPendingCheckins() {
+  return request('/staff/pending-checkins', { method: 'GET' });
+}
+
+export async function approveCheckin(visitId) {
+  return request(`/staff/approve-checkin/${visitId}`, { method: 'POST' });
 }
 
 export async function uploadEquipmentCsv(file) {

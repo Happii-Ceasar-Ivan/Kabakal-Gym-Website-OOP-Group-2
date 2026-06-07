@@ -63,6 +63,9 @@ builder.Services.AddScoped<ITransactionService,  TransactionService>();
 builder.Services.AddScoped<IMemberManagementService, MemberManagementService>();
 builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 
+// ── Sprint 5: Geolocation & Attendance Tracking ──
+builder.Services.AddScoped<ICheckInService, CheckInService>();
+
 // ── JWT Bearer Authentication ──
 // Read settings here for TokenValidationParameters — IOptions not available yet at this stage
 var jwtSettings = builder.Configuration

@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import QRScannerModal from './kiosk/QRScannerModal';
 import styles from './Dashboard.module.css';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
+  const [isScannerOpen, setIsScannerOpen] = useState(false);
 
   // Read user info from localStorage
   const userRaw = localStorage.getItem('kabakal_user');
@@ -62,6 +64,29 @@ export default function DashboardPage() {
               <span className={styles.roleBadge}>{user.role}</span>
             </div>
           </div>
+          
+          <div style={{ marginTop: '2rem', textAlign: 'center' }}>
+            <button 
+              onClick={() => setIsScannerOpen(true)}
+              style={{
+                padding: '12px 24px',
+                backgroundColor: 'var(--primary-color)',
+                color: '#000',
+                border: 'none',
+                borderRadius: '8px',
+                fontWeight: '800',
+                fontSize: '1.1rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                boxShadow: '0 4px 14px rgba(255, 204, 0, 0.4)'
+              }}
+            >
+              📷 Test the QR Feature
+            </button>
+          </div>
+
           {user.role === 'Admin' && (
             <div style={{ marginTop: '20px', textAlign: 'center' }}>
               <button 
@@ -82,6 +107,11 @@ export default function DashboardPage() {
           )}
         </div>
       </main>
+
+      <QRScannerModal 
+        isOpen={isScannerOpen} 
+        onClose={() => setIsScannerOpen(false)} 
+      />
     </div>
   );
 }

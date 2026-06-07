@@ -10,10 +10,12 @@ import VerifyPage from './pages/auth/VerifyPage';
 import DashboardPage from './pages/DashboardPage';
 import './App.css';
 
-// Lazy load admin routes for Vite code-splitting
+// Lazy load roles
 const AdminLayout = lazy(() => import('./components/AdminLayout'));
 const AdminMemberManagementPage = lazy(() => import('./pages/admin/AdminMemberManagementPage'));
 const AdminEquipmentManagementPage = lazy(() => import('./pages/admin/AdminEquipmentManagementPage'));
+const GateKioskPage = lazy(() => import('./pages/kiosk/GateKioskPage'));
+const StaffDashboard = lazy(() => import('./pages/staff/StaffDashboard'));
 
 function App() {
   return (
@@ -30,6 +32,10 @@ function App() {
           
           {/* Protected Member Route */}
           <Route path="/dashboard" element={<DashboardPage />} />
+
+          {/* New Sprint 5 Routes */}
+          <Route path="/kiosk" element={<GateKioskPage />} />
+          <Route path="/staff" element={<StaffDashboard />} />
 
           {/* Protected Admin Routes (Lazy Loaded) */}
           <Route path="/admin" element={<AdminLayout />}>

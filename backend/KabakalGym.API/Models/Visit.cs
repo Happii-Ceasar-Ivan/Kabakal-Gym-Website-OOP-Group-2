@@ -33,6 +33,12 @@ public class Visit
     /// </summary>
     public DateTime? CheckOut { get; set; }
 
+    /// <summary>
+    /// True if the user has an active subscription when checking in, OR if Staff manually accepted the day pass cash payment.
+    /// False if pending payment.
+    /// </summary>
+    public bool IsApproved { get; set; } = true;
+
     // ── Navigation ─────────────────────────────────────────────────────────
     [ForeignKey(nameof(UserId))]
     public User User { get; set; } = null!;
