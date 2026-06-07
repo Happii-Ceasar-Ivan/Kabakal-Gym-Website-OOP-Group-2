@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import SkeletonLoader from '../components/SkeletonLoader';
-import { wakeupServer, getEquipment } from '../services/api';
+import { wakeupServer, getEquipment, BASE_URL } from '../services/api';
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -101,7 +101,7 @@ export default function LandingPage() {
                    {item.imageUrl ? (
                      <div 
                        className={styles.arsenalImageBg} 
-                       style={{ backgroundImage: `url(http://localhost:5252${item.imageUrl})` }}
+                       style={{ backgroundImage: `url(${BASE_URL}${item.imageUrl})` }}
                      >
                        <div className={styles.arsenalCardContentOverlay}>
                          <span className={styles.arsenalName}>{item.equipmentName}</span>
