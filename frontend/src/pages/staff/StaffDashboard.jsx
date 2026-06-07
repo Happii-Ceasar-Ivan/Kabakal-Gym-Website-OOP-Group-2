@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getPendingCheckins, approveCheckin } from '../../services/api';
-import { CheckCircle, Clock, AlertTriangle } from 'lucide-react';
+import { CheckCircle, Clock, AlertTriangle, LogOut, User, Check, DollarSign } from 'lucide-react';
 import styles from './StaffDashboard.module.css';
 
 export default function StaffDashboard() {
@@ -8,6 +9,10 @@ export default function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [actionMessage, setActionMessage] = useState('');
+  const navigate = useNavigate();
+
+  const userStr = localStorage.getItem('kabakal_user');
+  const user = userStr ? JSON.parse(userStr) : null;
 
   const fetchPending = async () => {
     try {
@@ -41,6 +46,12 @@ export default function StaffDashboard() {
     }
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('kabakal_token');
+    localStorage.removeItem('kabakal_user');
+    navigate('/login');
+  };
+
   const formatTime = (isoString) => {
     return new Date(isoString).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
@@ -48,59 +59,98 @@ export default function StaffDashboard() {
   if (loading && pendingVisits.length === 0) {
     return (
       <div className={styles.dashboardContainer}>
-        <div className={styles.loading}>Loading pending walk-ins...</div>
+        <div className={styles.loadingWrapper}>
+          <div className={styles.spinner}></div>
+          <p>Loading Front Desk...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={styles.dashboardContainer}>
-      <header className={styles.header}>
-        <h1>Staff Dashboard</h1>
-        <p>Manage Walk-in Day Passes</p>
-      </header>
-
-      {error && <div className={styles.errorBanner}><AlertTriangle size={20}/> {error}</div>}
-      {actionMessage && <div className={styles.successBanner}><CheckCircle size={20}/> {actionMessage}</div>}
-
-      <div className={styles.listContainer}>
-        <div className={styles.listHeader}>
-          <h2>Pending Payments ({pendingVisits.length})</h2>
-          <span className={styles.liveIndicator}>
-            <span className={styles.pulse}></span> Live
-          </span>
+      {/* Navbar */}
+      <nav className={styles.navbar}>
+        <div className={styles.brand}>
+          <span className={styles.logoText}>KC</span>
+          <h1>Kabakal Gym</h1>
         </div>
+        <div className={styles.navRight}>
+          <div className={styles.userInfo}>
+            <User size={18} className={styles.userIcon} />
+            <span>{user?.firstName || 'Staff'}</span>
+            <span className={styles.roleBadge}>Front Desk</span>
+          </div>
+          <button onClick={handleLogout} className={styles.logoutBtn}>
+            <LogOut size={18} /> Logout
+          </button>
+        </div>
+      </nav>
 
-        {pendingVisits.length === 0 ? (
-          <div className={styles.emptyState}>
-            <CheckCircle size={48} color="var(--success-color)" />
-            <p>All clear! No pending walk-ins.</p>
+      <main className={styles.mainContent}>
+        <header className={styles.pageHeader}>
+          <h2>Staff Dashboard</h2>
+          <p>Manage Walk-in Day Passes and Pending Payments</p>
+        </header>
+
+        {error && <div className={styles.errorBanner}><AlertTriangle size={20}/> {error}</div>}
+        {actionMessage && <div className={styles.successBanner}><CheckCircle size={20}/> {actionMessage}</div>}
+
+        <div className={styles.listContainer}>
+          <div className={styles.listHeader}>
+            <div className={styles.listTitleGroup}>
+              <h3>Pending Payments</h3>
+              <span className={styles.badge}>{pendingVisits.length}</span>
+            </div>
+            <div className={styles.liveIndicator}>
+              <span className={styles.pulse}></span>
+              <span>Live Queue</span>
+            </div>
           </div>
-        ) : (
-          <div className={styles.grid}>
-            {pendingVisits.map((visit) => (
-              <div key={visit.visitId} className={styles.card}>
-                <div className={styles.cardHeader}>
-                  <h3>{visit.fullName}</h3>
-                  <span className={styles.time}><Clock size={14}/> {formatTime(visit.checkInTime)}</span>
-                </div>
-                <div className={styles.cardBody}>
-                  <p className={styles.email}>{visit.email}</p>
-                  <p className={styles.status}>Pending ₱50 Cash Payment</p>
-                </div>
-                <div className={styles.cardFooter}>
-                  <button 
-                    className={styles.acceptBtn}
-                    onClick={() => handleApprove(visit.visitId, visit.fullName)}
-                  >
-                    Accept ₱50 Cash
-                  </button>
-                </div>
+
+          {pendingVisits.length === 0 ? (
+            <div className={styles.emptyState}>
+              <div className={styles.emptyIconWrapper}>
+                <Check size={48} color="#ffcc00" />
               </div>
-            ))}
-          </div>
-        )}
-      </div>
+              <h4>All caught up!</h4>
+              <p>No pending walk-ins at the moment.</p>
+            </div>
+          ) : (
+            <div className={styles.grid}>
+              {pendingVisits.map((visit) => (
+                <div key={visit.visitId} className={styles.card}>
+                  <div className={styles.cardHeader}>
+                    <div className={styles.cardAvatar}>
+                      {visit.fullName.charAt(0)}
+                    </div>
+                    <div className={styles.cardTitle}>
+                      <h4>{visit.fullName}</h4>
+                      <span className={styles.time}><Clock size={12}/> {formatTime(visit.checkInTime)}</span>
+                    </div>
+                  </div>
+                  <div className={styles.cardBody}>
+                    <p className={styles.email}>{visit.email}</p>
+                    <div className={styles.statusBadge}>
+                      <DollarSign size={14} />
+                      Pending ₱50 Cash
+                    </div>
+                  </div>
+                  <div className={styles.cardFooter}>
+                    <button 
+                      className={styles.acceptBtn}
+                      onClick={() => handleApprove(visit.visitId, visit.fullName)}
+                    >
+                      <CheckCircle size={18} />
+                      Accept ₱50
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   );
 }
