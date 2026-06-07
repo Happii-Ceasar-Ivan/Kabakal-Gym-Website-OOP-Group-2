@@ -33,6 +33,10 @@ export default function LoginPage() {
       // Navigate based on role
       if (data.role === 'Admin') {
         navigate('/admin/members');
+      } else if (data.role === 'Staff') {
+        navigate('/staff');
+      } else if (data.role === 'GateKiosk') {
+        navigate('/kiosk');
       } else {
         navigate('/dashboard');
       }
