@@ -23,13 +23,46 @@ public static class DbSeeder
                 LastName = "Kabakal",
                 Role = UserRoles.Admin,
                 IsActive = true,
-                IsVerified = true // Admins bypass the waiting room
+                IsVerified = true
             };
-
             adminUser.PasswordHash = hasher.HashPassword(adminUser, "KabakalAkoBro123!");
-
             context.Users.Add(adminUser);
-            await context.SaveChangesAsync();
         }
+
+        var kioskEmail = "kiosk@kabakalgym.com";
+        if (!context.Users.Any(u => u.Email == kioskEmail))
+        {
+            var kioskUser = new User
+            {
+                UserId = Guid.NewGuid(),
+                Email = kioskEmail,
+                FirstName = "Gate",
+                LastName = "Kiosk",
+                Role = UserRoles.GateKiosk,
+                IsActive = true,
+                IsVerified = true
+            };
+            kioskUser.PasswordHash = hasher.HashPassword(kioskUser, "KabakalKiosk123!");
+            context.Users.Add(kioskUser);
+        }
+
+        var staffEmail = "staff@kabakalgym.com";
+        if (!context.Users.Any(u => u.Email == staffEmail))
+        {
+            var staffUser = new User
+            {
+                UserId = Guid.NewGuid(),
+                Email = staffEmail,
+                FirstName = "Front",
+                LastName = "Desk",
+                Role = UserRoles.Staff,
+                IsActive = true,
+                IsVerified = true
+            };
+            staffUser.PasswordHash = hasher.HashPassword(staffUser, "KabakalStaff123!");
+            context.Users.Add(staffUser);
+        }
+
+        await context.SaveChangesAsync();
     }
 }
