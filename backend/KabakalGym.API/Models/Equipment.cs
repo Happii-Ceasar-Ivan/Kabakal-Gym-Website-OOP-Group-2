@@ -24,6 +24,9 @@ public class Equipment
 
     public bool IsActive { get; set; } = true;
 
+    [MaxLength(500)]
+    public string? ImageUrl { get; set; }
+
     // ── Navigation ─────────────────────────────────────────────────────────
     public ICollection<Exercise> Exercises { get; set; } = new List<Exercise>();
 }

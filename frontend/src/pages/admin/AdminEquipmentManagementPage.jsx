@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import { getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv, deleteEquipment } from '../../services/api';
+import { getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv, deleteEquipment, uploadEquipmentImage } from '../../services/api';
 import styles from './Admin.module.css';
 
 export default function AdminEquipmentManagementPage() {
@@ -14,7 +14,9 @@ export default function AdminEquipmentManagementPage() {
   const [form, setForm] = useState({ equipmentName: '', equipmentStatus: 'Available', isActive: true });
 
   const fileInputRef = useRef(null);
+  const imageInputRef = useRef(null);
   const [uploading, setUploading] = useState(false);
+  const [activeEqIdForImage, setActiveEqIdForImage] = useState(null);
 
   const fetchEquipment = async () => {
     try {
@@ -100,6 +102,34 @@ export default function AdminEquipmentManagementPage() {
     }
   };
 
+  const triggerImageUpload = (id) => {
+    setActiveEqIdForImage(id);
+    imageInputRef.current.click();
+  };
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file || !activeEqIdForImage) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      alert("Image is too large! Maximum size is 5MB.");
+      e.target.value = '';
+      return;
+    }
+
+    try {
+      setUploading(true);
+      await uploadEquipmentImage(activeEqIdForImage, file);
+      fetchEquipment();
+    } catch (err) {
+      alert(`Image Upload Failed: ${err.message}`);
+    } finally {
+      setUploading(false);
+      setActiveEqIdForImage(null);
+      e.target.value = '';
+    }
+  };
+
   if (loading) return <div>Loading equipment...</div>;
   if (error) return <div style={{color: 'red'}}>Error: {error}</div>;
 
@@ -113,6 +143,13 @@ export default function AdminEquipmentManagementPage() {
             accept=".csv" 
             ref={fileInputRef} 
             onChange={handleFileUpload} 
+            style={{ display: 'none' }} 
+          />
+          <input 
+            type="file" 
+            accept=".jpg,.jpeg,.png" 
+            ref={imageInputRef} 
+            onChange={handleImageUpload} 
             style={{ display: 'none' }} 
           />
           <button 
@@ -132,6 +169,7 @@ export default function AdminEquipmentManagementPage() {
         <table className={styles.table}>
           <thead>
             <tr>
+              <th>Image</th>
               <th>Equipment Name</th>
               <th>Status</th>
               <th>Active</th>
@@ -141,6 +179,15 @@ export default function AdminEquipmentManagementPage() {
           <tbody>
             {equipment.map((eq) => (
               <tr key={eq.equipmentId}>
+                <td>
+                  {eq.imageUrl ? (
+                    <img src={`http://localhost:5252${eq.imageUrl}`} alt={eq.equipmentName} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                  ) : (
+                    <div style={{ width: '50px', height: '50px', backgroundColor: '#333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#888' }}>
+                      No Img
+                    </div>
+                  )}
+                </td>
                 <td>{eq.equipmentName}</td>
                 <td>
                   <span className={`${styles.badge} ${
@@ -153,6 +200,9 @@ export default function AdminEquipmentManagementPage() {
                 </td>
                 <td>{eq.isActive ? '✅ Yes' : '❌ No'}</td>
                 <td>
+                  <button onClick={() => triggerImageUpload(eq.equipmentId)} className={styles.actionBtn} style={{ color: '#60a5fa', marginRight: '1rem' }} disabled={uploading}>
+                    📷 Upload Img
+                  </button>
                   <button onClick={() => openModal(eq)} className={styles.actionBtn}>Edit</button>
                   <button 
                     onClick={() => handleDelete(eq.equipmentId, eq.equipmentName)} 
@@ -166,7 +216,7 @@ export default function AdminEquipmentManagementPage() {
             ))}
             {equipment.length === 0 && (
               <tr>
-                <td colSpan="4" style={{textAlign: 'center', padding: '2rem', color: '#888'}}>
+                <td colSpan="5" style={{textAlign: 'center', padding: '2rem', color: '#888'}}>
                   No equipment found. Add some!
                 </td>
               </tr>

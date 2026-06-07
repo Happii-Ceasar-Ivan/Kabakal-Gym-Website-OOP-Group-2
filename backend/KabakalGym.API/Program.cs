@@ -231,6 +231,8 @@ if (!app.Environment.IsDevelopment())
     app.UseHttpsRedirection();
 }
 
+app.UseStaticFiles();
+
 // CORS MUST go before Rate Limiting, otherwise browser OPTIONS (preflight) requests
 // will get rate-limited and block the frontend completely.
 app.UseCors("KabakalCors");

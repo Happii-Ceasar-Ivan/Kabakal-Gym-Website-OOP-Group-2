@@ -36,7 +36,7 @@ public sealed class EquipmentService : IEquipmentService
             .OrderBy(e => e.EquipmentName)
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(e => new EquipmentDto(e.EquipmentId, e.EquipmentName, e.EquipmentStatus, e.IsActive))
+            .Select(e => new EquipmentDto(e.EquipmentId, e.EquipmentName, e.EquipmentStatus, e.IsActive, e.ImageUrl))
             .ToListAsync();
 
         return ServiceResult<PagedResultDto<EquipmentDto>>.Success(
@@ -49,7 +49,7 @@ public sealed class EquipmentService : IEquipmentService
         var eq = await _context.Equipments.AsNoTracking().FirstOrDefaultAsync(e => e.EquipmentId == id);
         if (eq == null) return ServiceResult<EquipmentDto>.Fail("Equipment not found.");
 
-        return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive));
+        return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive, eq.ImageUrl));
     }
 
     public async Task<ServiceResult<EquipmentDto>> CreateEquipmentAsync(CreateEquipmentDto dto)
@@ -65,7 +65,7 @@ public sealed class EquipmentService : IEquipmentService
         _context.Equipments.Add(eq);
         await _context.SaveChangesAsync();
 
-        return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive));
+        return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive, eq.ImageUrl));
     }
 
     public async Task<ServiceResult<EquipmentDto>> UpdateEquipmentAsync(Guid id, UpdateEquipmentDto dto)
@@ -83,7 +83,7 @@ public sealed class EquipmentService : IEquipmentService
 
         await _context.SaveChangesAsync();
 
-        return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive));
+        return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive, eq.ImageUrl));
     }
 
     public async Task<ServiceResult<bool>> DeleteEquipmentAsync(Guid id)
@@ -217,5 +217,62 @@ public sealed class EquipmentService : IEquipmentService
         }
 
         return ServiceResult<int>.Success(addedCount);
+    }
+
+    public async Task<ServiceResult<string>> UploadEquipmentImageAsync(Guid id, IFormFile file)
+    {
+        var eq = await _context.Equipments.AsTracking().FirstOrDefaultAsync(e => e.EquipmentId == id);
+        if (eq == null) return ServiceResult<string>.Fail("Equipment not found.");
+
+        if (file == null || file.Length == 0)
+            return ServiceResult<string>.Fail("File is empty.");
+
+        if (file.Length > 5 * 1024 * 1024)
+            return ServiceResult<string>.Fail("File size exceeds the 5MB limit.");
+
+        var extension = Path.GetExtension(file.FileName).ToLower();
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+        if (!allowedExtensions.Contains(extension))
+            return ServiceResult<string>.Fail("Invalid file type. Only .jpg, .jpeg, and .png are allowed.");
+
+        // Additional MIME type validation
+        var mimeType = file.ContentType.ToLower();
+        var allowedMimeTypes = new[] { "image/jpeg", "image/png" };
+        if (!allowedMimeTypes.Contains(mimeType))
+            return ServiceResult<string>.Fail("Invalid MIME type.");
+
+        // Secure filename to prevent path traversal
+        var fileName = $"{Guid.NewGuid()}{extension}";
+        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "equipment");
+        
+        if (!Directory.Exists(folderPath))
+            Directory.CreateDirectory(folderPath);
+
+        var filePath = Path.Combine(folderPath, fileName);
+
+        using (var stream = new FileStream(filePath, FileMode.Create))
+        {
+            await file.CopyToAsync(stream);
+        }
+
+        // Delete old image if it exists to save space (Optional but good practice)
+        if (!string.IsNullOrEmpty(eq.ImageUrl))
+        {
+            try
+            {
+                var oldFileName = Path.GetFileName(eq.ImageUrl);
+                var oldFilePath = Path.Combine(folderPath, oldFileName);
+                if (File.Exists(oldFilePath))
+                {
+                    File.Delete(oldFilePath);
+                }
+            }
+            catch { /* Ignore deletion errors */ }
+        }
+
+        eq.ImageUrl = $"/images/equipment/{fileName}";
+        await _context.SaveChangesAsync();
+
+        return ServiceResult<string>.Success(eq.ImageUrl);
     }
 }

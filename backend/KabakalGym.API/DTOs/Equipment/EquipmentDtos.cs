@@ -6,7 +6,8 @@ public record EquipmentDto(
     Guid EquipmentId,
     string EquipmentName,
     string EquipmentStatus,
-    bool IsActive
+    bool IsActive,
+    string? ImageUrl
 );
 
 public class CreateEquipmentDto
@@ -14,6 +15,7 @@ public class CreateEquipmentDto
     [Required]
     [MaxLength(100)]
     public string EquipmentName { get; set; } = string.Empty;
+    public string? ImageUrl { get; set; }
 }
 
 public class UpdateEquipmentDto

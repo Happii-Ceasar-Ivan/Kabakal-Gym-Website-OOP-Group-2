@@ -132,24 +132,41 @@ export async function uploadEquipmentCsv(file) {
   formData.append('file', file);
 
   const token = localStorage.getItem('kabakal_token');
-  const headers = {};
-  if (token) headers['Authorization'] = `Bearer ${token}`;
-
   const response = await fetch(`${API_BASE}/equipment/upload`, {
     method: 'POST',
-    headers,
-    body: formData,
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    body: formData
   });
 
-  let data;
-  try {
-    data = await response.json();
-  } catch {
-    data = null;
-  }
+  const data = await response.json();
 
   if (!response.ok) {
     const errorMessage = data?.error || data?.title || `Upload failed: ${response.status}`;
+    throw new Error(errorMessage);
+  }
+
+  return data;
+}
+
+export async function uploadEquipmentImage(id, file) {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const token = localStorage.getItem('kabakal_token');
+  const response = await fetch(`${API_BASE}/equipment/${id}/image`, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    },
+    body: formData
+  });
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const errorMessage = data?.error || data?.title || `Image upload failed: ${response.status}`;
     throw new Error(errorMessage);
   }
 

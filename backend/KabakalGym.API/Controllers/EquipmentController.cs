@@ -88,4 +88,20 @@ public class EquipmentController : ControllerBase
         }
         return Ok(new { count = result.Data, message = $"Successfully uploaded {result.Data} equipment records." });
     }
+
+    [HttpPost("{id:guid}/image")]
+    [Authorize(Roles = UserRoles.Admin)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> UploadImage(Guid id, IFormFile file)
+    {
+        var result = await _equipmentService.UploadEquipmentImageAsync(id, file);
+        if (!result.IsSuccess)
+        {
+            if (result.ErrorMessage!.Contains("not found")) return NotFound(new { error = result.ErrorMessage });
+            return BadRequest(new { error = result.ErrorMessage });
+        }
+        return Ok(new { imageUrl = result.Data, message = "Image uploaded successfully." });
+    }
 }

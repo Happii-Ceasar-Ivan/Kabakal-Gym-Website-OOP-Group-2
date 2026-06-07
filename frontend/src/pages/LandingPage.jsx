@@ -2,29 +2,31 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import SkeletonLoader from '../components/SkeletonLoader';
-import { wakeupServer } from '../services/api';
-
-const equipmentItems = [
-  { id: 1, name: 'Bench Press', desc: 'Flat & Incline' },
-  { id: 2, name: 'Squat Rack', desc: 'Power Cage' },
-  { id: 3, name: 'Dumbbells', desc: '5–100 lbs' },
-  { id: 4, name: 'Cable Machine', desc: 'Dual Stack' },
-  { id: 5, name: 'Leg Press', desc: '45° Sled' },
-  { id: 6, name: 'Pull-Up Bar', desc: 'Multi-Grip' },
-];
+import { wakeupServer, getEquipment } from '../services/api';
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
+  const [equipmentItems, setEquipmentItems] = useState([]);
 
   useEffect(() => {
     // Silently pre-warm the Azure backend
     wakeupServer();
 
-    // Wait for fonts to load, then show content with a minimum skeleton time
+    // Fetch equipment
+    const fetchEq = async () => {
+      try {
+        const data = await getEquipment(1, 50, ''); // Fetch up to 50
+        // Only show active equipment
+        setEquipmentItems(data.items.filter(e => e.isActive));
+      } catch (err) {
+        console.error("Failed to load equipment:", err);
+      }
+    };
+
     const minDelay = new Promise((r) => setTimeout(r, 1200));
     const fontsReady = document.fonts ? document.fonts.ready : Promise.resolve();
 
-    Promise.all([minDelay, fontsReady]).then(() => setLoading(false));
+    Promise.all([fetchEq(), minDelay, fontsReady]).then(() => setLoading(false));
   }, []);
 
   if (loading) {
@@ -91,17 +93,32 @@ export default function LandingPage() {
         <h2 className={styles.sectionHeading}>Our Iron Arsenal</h2>
         <div className={styles.carouselWrapper}>
           <div className={styles.carouselTrack}>
-            {/* Render items twice for seamless infinite looping */}
-            {[...equipmentItems, ...equipmentItems].map((item, idx) => (
-              <div key={idx} className={styles.arsenalCard}>
-                <div className={styles.arsenalPlaceholder}>
-                  <div className={styles.arsenalCardContent}>
-                    <span className={styles.arsenalName}>{item.name}</span>
-                    <span className={styles.arsenalDesc}>{item.desc}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+            {equipmentItems.length === 0 ? (
+               <div style={{ color: '#888', padding: '2rem' }}>Loading equipment...</div>
+            ) : (
+               [...equipmentItems, ...equipmentItems].map((item, idx) => (
+                 <div key={idx} className={styles.arsenalCard}>
+                   {item.imageUrl ? (
+                     <div 
+                       className={styles.arsenalImageBg} 
+                       style={{ backgroundImage: `url(http://localhost:5252${item.imageUrl})` }}
+                     >
+                       <div className={styles.arsenalCardContentOverlay}>
+                         <span className={styles.arsenalName}>{item.equipmentName}</span>
+                         <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
+                       </div>
+                     </div>
+                   ) : (
+                     <div className={styles.arsenalPlaceholder}>
+                       <div className={styles.arsenalCardContent}>
+                         <span className={styles.arsenalName}>{item.equipmentName}</span>
+                         <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
+                       </div>
+                     </div>
+                   )}
+                 </div>
+               ))
+            )}
           </div>
         </div>
       </section>
