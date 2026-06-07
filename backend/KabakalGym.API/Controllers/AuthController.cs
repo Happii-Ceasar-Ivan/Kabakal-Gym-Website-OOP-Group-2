@@ -140,25 +140,26 @@ public class AuthController : ControllerBase
     }
 
     // ──────────────────────────────────────────────────────────────────────
-    // GET /api/auth/verify
+    // POST /api/auth/verify
     // ──────────────────────────────────────────────────────────────────────
 
     /// <summary>
-    /// Verifies the user's email address using the token sent to their inbox.
+    /// Verifies the user's email address using the OTP sent to their inbox.
     /// </summary>
-    [HttpGet("verify")]
+    [HttpPost("verify")]
+    [EnableRateLimiting("AuthPolicy")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(object), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> VerifyEmail([FromQuery] string token)
+    public async Task<IActionResult> VerifyEmail([FromBody] VerifyEmailRequestDto dto)
     {
-        if (string.IsNullOrWhiteSpace(token))
-            return BadRequest(new { error = "Verification token is required." });
+        if (!ModelState.IsValid)
+            return BadRequest(ModelState);
 
-        var result = await _authService.VerifyEmailAsync(token);
+        var result = await _authService.VerifyEmailAsync(dto.Email, dto.Otp);
 
         if (!result.IsSuccess)
             return BadRequest(new { error = result.ErrorMessage });
 
-        return Ok(new { message = result.Data });
+        return Ok(new { message = "Email verified successfully! You can now log in." });
     }
 }

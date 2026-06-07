@@ -61,9 +61,10 @@ export async function loginUser({ email, password }) {
   });
 }
 
-export async function verifyEmail(token) {
-  return request(`/auth/verify?token=${encodeURIComponent(token)}`, {
-    method: 'GET',
+export async function verifyEmail(email, otp) {
+  return request('/auth/verify', {
+    method: 'POST',
+    body: JSON.stringify({ email, otp }),
   });
 }
 

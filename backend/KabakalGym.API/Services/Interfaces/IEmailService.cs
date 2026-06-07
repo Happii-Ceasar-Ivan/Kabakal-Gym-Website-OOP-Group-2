@@ -17,5 +17,5 @@ public interface IEmailService
     /// <summary>
     /// Sends an email verification link during registration.
     /// </summary>
-    Task SendVerificationEmailAsync(string toEmail, string verificationLink);
+    Task SendVerificationEmailAsync(string toEmail, string otp);
 }

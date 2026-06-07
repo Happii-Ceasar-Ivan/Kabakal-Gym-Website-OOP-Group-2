@@ -14,7 +14,6 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
-  const [successMsg, setSuccessMsg] = useState('');
   const [loading, setLoading] = useState(false);
   const [agreedToTos, setAgreedToTos] = useState(false);
   const [showTos, setShowTos] = useState(false);
@@ -57,7 +56,7 @@ export default function RegisterPage() {
         confirmPassword,
       });
 
-      setSuccessMsg(data.message || 'Registration successful! Please check your email to verify your account before logging in.');
+      navigate(`/verify?email=${encodeURIComponent(email)}`);
     } catch (err) {
       setError(err.message || 'An error occurred during registration.');
     } finally {
@@ -70,17 +69,6 @@ export default function RegisterPage() {
       <h1 className={styles.heading}>Join Kabakal Gym</h1>
       <p className={styles.subheading}>Create your account.</p>
 
-      {successMsg ? (
-        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-          <div style={{ color: '#4caf50', fontSize: '3rem', marginBottom: '1rem' }}>✓</div>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
-            {successMsg}
-          </p>
-          <Link to="/login" className={styles.submitBtn} style={{ textDecoration: 'none', display: 'inline-block' }}>
-            GO TO LOGIN
-          </Link>
-        </div>
-      ) : (
         <form onSubmit={handleSubmit}>
         {error && (
           <div className={styles.requirementsBox} style={{ borderColor: '#ff4444', marginBottom: '1.5rem' }}>
@@ -273,7 +261,6 @@ export default function RegisterPage() {
           Already have an account? <Link to="/login">Sign In</Link>
         </p>
       </form>
-      )}
     </AuthLayout>
   );
 }

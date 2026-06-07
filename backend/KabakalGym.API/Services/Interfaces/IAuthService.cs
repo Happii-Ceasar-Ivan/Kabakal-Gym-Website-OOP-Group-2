@@ -48,5 +48,5 @@ public interface IAuthService
     /// <summary>
     /// Verifies a user's email address using the token sent to them.
     /// </summary>
-    Task<ServiceResult<string>> VerifyEmailAsync(string token);
+    Task<ServiceResult<bool>> VerifyEmailAsync(string email, string otp);
 }

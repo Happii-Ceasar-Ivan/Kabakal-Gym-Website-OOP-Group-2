@@ -75,7 +75,7 @@ public sealed class ResendEmailService : IEmailService
         _logger.LogInformation("Password reset email sent to {Email}", toEmail);
     }
 
-    public async Task SendVerificationEmailAsync(string toEmail, string verificationLink)
+    public async Task SendVerificationEmailAsync(string toEmail, string otp)
     {
         var apiKey = _config["Resend:ApiKey"]
             ?? throw new InvalidOperationException(
@@ -91,11 +91,11 @@ public sealed class ResendEmailService : IEmailService
             html    = $@"
                 <div style='font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 2rem; background: #060407; color: #fff; border-radius: 10px;'>
                     <h2 style='color: #F7F014;'>Welcome to Kabakal Gym!</h2>
-                    <p>We're excited to have you. Please verify your email address to complete your registration and log into your account.</p>
-                    <p>Click the button below to verify. This link expires in <strong>15 minutes</strong>.</p>
-                    <a href='{verificationLink}' style='display: inline-block; margin: 1.5rem 0; padding: 0.8rem 2rem; background: #F7F014; color: #060407; text-decoration: none; border-radius: 8px; font-weight: bold;'>
-                        Verify Email Address
-                    </a>
+                    <p>We're excited to have you. Please enter the following 6-digit code to verify your email address.</p>
+                    <p>This code expires in <strong>15 minutes</strong>.</p>
+                    <div style='margin: 1.5rem 0; padding: 1.5rem; background: #1a1a1a; border-radius: 8px; text-align: center;'>
+                        <span style='font-size: 2rem; font-weight: bold; letter-spacing: 5px; color: #F7F014;'>{otp}</span>
+                    </div>
                     <p style='font-size: 0.85rem; opacity: 0.7;'>If you didn't register at Kabakal Gym, you can safely ignore this email.</p>
                     <hr style='border-color: rgba(255,255,255,0.1); margin: 1.5rem 0;'/>
                     <p style='font-size: 0.75rem; opacity: 0.5;'>&copy; 2026 Kabakal Gym — Digitalizing Local Fitness</p>

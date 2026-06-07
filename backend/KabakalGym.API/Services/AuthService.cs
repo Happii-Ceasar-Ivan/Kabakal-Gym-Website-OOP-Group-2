@@ -82,10 +82,9 @@ public sealed class AuthService : IAuthService
             IsVerified = false
         };
 
-        // 3. Generate Email Verification Token
-        var tokenBytes = RandomNumberGenerator.GetBytes(32);
-        user.VerificationToken = Convert.ToBase64String(tokenBytes)
-            .Replace("+", "-").Replace("/", "_").TrimEnd('=');
+        // 3. Generate 6-digit OTP Verification Code
+        var otp = Random.Shared.Next(100000, 999999).ToString();
+        user.VerificationToken = otp;
         user.VerificationTokenExpiresAt = DateTime.UtcNow.AddMinutes(15);
 
         // Hash AFTER UserId is assigned — PasswordHasher may embed the user ID
@@ -107,12 +106,9 @@ public sealed class AuthService : IAuthService
         _context.Subscriptions.Add(subscription);
         await _context.SaveChangesAsync();
 
-        // 5. Send Verification Email
-        var frontendUrl = _config["FrontendUrl"] ?? "http://localhost:5173";
-        var verifyLink = $"{frontendUrl}/verify?token={user.VerificationToken}";
-        
-        // Fire and forget or await the email service
-        await _emailService.SendVerificationEmailAsync(user.Email, verifyLink);
+        // 5. Send Verification Email with OTP
+        // We can just use the VerifyEmail feature of IEmailService, passing the OTP directly.
+        await _emailService.SendVerificationEmailAsync(user.Email, otp);
 
         return ServiceResult<string>.Success("Registration successful. Please check your email to verify your account.");
     }
@@ -268,20 +264,21 @@ public sealed class AuthService : IAuthService
     // VERIFY EMAIL
     // ──────────────────────────────────────────────────────────────────────
     
-    public async Task<ServiceResult<string>> VerifyEmailAsync(string token)
+    public async Task<ServiceResult<bool>> VerifyEmailAsync(string email, string otp)
     {
+        var normalizedEmail = email.ToLower().Trim();
         var user = await _context.Users
             .AsTracking()
-            .FirstOrDefaultAsync(u => u.VerificationToken == token);
+            .FirstOrDefaultAsync(u => u.Email == normalizedEmail && u.VerificationToken == otp);
 
         if (user == null)
-            return ServiceResult<string>.Fail("Invalid verification token.");
+            return ServiceResult<bool>.Fail("Invalid verification code.");
 
         if (user.IsVerified)
-            return ServiceResult<string>.Fail("Email is already verified.");
+            return ServiceResult<bool>.Fail("Email is already verified.");
 
         if (user.VerificationTokenExpiresAt < DateTime.UtcNow)
-            return ServiceResult<string>.Fail("Verification link has expired. Please register again or contact support.");
+            return ServiceResult<bool>.Fail("Verification code has expired. Please register again.");
 
         user.IsVerified = true;
         user.VerificationToken = null;
@@ -289,7 +286,7 @@ public sealed class AuthService : IAuthService
 
         await _context.SaveChangesAsync();
 
-        return ServiceResult<string>.Success("Email verified successfully! You can now log in.");
+        return ServiceResult<bool>.Success(true);
     }
 
     // ──────────────────────────────────────────────────────────────────────
