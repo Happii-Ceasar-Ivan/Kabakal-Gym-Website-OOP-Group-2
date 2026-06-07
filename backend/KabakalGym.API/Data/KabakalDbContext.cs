@@ -46,7 +46,7 @@ public class KabakalDbContext : DbContext
             // Enforce valid user roles.
             entity.ToTable(t => t.HasCheckConstraint(
                 "CK_Users_Role",
-                $"\"Role\" IN ('{UserRoles.Admin}', '{UserRoles.Member}')"
+                $"\"Role\" IN ('{UserRoles.Admin}', '{UserRoles.Member}', '{UserRoles.Staff}', '{UserRoles.GateKiosk}')"
             ));
         });
 
