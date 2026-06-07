@@ -70,7 +70,7 @@ export default function DashboardPage() {
               onClick={() => setIsScannerOpen(true)}
               style={{
                 padding: '12px 24px',
-                backgroundColor: 'var(--primary-color)',
+                backgroundColor: '#ffcc00',
                 color: '#000',
                 border: 'none',
                 borderRadius: '8px',
