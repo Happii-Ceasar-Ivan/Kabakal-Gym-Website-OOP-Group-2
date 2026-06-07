@@ -63,6 +63,7 @@ public class StaffController : ControllerBase
 
         // 1. Approve the visit
         visit.IsApproved = true;
+        _context.Visits.Update(visit);
 
         // 2. Record the ₱50 Day Pass transaction
         var transaction = new Transaction

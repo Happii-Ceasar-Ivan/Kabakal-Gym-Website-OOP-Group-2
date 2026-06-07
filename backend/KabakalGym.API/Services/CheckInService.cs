@@ -16,7 +16,7 @@ public class CheckInService : ICheckInService
     // Gym Location: 47 Kalayaan B, Batasan Hills, Quezon City
     private const double GYM_LATITUDE = 14.691170847692042;
     private const double GYM_LONGITUDE = 121.08956444186192;
-    private const double MAX_DISTANCE_METERS = 50.0;
+    private const double MAX_DISTANCE_METERS = 15.0;
     
     // 5 minutes per QR code window
     private const int WINDOW_MINUTES = 5;
@@ -97,6 +97,7 @@ public class CheckInService : ICheckInService
     {
         // They are checking out
         visit.CheckOut = DateTime.UtcNow;
+        _context.Visits.Update(visit);
         await _context.SaveChangesAsync();
         
         var duration = visit.CheckOut.Value - visit.CheckIn;
