@@ -72,7 +72,7 @@ export default function StaffDashboard() {
       {/* Navbar */}
       <nav className={styles.navbar}>
         <div className={styles.brand}>
-          <span className={styles.logoText}>KC</span>
+          <img src="/monogram-logo.png" alt="KG Logo" className={styles.logoImg} />
           <h1>Kabakal Gym</h1>
         </div>
         <div className={styles.navRight}>

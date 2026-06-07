@@ -53,7 +53,7 @@ export default function GateKioskPage() {
     <div className={styles.kioskContainer}>
       <nav className={styles.navbar}>
         <div className={styles.brand}>
-          <span className={styles.logoText}>KC</span>
+          <img src="/monogram-logo.png" alt="KG Logo" className={styles.logoImg} />
           <h2>Kabakal Gym</h2>
         </div>
         <button onClick={handleLogout} className={styles.logoutBtn}>

@@ -1,7 +1,7 @@
 .kioskContainer {
   min-height: 100vh;
-  background-color: #0d0d0d;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  font-family: var(--font-body);
   color: #ffffff;
   display: flex;
   flex-direction: column;
@@ -14,7 +14,7 @@
   align-items: center;
   padding: 1.5rem 3rem;
   background-color: transparent;
-  border-bottom: 1px solid rgba(255, 204, 0, 0.1);
+  border-bottom: 1px solid rgba(247, 240, 20, 0.1);
 }
 
 .brand {
@@ -23,17 +23,13 @@
   gap: 1rem;
 }
 
-.logoText {
-  background-color: #ffcc00;
-  color: #000;
-  font-weight: 900;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  font-size: 1.5rem;
-  letter-spacing: -1px;
+.logoImg {
+  height: 40px;
+  width: auto;
 }
 
 .brand h2 {
+  font-family: var(--font-heading);
   font-size: 1.8rem;
   font-weight: 800;
   margin: 0;
@@ -87,10 +83,11 @@
 }
 
 .brandingHeader h1 {
+  font-family: var(--font-heading);
   font-size: 4.5rem;
   font-weight: 900;
   margin: 0 0 0.5rem 0;
-  background: linear-gradient(135deg, #ffcc00, #fff);
+  background: linear-gradient(135deg, var(--accent-yellow), #fff);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -112,7 +109,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  border: 1px solid rgba(255, 204, 0, 0.15);
+  border: 1px solid rgba(247, 240, 20, 0.15);
   backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
@@ -125,7 +122,7 @@
   left: 0;
   width: 100%;
   height: 6px;
-  background: linear-gradient(90deg, #ffcc00, #ff9900);
+  background: linear-gradient(90deg, var(--accent-yellow), #e6df13);
 }
 
 .qrWrapper {
@@ -133,7 +130,7 @@
   padding: 1.5rem;
   border-radius: 20px;
   margin-bottom: 2.5rem;
-  box-shadow: 0 0 30px rgba(255, 204, 0, 0.2);
+  box-shadow: 0 0 30px rgba(247, 240, 20, 0.2);
 }
 
 .timerBox {
@@ -148,7 +145,7 @@
 }
 
 .timerBox strong {
-  color: #ffcc00;
+  color: var(--accent-yellow);
   font-weight: 800;
   font-size: 1.4rem;
   font-variant-numeric: tabular-nums;
@@ -165,9 +162,9 @@
 
 .progressFill {
   height: 100%;
-  background: #ffcc00;
+  background: var(--accent-yellow);
   transition: width 1s linear;
-  box-shadow: 0 0 10px #ffcc00;
+  box-shadow: 0 0 10px var(--accent-yellow);
 }
 
 .loadingBox, .errorBox {
@@ -197,7 +194,7 @@
 .spinner {
   animation: spin 2s linear infinite;
   margin-bottom: 1.5rem;
-  color: #ffcc00;
+  color: var(--accent-yellow);
 }
 
 /* Right Column - Instructions */
@@ -217,10 +214,11 @@
 }
 
 .instructionsPanel h3 {
+  font-family: var(--font-heading);
   font-size: 2rem;
   margin: 0 0 2.5rem 0;
   color: #fff;
-  border-bottom: 2px solid rgba(255, 204, 0, 0.3);
+  border-bottom: 2px solid rgba(247, 240, 20, 0.3);
   padding-bottom: 1rem;
 }
 
@@ -239,9 +237,9 @@
 .stepIcon {
   width: 56px;
   height: 56px;
-  background: rgba(255, 204, 0, 0.1);
-  border: 1px solid rgba(255, 204, 0, 0.2);
-  color: #ffcc00;
+  background: rgba(247, 240, 20, 0.1);
+  border: 1px solid rgba(247, 240, 20, 0.2);
+  color: var(--accent-yellow);
   border-radius: 16px;
   display: flex;
   align-items: center;
@@ -250,6 +248,7 @@
 }
 
 .stepText h4 {
+  font-family: var(--font-heading);
   font-size: 1.3rem;
   color: #fff;
   margin: 0 0 0.4rem 0;

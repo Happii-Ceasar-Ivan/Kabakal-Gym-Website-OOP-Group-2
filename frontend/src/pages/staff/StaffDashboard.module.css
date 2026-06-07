@@ -1,7 +1,7 @@
 .dashboardContainer {
   min-height: 100vh;
-  background-color: #0d0d0d;
-  font-family: 'Inter', sans-serif;
+  background-color: var(--bg-dark);
+  font-family: var(--font-body);
   color: #ffffff;
 }
 
@@ -21,21 +21,17 @@
   gap: 0.75rem;
 }
 
-.logoText {
-  background-color: #ffcc00;
-  color: #000;
-  font-weight: 900;
-  padding: 0.3rem 0.6rem;
-  border-radius: 6px;
-  font-size: 1.2rem;
-  letter-spacing: -1px;
+.logoImg {
+  height: 40px;
+  width: auto;
 }
 
 .brand h1 {
+  font-family: var(--font-heading);
   font-size: 1.4rem;
   font-weight: 800;
   margin: 0;
-  color: #ffcc00;
+  color: var(--accent-yellow);
 }
 
 .navRight {
@@ -56,8 +52,8 @@
 }
 
 .roleBadge {
-  background-color: rgba(255, 204, 0, 0.15);
-  color: #ffcc00;
+  background-color: rgba(247, 240, 20, 0.15);
+  color: var(--accent-yellow);
   padding: 0.2rem 0.6rem;
   border-radius: 12px;
   font-size: 0.75rem;
@@ -97,6 +93,7 @@
 }
 
 .pageHeader h2 {
+  font-family: var(--font-heading);
   font-size: 2.5rem;
   font-weight: 800;
   margin: 0 0 0.5rem 0;
@@ -116,14 +113,14 @@
   align-items: center;
   justify-content: center;
   height: 80vh;
-  color: #ffcc00;
+  color: var(--accent-yellow);
 }
 
 .spinner {
   width: 40px;
   height: 40px;
-  border: 4px solid rgba(255, 204, 0, 0.2);
-  border-top-color: #ffcc00;
+  border: 4px solid rgba(247, 240, 20, 0.2);
+  border-top-color: var(--accent-yellow);
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -186,13 +183,14 @@
 }
 
 .listTitleGroup h3 {
+  font-family: var(--font-heading);
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
 }
 
 .badge {
-  background: #ffcc00;
+  background: var(--accent-yellow);
   color: #000;
   padding: 0.2rem 0.8rem;
   border-radius: 20px;
@@ -230,7 +228,7 @@
 .emptyIconWrapper {
   width: 90px;
   height: 90px;
-  background: rgba(255, 204, 0, 0.1);
+  background: rgba(247, 240, 20, 0.1);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -239,6 +237,7 @@
 }
 
 .emptyState h4 {
+  font-family: var(--font-heading);
   font-size: 1.5rem;
   color: #ddd;
   margin: 0 0 0.5rem 0;
@@ -253,7 +252,7 @@
 
 .card {
   background: #1a1a1a;
-  border: 1px solid rgba(255, 204, 0, 0.15);
+  border: 1px solid rgba(247, 240, 20, 0.15);
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.2s ease;
@@ -265,13 +264,13 @@
   content: '';
   position: absolute;
   top: 0; left: 0; width: 4px; height: 100%;
-  background: #ffcc00;
+  background: var(--accent-yellow);
 }
 
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(255, 204, 0, 0.15);
-  border-color: rgba(255, 204, 0, 0.4);
+  box-shadow: 0 8px 24px rgba(247, 240, 20, 0.15);
+  border-color: rgba(247, 240, 20, 0.4);
 }
 
 .cardHeader {
@@ -284,7 +283,7 @@
 .cardAvatar {
   width: 42px;
   height: 42px;
-  background: #ffcc00;
+  background: var(--accent-yellow);
   color: #000;
   border-radius: 50%;
   display: flex;
@@ -299,6 +298,7 @@
 }
 
 .cardTitle h4 {
+  font-family: var(--font-heading);
   font-size: 1.15rem;
   font-weight: 700;
   margin: 0 0 0.2rem 0;
@@ -327,8 +327,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  background: rgba(255, 204, 0, 0.15);
-  color: #ffcc00;
+  background: rgba(247, 240, 20, 0.15);
+  color: var(--accent-yellow);
   padding: 0.4rem 0.8rem;
   border-radius: 6px;
   font-size: 0.9rem;
@@ -347,7 +347,7 @@
   justify-content: center;
   gap: 0.5rem;
   padding: 0.8rem;
-  background: #ffcc00;
+  background: var(--accent-yellow);
   color: #000;
   border: none;
   border-radius: 8px;
@@ -358,9 +358,9 @@
 }
 
 .acceptBtn:hover {
-  background: #ffdb4d;
+  background: #e6df13;
   transform: scale(1.02);
-  box-shadow: 0 4px 15px rgba(255, 204, 0, 0.4);
+  box-shadow: 0 4px 15px rgba(247, 240, 20, 0.4);
 }
 
 @keyframes pulse {
