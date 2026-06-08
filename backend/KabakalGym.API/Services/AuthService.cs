@@ -118,7 +118,7 @@ public sealed class AuthService : IAuthService
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            return ServiceResult<string>.Fail("Registration failed: Could not send verification email.");
+            return ServiceResult<string>.Fail($"Registration failed: Could not send verification email. Details: {ex.Message}");
         }
     }
 
