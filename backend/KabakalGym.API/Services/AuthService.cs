@@ -102,15 +102,24 @@ public sealed class AuthService : IAuthService
             ExpirationDate = null,
         };
 
-        _context.Users.Add(user);
-        _context.Subscriptions.Add(subscription);
-        await _context.SaveChangesAsync();
+        using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            _context.Users.Add(user);
+            _context.Subscriptions.Add(subscription);
+            await _context.SaveChangesAsync();
 
-        // 5. Send Verification Email with OTP
-        // We can just use the VerifyEmail feature of IEmailService, passing the OTP directly.
-        await _emailService.SendVerificationEmailAsync(user.Email, otp);
+            // 5. Send Verification Email with OTP
+            await _emailService.SendVerificationEmailAsync(user.Email, otp);
 
-        return ServiceResult<string>.Success("Registration successful. Please check your email to verify your account.");
+            await transaction.CommitAsync();
+            return ServiceResult<string>.Success("Registration successful. Please check your email to verify your account.");
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            return ServiceResult<string>.Fail("Registration failed: Could not send verification email. (Note: On Resend free tier, you can only send to your verified developer email address.)");
+        }
     }
 
     // ──────────────────────────────────────────────────────────────────────
@@ -207,7 +216,16 @@ public sealed class AuthService : IAuthService
         var frontendUrl = _config["FrontendUrl"] ?? "http://localhost:5173";
         var resetLink = $"{frontendUrl}/reset-password?token={token}";
 
-        await _emailService.SendPasswordResetEmailAsync(normalizedEmail, resetLink);
+        try
+        {
+            await _emailService.SendPasswordResetEmailAsync(normalizedEmail, resetLink);
+        }
+        catch (Exception)
+        {
+            _context.PasswordResets.Remove(passwordReset);
+            await _context.SaveChangesAsync();
+            // Still return success to prevent enumeration leakage
+        }
 
         return ServiceResult<string>.Success(
             "If an account with that email exists, a reset link has been sent."
