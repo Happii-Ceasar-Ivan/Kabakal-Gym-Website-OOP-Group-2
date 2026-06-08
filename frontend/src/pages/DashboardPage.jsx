@@ -17,7 +17,7 @@ export default function DashboardPage() {
     navigate('/login');
   };
 
-  // If no user is logged in, redirect to login
+  // If no user is logged in, redirect to log in in 
   if (!user) {
     navigate('/login');
     return null;
@@ -64,9 +64,9 @@ export default function DashboardPage() {
               <span className={styles.roleBadge}>{user.role}</span>
             </div>
           </div>
-          
+
           <div style={{ marginTop: '2rem', textAlign: 'center' }}>
-            <button 
+            <button
               onClick={() => setIsScannerOpen(true)}
               style={{
                 padding: '12px 24px',
@@ -89,7 +89,7 @@ export default function DashboardPage() {
 
           {user.role === 'Admin' && (
             <div style={{ marginTop: '20px', textAlign: 'center' }}>
-              <button 
+              <button
                 onClick={() => navigate('/admin/members')}
                 style={{
                   padding: '10px 20px',
@@ -108,9 +108,9 @@ export default function DashboardPage() {
         </div>
       </main>
 
-      <QRScannerModal 
-        isOpen={isScannerOpen} 
-        onClose={() => setIsScannerOpen(false)} 
+      <QRScannerModal
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
       />
     </div>
   );
