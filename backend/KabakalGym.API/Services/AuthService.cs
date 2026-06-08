@@ -118,7 +118,7 @@ public sealed class AuthService : IAuthService
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
-            return ServiceResult<string>.Fail("Registration failed: Could not send verification email. (Note: On Resend free tier, you can only send to your verified developer email address.)");
+            return ServiceResult<string>.Fail("Registration failed: Could not send verification email.");
         }
     }
 

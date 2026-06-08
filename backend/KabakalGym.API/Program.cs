@@ -53,7 +53,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 // ── Email Service (Resend) ──
-builder.Services.AddHttpClient<IEmailService, ResendEmailService>();
+builder.Services.AddHttpClient<IEmailService, BrevoEmailService>();
 
 // ── Sprint 3: Subscription & Transaction Services ──
 builder.Services.AddScoped<ISubscriptionService, SubscriptionService>();

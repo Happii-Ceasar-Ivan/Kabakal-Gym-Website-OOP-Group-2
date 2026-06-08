@@ -6,23 +6,19 @@ using KabakalGym.API.Services.Interfaces;
 namespace KabakalGym.API.Services;
 
 /// <summary>
-/// Sends emails via the Resend REST API (https://resend.com/docs/api-reference).
+/// Sends emails via the Brevo REST API (https://developers.brevo.com/reference/sendtransacemail).
 /// Uses a typed HttpClient injected via DI — no third-party SDK required.
-///
-/// NOTE: Until a custom domain is verified on Resend, the free tier only
-/// allows sending to the email address used to create the Resend account.
-/// The "from" address must be "onboarding@resend.dev".
 /// </summary>
-public sealed class ResendEmailService : IEmailService
+public sealed class BrevoEmailService : IEmailService
 {
     private readonly HttpClient    _httpClient;
     private readonly IConfiguration _config;
-    private readonly ILogger<ResendEmailService> _logger;
+    private readonly ILogger<BrevoEmailService> _logger;
 
-    public ResendEmailService(
+    public BrevoEmailService(
         HttpClient                    httpClient,
         IConfiguration                config,
-        ILogger<ResendEmailService>   logger)
+        ILogger<BrevoEmailService>    logger)
     {
         _httpClient = httpClient;
         _config     = config;
@@ -31,18 +27,19 @@ public sealed class ResendEmailService : IEmailService
 
     public async Task SendPasswordResetEmailAsync(string toEmail, string resetLink)
     {
-        var apiKey = _config["Resend:ApiKey"]
-            ?? throw new InvalidOperationException(
-                "[FATAL] Resend API key is not configured. " +
-                "Set it via: dotnet user-secrets set \"Resend:ApiKey\" \"re_...\""
-            );
+        var apiKey = _config["Brevo:ApiKey"]
+            ?? throw new InvalidOperationException("[FATAL] Brevo API key is not configured.");
+
+        // Brevo requires the sender email to be verified in their dashboard.
+        // Fallback to a default if not set in config.
+        var senderEmail = _config["Brevo:SenderEmail"] ?? "no-reply@kabakalgym.com";
 
         var payload = new
         {
-            from    = "Kabakal Gym <onboarding@resend.dev>",
-            to      = new[] { toEmail },
-            subject = "Reset Your Kabakal Gym Password",
-            html    = $@"
+            sender      = new { name = "Kabakal Gym", email = senderEmail },
+            to          = new[] { new { email = toEmail } },
+            subject     = "Reset Your Kabakal Gym Password",
+            htmlContent = $@"
                 <div style='font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 2rem; background: #060407; color: #fff; border-radius: 10px;'>
                     <h2 style='color: #F7F014;'>Password Reset Request</h2>
                     <p>We received a request to reset your Kabakal Gym account password.</p>
@@ -57,38 +54,37 @@ public sealed class ResendEmailService : IEmailService
         };
 
         var json = JsonSerializer.Serialize(payload);
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails")
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.brevo.com/v3/smtp/email")
         {
             Content = new StringContent(json, Encoding.UTF8, "application/json")
         };
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        request.Headers.Add("api-key", apiKey);
 
         var response = await _httpClient.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {
             var body = await response.Content.ReadAsStringAsync();
-            _logger.LogError("Resend API error {StatusCode}: {Body}", response.StatusCode, body);
-            throw new InvalidOperationException($"Failed to send password reset email. Resend returned {response.StatusCode}.");
+            _logger.LogError("Brevo API error {StatusCode}: {Body}", response.StatusCode, body);
+            throw new InvalidOperationException($"Failed to send password reset email. Brevo returned {response.StatusCode}.");
         }
 
-        _logger.LogInformation("Password reset email sent to {Email}", toEmail);
+        _logger.LogInformation("Password reset email sent to {Email} via Brevo", toEmail);
     }
 
     public async Task SendVerificationEmailAsync(string toEmail, string otp)
     {
-        var apiKey = _config["Resend:ApiKey"]
-            ?? throw new InvalidOperationException(
-                "[FATAL] Resend API key is not configured. " +
-                "Set it via: dotnet user-secrets set \"Resend:ApiKey\" \"re_...\""
-            );
+        var apiKey = _config["Brevo:ApiKey"]
+            ?? throw new InvalidOperationException("[FATAL] Brevo API key is not configured.");
+
+        var senderEmail = _config["Brevo:SenderEmail"] ?? "no-reply@kabakalgym.com";
 
         var payload = new
         {
-            from    = "Kabakal Gym <onboarding@resend.dev>",
-            to      = new[] { toEmail },
-            subject = "Verify Your Kabakal Gym Account",
-            html    = $@"
+            sender      = new { name = "Kabakal Gym", email = senderEmail },
+            to          = new[] { new { email = toEmail } },
+            subject     = "Verify Your Kabakal Gym Account",
+            htmlContent = $@"
                 <div style='font-family: sans-serif; max-width: 500px; margin: 0 auto; padding: 2rem; background: #060407; color: #fff; border-radius: 10px;'>
                     <h2 style='color: #F7F014;'>Welcome to Kabakal Gym!</h2>
                     <p>We're excited to have you. Please enter the following 6-digit code to verify your email address.</p>
@@ -103,21 +99,21 @@ public sealed class ResendEmailService : IEmailService
         };
 
         var json = JsonSerializer.Serialize(payload);
-        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.resend.com/emails")
+        var request = new HttpRequestMessage(HttpMethod.Post, "https://api.brevo.com/v3/smtp/email")
         {
             Content = new StringContent(json, Encoding.UTF8, "application/json")
         };
-        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+        request.Headers.Add("api-key", apiKey);
 
         var response = await _httpClient.SendAsync(request);
 
         if (!response.IsSuccessStatusCode)
         {
             var body = await response.Content.ReadAsStringAsync();
-            _logger.LogError("Resend API error {StatusCode}: {Body}", response.StatusCode, body);
-            throw new InvalidOperationException($"Failed to send verification email. Resend returned {response.StatusCode}.");
+            _logger.LogError("Brevo API error {StatusCode}: {Body}", response.StatusCode, body);
+            throw new InvalidOperationException($"Failed to send verification email. Brevo returned {response.StatusCode}.");
         }
 
-        _logger.LogInformation("Verification email sent to {Email}", toEmail);
+        _logger.LogInformation("Verification email sent to {Email} via Brevo", toEmail);
     }
 }
