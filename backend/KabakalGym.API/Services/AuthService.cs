@@ -102,22 +102,22 @@ public sealed class AuthService : IAuthService
             ExpirationDate = null,
         };
 
-        using var transaction = await _context.Database.BeginTransactionAsync();
+        _context.Users.Add(user);
+        _context.Subscriptions.Add(subscription);
+        await _context.SaveChangesAsync();
+
         try
         {
-            _context.Users.Add(user);
-            _context.Subscriptions.Add(subscription);
-            await _context.SaveChangesAsync();
-
             // 5. Send Verification Email with OTP
             await _emailService.SendVerificationEmailAsync(user.Email, otp);
 
-            await transaction.CommitAsync();
             return ServiceResult<string>.Success("Registration successful. Please check your email to verify your account.");
         }
         catch (Exception ex)
         {
-            await transaction.RollbackAsync();
+            _context.Users.Remove(user);
+            _context.Subscriptions.Remove(subscription);
+            await _context.SaveChangesAsync();
             return ServiceResult<string>.Fail($"Registration failed: Could not send verification email. Details: {ex.Message}");
         }
     }
