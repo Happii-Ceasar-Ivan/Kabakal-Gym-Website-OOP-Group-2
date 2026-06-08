@@ -91,12 +91,16 @@ public sealed class EquipmentService : IEquipmentService
         var eq = await _context.Equipments.AsTracking().FirstOrDefaultAsync(e => e.EquipmentId == id);
         if (eq == null) return ServiceResult<bool>.Fail("Equipment not found.");
 
-        // Soft delete
-        eq.IsActive = false;
-        eq.EquipmentStatus = "Unavailable";
-        await _context.SaveChangesAsync();
-
-        return ServiceResult<bool>.Success(true);
+        try
+        {
+            _context.Equipments.Remove(eq);
+            await _context.SaveChangesAsync();
+            return ServiceResult<bool>.Success(true);
+        }
+        catch (DbUpdateException)
+        {
+            return ServiceResult<bool>.Fail("Cannot delete this equipment because it is linked to one or more exercises. Please edit it and set it to Inactive instead.");
+        }
     }
 
     public async Task<ServiceResult<int>> UploadEquipmentCsvAsync(IFormFile file)
