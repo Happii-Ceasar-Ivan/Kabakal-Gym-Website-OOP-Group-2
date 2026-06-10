@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using KabakalGym.API.Common;
 using KabakalGym.API.Data;
 using KabakalGym.API.DTOs.Common;
@@ -11,10 +12,12 @@ namespace KabakalGym.API.Services;
 public sealed class EquipmentService : IEquipmentService
 {
     private readonly KabakalDbContext _context;
+    private readonly IMemoryCache _cache;
 
-    public EquipmentService(KabakalDbContext context)
+    public EquipmentService(KabakalDbContext context, IMemoryCache cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<ServiceResult<PagedResultDto<EquipmentDto>>> GetAllEquipmentAsync(int page, int pageSize, string? search)
@@ -22,7 +25,23 @@ public sealed class EquipmentService : IEquipmentService
         page = Math.Max(1, page);
         pageSize = Math.Clamp(pageSize, 1, 50);
 
-        var query = _context.Equipments.AsNoTracking();
+        const string cacheKey = "AllEquipmentList";
+
+        if (!_cache.TryGetValue(cacheKey, out List<EquipmentDto>? allEquipment))
+        {
+            allEquipment = await _context.Equipments
+                .AsNoTracking()
+                .OrderBy(e => e.EquipmentName)
+                .Select(e => new EquipmentDto(e.EquipmentId, e.EquipmentName, e.EquipmentStatus, e.IsActive, e.ImageUrl))
+                .ToListAsync();
+
+            var cacheOptions = new MemoryCacheEntryOptions()
+                .SetAbsoluteExpiration(TimeSpan.FromMinutes(10));
+            
+            _cache.Set(cacheKey, allEquipment, cacheOptions);
+        }
+
+        var query = allEquipment!.AsEnumerable();
 
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -30,14 +49,12 @@ public sealed class EquipmentService : IEquipmentService
             query = query.Where(e => e.EquipmentName.ToLower().Contains(searchLower));
         }
 
-        var totalCount = await query.CountAsync();
+        var totalCount = query.Count();
 
-        var items = await query
-            .OrderBy(e => e.EquipmentName)
+        var items = query
             .Skip((page - 1) * pageSize)
             .Take(pageSize)
-            .Select(e => new EquipmentDto(e.EquipmentId, e.EquipmentName, e.EquipmentStatus, e.IsActive, e.ImageUrl))
-            .ToListAsync();
+            .ToList();
 
         return ServiceResult<PagedResultDto<EquipmentDto>>.Success(
             PagedResultDto<EquipmentDto>.Create(items, totalCount, page, pageSize)
@@ -64,6 +81,7 @@ public sealed class EquipmentService : IEquipmentService
 
         _context.Equipments.Add(eq);
         await _context.SaveChangesAsync();
+        _cache.Remove("AllEquipmentList");
 
         return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive, eq.ImageUrl));
     }
@@ -82,6 +100,7 @@ public sealed class EquipmentService : IEquipmentService
         eq.IsActive = dto.IsActive;
 
         await _context.SaveChangesAsync();
+        _cache.Remove("AllEquipmentList");
 
         return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive, eq.ImageUrl));
     }
@@ -95,6 +114,7 @@ public sealed class EquipmentService : IEquipmentService
         {
             _context.Equipments.Remove(eq);
             await _context.SaveChangesAsync();
+            _cache.Remove("AllEquipmentList");
             return ServiceResult<bool>.Success(true);
         }
         catch (DbUpdateException)
@@ -218,6 +238,7 @@ public sealed class EquipmentService : IEquipmentService
             // By using EF Core AddRange, we are protected from SQL Injection automatically
             _context.Equipments.AddRange(newEquipments);
             await _context.SaveChangesAsync();
+            _cache.Remove("AllEquipmentList");
         }
 
         return ServiceResult<int>.Success(addedCount);
@@ -276,6 +297,7 @@ public sealed class EquipmentService : IEquipmentService
 
         eq.ImageUrl = $"/images/equipment/{fileName}";
         await _context.SaveChangesAsync();
+        _cache.Remove("AllEquipmentList");
 
         return ServiceResult<string>.Success(eq.ImageUrl);
     }

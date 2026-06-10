@@ -102,6 +102,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// ── CACHING ────────────────────────────────────────────────────────────────
+builder.Services.AddMemoryCache();
+builder.Services.AddResponseCaching();
+
 // ── 2. RATE LIMITING (built-in .NET 8 middleware — no extra NuGet) ─────────
 builder.Services.AddRateLimiter(options =>
 {
@@ -239,6 +243,7 @@ app.UseStaticFiles();
 // CORS MUST go before Rate Limiting, otherwise browser OPTIONS (preflight) requests
 // will get rate-limited and block the frontend completely.
 app.UseCors("KabakalCors");
+app.UseResponseCaching();
 app.UseRateLimiter();           
 app.UseAuthentication();        // Wired up in Sprint 2 (JWT + Identity)
 app.UseAuthorization();
