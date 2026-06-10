@@ -113,12 +113,12 @@ public sealed class AuthService : IAuthService
 
             return ServiceResult<string>.Success("Registration successful. Please check your email to verify your account.");
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             _context.Users.Remove(user);
             _context.Subscriptions.Remove(subscription);
             await _context.SaveChangesAsync();
-            return ServiceResult<string>.Fail($"Registration failed: Could not send verification email. Details: {ex.Message}");
+            return ServiceResult<string>.Fail("Registration failed: Could not send verification email. Please try again later.");
         }
     }
 
