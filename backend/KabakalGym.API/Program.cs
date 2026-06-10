@@ -27,7 +27,7 @@ var connectionString = builder.Configuration.GetConnectionString("NeonPostgres")
         "Set the CONNECTIONSTRINGS__NEONPOSTGRES environment variable on the server."
     );
 
-builder.Services.AddDbContext<KabakalDbContext>(options =>
+builder.Services.AddDbContextPool<KabakalDbContext>(options =>
     options
         .UseNpgsql(connectionString, npgsql =>
         {
@@ -102,9 +102,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
-// ── CACHING ────────────────────────────────────────────────────────────────
+// ── CACHING & COMPRESSION ────────────────────────────────────────────────────
 builder.Services.AddMemoryCache();
 builder.Services.AddResponseCaching();
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
 
 // ── 2. RATE LIMITING (built-in .NET 8 middleware — no extra NuGet) ─────────
 builder.Services.AddRateLimiter(options =>
@@ -235,14 +239,25 @@ else
 // HTTPS port and break frontend fetch() calls.
 if (!app.Environment.IsDevelopment())
 {
+    app.UseHsts();
     app.UseHttpsRedirection();
 }
+
+// ── SECURITY HEADERS ───────────────────────────────────────────────────────
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Append("X-Frame-Options", "DENY");
+    context.Response.Headers.Append("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
+    await next();
+});
 
 app.UseStaticFiles();
 
 // CORS MUST go before Rate Limiting, otherwise browser OPTIONS (preflight) requests
 // will get rate-limited and block the frontend completely.
 app.UseCors("KabakalCors");
+app.UseResponseCompression();
 app.UseResponseCaching();
 app.UseRateLimiter();           
 app.UseAuthentication();        // Wired up in Sprint 2 (JWT + Identity)
