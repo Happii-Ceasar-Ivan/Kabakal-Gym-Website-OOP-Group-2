@@ -22,11 +22,7 @@ public class KabakalDbContext : DbContext
     public DbSet<Equipment>    Equipments    => Set<Equipment>();
     public DbSet<PasswordReset> PasswordResets => Set<PasswordReset>();
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        // Disable lazy loading. Navigation properties must use .Include().
-        optionsBuilder.UseLazyLoadingProxies(false);
-    }
+
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
