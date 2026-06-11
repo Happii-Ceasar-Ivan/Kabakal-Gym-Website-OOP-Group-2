@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getPendingCheckins, approveCheckin } from '../../services/api';
+import { toast } from 'react-hot-toast';
 import { CheckCircle, Clock, AlertTriangle, LogOut, User, Check, DollarSign } from 'lucide-react';
 import styles from './StaffDashboard.module.css';
 
@@ -8,7 +9,6 @@ export default function StaffDashboard() {
   const [pendingVisits, setPendingVisits] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [actionMessage, setActionMessage] = useState('');
   const navigate = useNavigate();
 
   const userStr = localStorage.getItem('kabakal_user');
@@ -36,13 +36,11 @@ export default function StaffDashboard() {
   const handleApprove = async (visitId, name) => {
     try {
       await approveCheckin(visitId);
-      setActionMessage(`Approved ${name} and recorded ₱50 cash payment.`);
+      toast.success(`Approved ${name} and recorded ₱50 cash payment.`);
       fetchPending(); // Immediate refresh
-      
-      setTimeout(() => setActionMessage(''), 5000);
     } catch (err) {
       console.error(err);
-      alert(err.message || 'Failed to approve check-in.');
+      toast.error(err.message || 'Failed to approve check-in.');
     }
   };
 
@@ -94,7 +92,6 @@ export default function StaffDashboard() {
         </header>
 
         {error && <div className={styles.errorBanner}><AlertTriangle size={20}/> {error}</div>}
-        {actionMessage && <div className={styles.successBanner}><CheckCircle size={20}/> {actionMessage}</div>}
 
         <div className={styles.listContainer}>
           <div className={styles.listHeader}>

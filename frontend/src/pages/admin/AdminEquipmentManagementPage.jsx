@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { BASE_URL, getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv, deleteEquipment, uploadEquipmentImage } from '../../services/api';
+import { toast } from 'react-hot-toast';
 import styles from './Admin.module.css';
 
 export default function AdminEquipmentManagementPage() {
@@ -58,13 +59,15 @@ export default function AdminEquipmentManagementPage() {
     try {
       if (editingEq) {
         await updateEquipment(editingEq.equipmentId, form);
+        toast.success('Equipment updated successfully!');
       } else {
         await createEquipment({ equipmentName: form.equipmentName });
+        toast.success('Equipment added successfully!');
       }
       closeModal();
       fetchEquipment();
     } catch (err) {
-      alert(`Operation failed: ${err.message}`);
+      toast.error(`Operation failed: ${err.message}`);
     }
   };
 
@@ -73,9 +76,10 @@ export default function AdminEquipmentManagementPage() {
     
     try {
       await deleteEquipment(eqId);
+      toast.success('Equipment deleted successfully.');
       fetchEquipment();
     } catch (err) {
-      alert(`Failed to delete equipment: ${err.message}`);
+      toast.error(`Failed to delete equipment: ${err.message}`);
     }
   };
 
@@ -84,7 +88,7 @@ export default function AdminEquipmentManagementPage() {
     if (!file) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("File is too large! Maximum size is 5MB.");
+      toast.error("File is too large! Maximum size is 5MB.");
       e.target.value = '';
       return;
     }
@@ -92,10 +96,10 @@ export default function AdminEquipmentManagementPage() {
     try {
       setUploading(true);
       const result = await uploadEquipmentCsv(file);
-      alert(`Successfully uploaded ${result.count} equipment records!`);
+      toast.success(`Successfully uploaded ${result.count} equipment records!`);
       fetchEquipment();
     } catch (err) {
-      alert(`CSV Upload Failed: ${err.message}`);
+      toast.error(`CSV Upload Failed: ${err.message}`);
     } finally {
       setUploading(false);
       e.target.value = ''; // Reset file input
@@ -112,7 +116,7 @@ export default function AdminEquipmentManagementPage() {
     if (!file || !activeEqIdForImage) return;
 
     if (file.size > 5 * 1024 * 1024) {
-      alert("Image is too large! Maximum size is 5MB.");
+      toast.error("Image is too large! Maximum size is 5MB.");
       e.target.value = '';
       return;
     }
@@ -120,9 +124,10 @@ export default function AdminEquipmentManagementPage() {
     try {
       setUploading(true);
       await uploadEquipmentImage(activeEqIdForImage, file);
+      toast.success("Image uploaded successfully!");
       fetchEquipment();
     } catch (err) {
-      alert(`Image Upload Failed: ${err.message}`);
+      toast.error(`Image Upload Failed: ${err.message}`);
     } finally {
       setUploading(false);
       setActiveEqIdForImage(null);

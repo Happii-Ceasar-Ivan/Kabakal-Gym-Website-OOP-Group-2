@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { getMembers, updateMember } from '../../services/api';
+import { toast } from 'react-hot-toast';
 import styles from './Admin.module.css';
 
 export default function AdminMemberManagementPage() {
@@ -44,10 +45,11 @@ export default function AdminMemberManagementPage() {
     e.preventDefault();
     try {
       await updateMember(editingMember.userId, editForm);
+      toast.success('Member updated successfully!');
       closeEditModal();
       fetchMembers();
     } catch (err) {
-      alert(`Update failed: ${err.message}`);
+      toast.error(`Update failed: ${err.message}`);
     }
   };
 
