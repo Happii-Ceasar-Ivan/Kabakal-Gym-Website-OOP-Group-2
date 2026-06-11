@@ -135,6 +135,11 @@ export async function getQrPayload() {
   return request('/checkin/qr', { method: 'GET' });
 }
 
+export async function getLiveCapacity() {
+  const res = await request('/checkin/capacity', { method: 'GET' });
+  return res.capacity;
+}
+
 export async function verifyCheckIn(qrPayload, latitude, longitude) {
   return request('/checkin/verify', {
     method: 'POST',

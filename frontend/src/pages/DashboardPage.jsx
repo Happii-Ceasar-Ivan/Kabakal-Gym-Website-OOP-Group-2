@@ -1,11 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getLiveCapacity } from '../services/api';
 import QRScannerModal from './kiosk/QRScannerModal';
 import styles from './Dashboard.module.css';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
   const [isScannerOpen, setIsScannerOpen] = useState(false);
+  const [capacity, setCapacity] = useState(0);
+
+  useEffect(() => {
+    // Fetch immediately
+    getLiveCapacity().then(setCapacity).catch(console.error);
+
+    // Poll every 30 seconds
+    const interval = setInterval(() => {
+      getLiveCapacity().then(setCapacity).catch(console.error);
+    }, 30000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   // Read user info from localStorage
   const userRaw = localStorage.getItem('kabakal_user');
@@ -30,6 +44,10 @@ export default function DashboardPage() {
         <div className={styles.logoSection}>
           <img src="/monogram-logo.png" alt="Kabakal Gym" className={styles.logo} />
           <h1 className={styles.brandName}>Kabakal Gym</h1>
+        </div>
+        <div className={styles.capacityIndicator}>
+          <span className={styles.pulseDot}></span>
+          <span className={styles.capacityText}>{capacity} members at the gym</span>
         </div>
         <div className={styles.userSection}>
           <span className={styles.greeting}>

@@ -1,6 +1,7 @@
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using KabakalGym.API.Data;
 using KabakalGym.API.Models;
 using KabakalGym.API.Common;
@@ -12,6 +13,7 @@ public class CheckInService : ICheckInService
 {
     private readonly KabakalDbContext _context;
     private readonly IConfiguration _config;
+    private readonly IMemoryCache _cache;
     
     // Gym Location: 47 Kalayaan B, Batasan Hills, Quezon City
     private const double GYM_LATITUDE = 14.691170847692042;
@@ -21,15 +23,32 @@ public class CheckInService : ICheckInService
     // 5 minutes per QR code window
     private const int WINDOW_MINUTES = 5;
 
-    public CheckInService(KabakalDbContext context, IConfiguration config)
+    public CheckInService(KabakalDbContext context, IConfiguration config, IMemoryCache cache)
     {
         _context = context;
         _config = config;
+        _cache = cache;
     }
 
     public string GenerateQrPayload()
     {
         return GeneratePayloadForWindow(GetCurrentTimeWindow());
+    }
+
+    public async Task<int> GetCurrentCapacityAsync()
+    {
+        // Try to get the capacity from the cache first
+        if (_cache.TryGetValue("LiveCapacity", out int capacity))
+        {
+            return capacity;
+        }
+
+        // If not in cache, query the database
+        capacity = await _context.Visits.CountAsync(v => v.CheckOut == null && v.IsApproved);
+        
+        // Store it indefinitely until someone checks in/out
+        _cache.Set("LiveCapacity", capacity);
+        return capacity;
     }
 
     public async Task<ServiceResult<string>> VerifyCheckInAsync(Guid userId, string qrPayload, double latitude, double longitude)
@@ -87,6 +106,9 @@ public class CheckInService : ICheckInService
         _context.Visits.Add(visit);
         await _context.SaveChangesAsync();
 
+        // Invalidate capacity cache so next caller re-calculates
+        _cache.Remove("LiveCapacity");
+
         if (hasActiveSub)
             return ServiceResult<string>.Success("Check-in successful! Welcome to Kabakal Gym.");
         else
@@ -99,6 +121,9 @@ public class CheckInService : ICheckInService
         visit.CheckOut = DateTime.UtcNow;
         _context.Visits.Update(visit);
         await _context.SaveChangesAsync();
+        
+        // Invalidate capacity cache so next caller re-calculates
+        _cache.Remove("LiveCapacity");
         
         var duration = visit.CheckOut.Value - visit.CheckIn;
         string durationStr = $"{(int)duration.TotalHours}h {duration.Minutes}m";

@@ -13,4 +13,9 @@ public interface ICheckInService
     /// Verifies the scanned payload, enforces the geofence, checks subscription, and logs the Visit.
     /// </summary>
     Task<ServiceResult<string>> VerifyCheckInAsync(Guid userId, string qrPayload, double latitude, double longitude);
+
+    /// <summary>
+    /// Gets the live capacity of the gym, using caching to eliminate database queries.
+    /// </summary>
+    Task<int> GetCurrentCapacityAsync();
 }

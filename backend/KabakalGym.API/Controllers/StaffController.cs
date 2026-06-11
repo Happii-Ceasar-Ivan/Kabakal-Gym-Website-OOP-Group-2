@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using KabakalGym.API.Data;
 using KabakalGym.API.Models;
 using System.Security.Claims;
@@ -13,10 +14,12 @@ namespace KabakalGym.API.Controllers;
 public class StaffController : ControllerBase
 {
     private readonly KabakalDbContext _context;
+    private readonly IMemoryCache _cache;
 
-    public StaffController(KabakalDbContext context)
+    public StaffController(KabakalDbContext context, IMemoryCache cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     /// <summary>
@@ -76,6 +79,9 @@ public class StaffController : ControllerBase
 
         _context.Transactions.Add(transaction);
         await _context.SaveChangesAsync();
+
+        // Invalidate capacity cache so the live counter updates
+        _cache.Remove("LiveCapacity");
 
         return Ok(new { message = $"Successfully approved check-in for {visit.User.FirstName} {visit.User.LastName} and recorded ₱50 cash payment." });
     }

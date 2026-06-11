@@ -31,6 +31,38 @@
   font-size: 1.3rem;
 }
 
+.capacityIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(247, 240, 20, 0.1);
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  border: 1px solid rgba(247, 240, 20, 0.2);
+}
+
+.pulseDot {
+  width: 8px;
+  height: 8px;
+  background-color: #00ff00;
+  border-radius: 50%;
+  box-shadow: 0 0 8px #00ff00;
+  animation: pulse 2s infinite;
+}
+
+.capacityText {
+  color: #00ff00;
+  font-family: var(--font-heading);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; box-shadow: 0 0 8px #00ff00; }
+  50% { opacity: 0.5; box-shadow: 0 0 2px #00ff00; }
+  100% { opacity: 1; box-shadow: 0 0 8px #00ff00; }
+}
+
 .userSection {
   display: flex;
   align-items: center;

@@ -52,4 +52,15 @@ public class CheckInController : ControllerBase
 
         return Ok(new { message = result.Data });
     }
+
+    /// <summary>
+    /// Gets the current live capacity of the gym (number of checked-in users).
+    /// </summary>
+    [HttpGet("capacity")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetLiveCapacity()
+    {
+        int capacity = await _checkInService.GetCurrentCapacityAsync();
+        return Ok(new { capacity });
+    }
 }
