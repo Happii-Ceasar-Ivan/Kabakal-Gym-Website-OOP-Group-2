@@ -207,6 +207,8 @@
 .carouselWrapper {
   overflow: hidden;
   width: 100%;
+  padding: 1rem 0;
+  clip-path: ellipse(120% 90% at 50% 50%);
   mask-image: linear-gradient(
     to right,
     transparent 0%,
@@ -235,6 +237,12 @@
   animation-play-state: paused;
 }
 
+.carouselTrack:hover .arsenalCard {
+  opacity: 0.4;
+  filter: grayscale(60%);
+  transform: scale(0.95);
+}
+
 @keyframes scrollCarousel {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
@@ -242,19 +250,22 @@
 
 .arsenalCard {
   flex-shrink: 0;
-  width: 280px;
+  width: 320px;
   border-radius: 15px;
   overflow: hidden;
-  aspect-ratio: 4/3;
+  aspect-ratio: 4/5;
   background-color: #1a1a1a;
   border: 1px solid rgba(247, 240, 20, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.arsenalCard:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 10px 20px rgba(247, 240, 20, 0.2);
+.carouselTrack:hover .arsenalCard:hover {
+  opacity: 1;
+  filter: grayscale(0%);
+  transform: scale(1.05) translateY(-10px);
+  box-shadow: 0 15px 30px rgba(247, 240, 20, 0.3);
   border-color: var(--accent-yellow);
+  z-index: 10;
 }
 
 .arsenalPlaceholder {
@@ -470,5 +481,8 @@
   }
   .arsenalCard {
     width: 220px;
+  }
+  .carouselWrapper {
+    clip-path: ellipse(200% 100% at 50% 50%);
   }
 }
