@@ -8,7 +8,7 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.svg', 'monogram-logo.png'],
+      includeAssets: ['favicon.svg', 'pwa-icon.png'],
       manifest: {
         name: 'Kabakal Gym',
         short_name: 'Kabakal',
@@ -18,12 +18,12 @@ export default defineConfig({
         display: 'standalone',
         icons: [
           {
-            src: 'monogram-logo.png',
+            src: 'pwa-icon.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'monogram-logo.png',
+            src: 'pwa-icon.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
