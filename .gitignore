@@ -38,5 +38,4 @@ logs/
 
 ## ── AI Agents / References ─────────────────────────────────────────────────
 .agents/
-.references/
-references/
+.Reference/
