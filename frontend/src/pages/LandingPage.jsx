@@ -82,11 +82,6 @@ export default function LandingPage() {
           <span className={styles.brandName}>Kabakal Gym</span>
         </div>
         <nav className={styles.navLinks}>
-          {deferredPrompt && (
-            <button onClick={handleInstallClick} className={styles.installBtn}>
-              📱 Install App
-            </button>
-          )}
           <a href="#about" className={styles.navLink}>About</a>
           <a href="#equipment" className={styles.navLink}>Equipment</a>
           <a href="#pricing" className={styles.navLink}>Pricing</a>
@@ -205,6 +200,12 @@ export default function LandingPage() {
         <p>Kabakal Gym &copy; 2026 Digitalizing Local Fitness</p>
       </footer>
 
+      {/* Floating Install App Button */}
+      {deferredPrompt && (
+        <button onClick={handleInstallClick} className={styles.installBtn}>
+          📱 Install App
+        </button>
+      )}
     </div>
   );
 }

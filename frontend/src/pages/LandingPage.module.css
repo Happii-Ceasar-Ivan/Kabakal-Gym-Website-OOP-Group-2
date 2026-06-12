@@ -89,21 +89,33 @@
 }
 
 .installBtn {
-  background: rgba(247, 240, 20, 0.1);
-  border: 1px solid var(--accent-yellow);
-  color: var(--accent-yellow);
-  padding: 0.5rem 1rem;
-  border-radius: 8px;
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  background: var(--accent-yellow);
+  color: var(--bg-dark);
+  font-weight: 700;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
   font-family: var(--font-heading);
-  font-size: 0.9rem;
+  font-size: 1.1rem;
+  border: none;
   cursor: pointer;
+  box-shadow: 0 10px 30px rgba(247, 240, 20, 0.4);
   transition: all 0.3s ease;
+  animation: floatUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes floatUp {
+  0% { transform: translate(-50%, 100px); opacity: 0; }
+  100% { transform: translate(-50%, 0); opacity: 1; }
 }
 
 .installBtn:hover {
-  background: var(--accent-yellow);
-  color: var(--bg-dark);
-  box-shadow: 0 4px 15px rgba(247, 240, 20, 0.3);
+  transform: translate(-50%, -5px);
+  box-shadow: 0 15px 40px rgba(247, 240, 20, 0.6);
 }
 
 .navLink {
