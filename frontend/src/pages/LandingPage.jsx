@@ -16,8 +16,18 @@ export default function LandingPage() {
     const fetchEq = async () => {
       try {
         const data = await getEquipment(1, 50, ''); // Fetch up to 50
-        // Only show active equipment
-        setEquipmentItems(data.items.filter(e => e.isActive));
+        // Group active equipment by name to avoid visual duplicates (e.g., Press Machine x2)
+        const activeItems = data.items.filter(e => e.isActive);
+        const grouped = activeItems.reduce((acc, curr) => {
+          const existing = acc.find(item => item.equipmentName === curr.equipmentName);
+          if (existing) {
+            existing.count = (existing.count || 1) + 1;
+          } else {
+            acc.push({ ...curr, count: 1 });
+          }
+          return acc;
+        }, []);
+        setEquipmentItems(grouped);
       } catch (err) {
         console.error("Failed to load equipment:", err);
       }
@@ -42,7 +52,7 @@ export default function LandingPage() {
       <header className={styles.header}>
         <div className={styles.logoContainer}>
           <img src="/monogram-logo.png" alt="Kabakal Gym" className={styles.navLogo} />
-          <h1 className={styles.brandName}>Kabakal Gym</h1>
+          <span className={styles.brandName}>Kabakal Gym</span>
         </div>
         <nav className={styles.navLinks}>
           <a href="#about" className={styles.navLink}>About</a>
@@ -57,7 +67,7 @@ export default function LandingPage() {
       {/* --- HERO SECTION --- */}
       <section id="about" className={styles.heroSection}>
         <div className={styles.heroContent}>
-          <h2 className={styles.heroHeading}>Kabakal, <span className={styles.highlight}>Always a Kabakal.</span></h2>
+          <h1 className={styles.heroHeading}>Kabakal, <span className={styles.highlight}>Always a Kabakal.</span></h1>
           <p className={styles.heroText}>
             Kabakal Gym is your affordable, no-nonsense iron paradise. We stripped away the
             expensive fluff to bring you pure, heavy lifting and a community built on real gains.
@@ -104,14 +114,18 @@ export default function LandingPage() {
                        style={{ backgroundImage: `url(${BASE_URL}${item.imageUrl})` }}
                      >
                        <div className={styles.arsenalCardContentOverlay}>
-                         <span className={styles.arsenalName}>{item.equipmentName}</span>
+                         <span className={styles.arsenalName}>
+                           {item.equipmentName} {item.count > 1 && <span style={{color: 'var(--accent-yellow)', marginLeft: '4px'}}>x{item.count}</span>}
+                         </span>
                          <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
                        </div>
                      </div>
                    ) : (
                      <div className={styles.arsenalPlaceholder}>
                        <div className={styles.arsenalCardContent}>
-                         <span className={styles.arsenalName}>{item.equipmentName}</span>
+                         <span className={styles.arsenalName}>
+                           {item.equipmentName} {item.count > 1 && <span style={{color: 'var(--accent-yellow)', marginLeft: '4px'}}>x{item.count}</span>}
+                         </span>
                          <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
                        </div>
                      </div>

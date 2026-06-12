@@ -110,7 +110,8 @@
 .loginBtn:hover {
   background-color: var(--accent-yellow);
   color: var(--bg-dark);
-  box-shadow: 0 0 10px rgba(247, 240, 20, 0.5);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(247, 240, 20, 0.4);
 }
 
 /* --- HERO SECTION --- */
@@ -411,6 +412,8 @@
 .planBtnOutline:hover {
   border-color: #fff;
   background: rgba(255,255,255,0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255,255,255,0.1);
 }
 
 .planBtnFilled {

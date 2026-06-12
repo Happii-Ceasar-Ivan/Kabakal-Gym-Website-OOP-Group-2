@@ -81,6 +81,8 @@
 .logoutBtn:hover {
   background-color: #ff4444;
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.3);
 }
 
 .mainContent {
@@ -119,13 +121,15 @@
 
 .primaryBtn:hover {
   background-color: #d6cc0e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(247, 240, 20, 0.3);
 }
 
 .secondaryBtn {
   padding: 0.5rem 1.25rem;
-  background-color: transparent;
+  background-color: #1E1C08;
   color: #ddd;
-  border: 1px solid #444;
+  border: 1px solid #514F51;
   border-radius: 4px;
   font-family: var(--font-heading);
   cursor: pointer;
@@ -133,8 +137,10 @@
 }
 
 .secondaryBtn:hover {
-  background-color: #333;
+  background-color: #2A2710;
   color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(81, 79, 81, 0.3);
 }
 
 /* Table Styles */
