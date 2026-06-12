@@ -7,6 +7,33 @@ import { wakeupServer, getEquipment, BASE_URL } from '../services/api';
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
   const [equipmentItems, setEquipmentItems] = useState([]);
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleInstallClick = async () => {
+    if (!deferredPrompt) return;
+    // Show the install prompt
+    deferredPrompt.prompt();
+    // Wait for the user to respond to the prompt
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
 
   useEffect(() => {
     // Silently pre-warm the Azure backend
@@ -55,6 +82,11 @@ export default function LandingPage() {
           <span className={styles.brandName}>Kabakal Gym</span>
         </div>
         <nav className={styles.navLinks}>
+          {deferredPrompt && (
+            <button onClick={handleInstallClick} className={styles.installBtn}>
+              📱 Install App
+            </button>
+          )}
           <a href="#about" className={styles.navLink}>About</a>
           <a href="#equipment" className={styles.navLink}>Equipment</a>
           <a href="#pricing" className={styles.navLink}>Pricing</a>

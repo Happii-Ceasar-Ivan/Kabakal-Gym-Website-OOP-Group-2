@@ -85,6 +85,25 @@
 .navLinks {
   display: flex;
   gap: 2rem;
+  align-items: center;
+}
+
+.installBtn {
+  background: rgba(247, 240, 20, 0.1);
+  border: 1px solid var(--accent-yellow);
+  color: var(--accent-yellow);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: var(--font-heading);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.installBtn:hover {
+  background: var(--accent-yellow);
+  color: var(--bg-dark);
+  box-shadow: 0 4px 15px rgba(247, 240, 20, 0.3);
 }
 
 .navLink {
