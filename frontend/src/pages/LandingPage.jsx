@@ -46,7 +46,8 @@ export default function LandingPage() {
         // Group active equipment by name to avoid visual duplicates (e.g., Press Machine x2)
         const activeItems = data.items.filter(e => e.isActive);
         const grouped = activeItems.reduce((acc, curr) => {
-          const existing = acc.find(item => item.equipmentName === curr.equipmentName);
+          const cleanName = curr.equipmentName.trim().toLowerCase();
+          const existing = acc.find(item => item.equipmentName.trim().toLowerCase() === cleanName);
           if (existing) {
             existing.count = (existing.count || 1) + 1;
           } else {
