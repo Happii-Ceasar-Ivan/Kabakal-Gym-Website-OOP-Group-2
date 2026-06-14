@@ -21,6 +21,7 @@ public class KabakalDbContext : DbContext
     public DbSet<RoutineList>  RoutineLists  => Set<RoutineList>();
     public DbSet<Equipment>    Equipments    => Set<Equipment>();
     public DbSet<PasswordReset> PasswordResets => Set<PasswordReset>();
+    public DbSet<AiUsageTracker> AiUsageTrackers => Set<AiUsageTracker>();
 
 
 
@@ -191,6 +192,18 @@ public class KabakalDbContext : DbContext
 
             entity.Property(pr => pr.CreatedAt)
                   .HasDefaultValueSql("NOW()");
+        });
+
+        // ── Table 10: AiUsageTrackers ───────────────────────────────────────
+        modelBuilder.Entity<AiUsageTracker>(entity =>
+        {
+            entity.ToTable("AiUsageTrackers");
+            entity.HasKey(t => t.UserId);
+
+            entity.HasOne(t => t.User)
+                  .WithOne()
+                  .HasForeignKey<AiUsageTracker>(t => t.UserId)
+                  .OnDelete(DeleteBehavior.Cascade);
         });
     }
 }

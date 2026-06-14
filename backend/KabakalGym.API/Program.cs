@@ -66,6 +66,13 @@ builder.Services.AddScoped<IEquipmentService, EquipmentService>();
 // ── Sprint 5: Geolocation & Attendance Tracking ──
 builder.Services.AddScoped<ICheckInService, CheckInService>();
 
+// ── Sprint 6: AI Chatbot & Workout Generator ──
+builder.Services.Configure<GeminiSettings>(
+    builder.Configuration.GetSection(GeminiSettings.SectionName)
+);
+builder.Services.AddHttpClient<IAiChatService, AiChatService>();
+builder.Services.AddHttpClient<IWorkoutGeneratorService, WorkoutGeneratorService>();
+
 // ── JWT Bearer Authentication ──
 // Read settings here for TokenValidationParameters — IOptions not available yet at this stage
 var jwtSettings = builder.Configuration
@@ -143,6 +150,16 @@ builder.Services.AddRateLimiter(options =>
     {
         limiterOptions.PermitLimit          = 3;
         limiterOptions.Window               = TimeSpan.FromMinutes(15);
+        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
+        limiterOptions.QueueLimit           = 0;
+    });
+
+    // AI Chatbot — hard ceiling safety net (tier limits enforced in service layer)
+    // 20 requests / 30 minutes per IP
+    options.AddFixedWindowLimiter("AiChatPolicy", limiterOptions =>
+    {
+        limiterOptions.PermitLimit          = 20;
+        limiterOptions.Window               = TimeSpan.FromMinutes(30);
         limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
         limiterOptions.QueueLimit           = 0;
     });
