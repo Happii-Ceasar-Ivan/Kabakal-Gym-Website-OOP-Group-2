@@ -4,6 +4,7 @@ using System.Threading.RateLimiting;
 using KabakalGym.API.Data;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -136,33 +137,42 @@ builder.Services.AddRateLimiter(options =>
 
     // Stricter policy for auth endpoints (Sprint 2) — prevents brute-force
     // 10 requests / 10 minutes per IP on /api/auth/*
-    options.AddFixedWindowLimiter("AuthPolicy", limiterOptions =>
-    {
-        limiterOptions.PermitLimit          = 10;
-        limiterOptions.Window               = TimeSpan.FromMinutes(10);
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit           = 0;
-    });
+    options.AddPolicy("AuthPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit          = 10,
+                Window               = TimeSpan.FromMinutes(10),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit           = 0
+            }));
 
     // Ultra-strict policy for password reset — protects Resend free-tier quota
     // 3 requests / 15 minutes per IP on /api/auth/forgot-password
-    options.AddFixedWindowLimiter("ResetPolicy", limiterOptions =>
-    {
-        limiterOptions.PermitLimit          = 3;
-        limiterOptions.Window               = TimeSpan.FromMinutes(15);
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit           = 0;
-    });
+    options.AddPolicy("ResetPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit          = 3,
+                Window               = TimeSpan.FromMinutes(15),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit           = 0
+            }));
 
     // AI Chatbot — hard ceiling safety net (tier limits enforced in service layer)
     // 20 requests / 30 minutes per IP
-    options.AddFixedWindowLimiter("AiChatPolicy", limiterOptions =>
-    {
-        limiterOptions.PermitLimit          = 20;
-        limiterOptions.Window               = TimeSpan.FromMinutes(30);
-        limiterOptions.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-        limiterOptions.QueueLimit           = 0;
-    });
+    options.AddPolicy("AiChatPolicy", context =>
+        RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: context.Connection.RemoteIpAddress?.ToString(),
+            factory: partition => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit          = 20,
+                Window               = TimeSpan.FromMinutes(30),
+                QueueProcessingOrder = QueueProcessingOrder.OldestFirst,
+                QueueLimit           = 0
+            }));
 
     options.OnRejected = async (context, cancellationToken) =>
     {
@@ -230,6 +240,12 @@ builder.Services.AddSwaggerGen(options =>
 
 // ── 5. BUILD & MIDDLEWARE PIPELINE ─────────────────────────────────────────
 var app = builder.Build();
+
+// Ensure IP addresses are correct when running behind Azure's load balancers
+app.UseForwardedHeaders(new ForwardedHeadersOptions
+{
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
 if (app.Environment.IsDevelopment())
 {
