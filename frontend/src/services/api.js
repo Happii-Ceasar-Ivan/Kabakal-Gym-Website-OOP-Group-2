@@ -178,27 +178,25 @@ export async function uploadEquipmentCsv(file) {
   return data;
 }
 
-export async function uploadEquipmentImage(id, file) {
-  const formData = new FormData();
-  formData.append('file', file);
+// ── Cloudinary Signed Upload ─────────────────────────────────────────────────
 
-  const token = localStorage.getItem('kabakal_token');
-  const response = await fetch(`${API_BASE}/equipment/${id}/image`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`
-    },
-    body: formData
+/**
+ * Fetches a cryptographic upload signature from the C# backend.
+ * Only Admin-authorized users can call this endpoint.
+ */
+export async function getUploadSignature() {
+  return request('/upload/signature');
+}
+
+/**
+ * Saves a Cloudinary CDN URL to the equipment record in the database.
+ * Called AFTER the image has been uploaded directly to Cloudinary.
+ */
+export async function updateEquipmentImageUrl(id, imageUrl) {
+  return request(`/equipment/${id}/image`, {
+    method: 'PUT',
+    body: JSON.stringify({ imageUrl }),
   });
-
-  const data = await response.json();
-
-  if (!response.ok) {
-    const errorMessage = data?.error || data?.title || `Image upload failed: ${response.status}`;
-    throw new Error(errorMessage);
-  }
-
-  return data;
 }
 
 // ── Server Pre-warm ──────────────────────────────────────────────────────────

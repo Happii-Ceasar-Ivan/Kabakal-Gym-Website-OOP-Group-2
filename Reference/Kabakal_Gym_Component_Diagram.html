@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Kabakal Gym – UML Component Diagram</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+    background: #ffffff;
+    color: #1a1a2e;
+    padding: 32px;
+  }
+
+  h1 {
+    text-align: center;
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 12px;
+    color: #666;
+    margin-bottom: 28px;
+  }
+
+  /* ── Layout ─────────────────────────────────────────────── */
+  .diagram {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* ── Layer Containers ───────────────────────────────────── */
+  .layer {
+    border: 2px solid #333;
+    border-radius: 6px;
+    padding: 14px 16px 16px;
+    position: relative;
+    background: #f8f9fb;
+  }
+  .layer-title {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: #fff;
+    padding: 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a1a2e;
+    letter-spacing: 0.3px;
+  }
+  .layer-tech {
+    font-size: 10px;
+    color: #888;
+    font-weight: 400;
+  }
+
+  /* ── Component Boxes ────────────────────────────────────── */
+  .components {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-top: 6px;
+  }
+  .component {
+    border: 1.5px solid #555;
+    border-radius: 4px;
+    padding: 10px 14px;
+    min-width: 155px;
+    max-width: 200px;
+    background: #eef1f7;
+    position: relative;
+    text-align: center;
+  }
+  .component.ext {
+    background: #fff3e0;
+    border-color: #e67e22;
+  }
+  .component.db {
+    background: #e3f2fd;
+    border-color: #1976d2;
+    border-radius: 12px;
+  }
+  .component .stereo {
+    font-size: 9px;
+    color: #777;
+    font-style: italic;
+    display: block;
+    margin-bottom: 2px;
+  }
+  .component .name {
+    font-size: 11.5px;
+    font-weight: 700;
+  }
+  .component .desc {
+    font-size: 9px;
+    color: #666;
+    margin-top: 3px;
+    line-height: 1.3;
+  }
+
+  /* Component icon (top-right) */
+  .component::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    right: 6px;
+    width: 16px;
+    height: 12px;
+    border: 1.5px solid #888;
+    border-radius: 1px;
+    background: transparent;
+  }
+  .component::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    right: 20px;
+    width: 6px;
+    height: 3px;
+    border: 1px solid #888;
+    background: #fff;
+  }
+  .component.db::after,
+  .component.db::before { display: none; }
+
+  /* ── DB Cylinder icon ─────────────────────────────────── */
+  .db-icon {
+    display: inline-block;
+    width: 22px;
+    height: 18px;
+    border: 1.5px solid #1976d2;
+    border-radius: 50% / 30%;
+    margin-right: 4px;
+    vertical-align: middle;
+    position: relative;
+  }
+
+  /* ── Arrow connections ─────────────────────────────────── */
+  .arrows {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+    padding: 4px 0;
+  }
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 9px;
+    color: #999;
+  }
+  .arrow .line {
+    width: 1.5px;
+    height: 20px;
+    background: #888;
+    position: relative;
+  }
+  .arrow .line::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #888;
+  }
+  .arrow .label {
+    margin-top: 2px;
+    font-style: italic;
+    max-width: 120px;
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  /* ── Interface lollipops ──────────────────────────────── */
+  .interfaces {
+    display: flex;
+    justify-content: center;
+    gap: 28px;
+    padding: 2px 0;
+    flex-wrap: wrap;
+  }
+  .iface {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 8.5px;
+    color: #555;
+  }
+  .iface .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 1.5px solid #333;
+    background: #fff;
+  }
+  .iface .stick {
+    width: 1.5px;
+    height: 10px;
+    background: #333;
+  }
+  .iface .lbl {
+    font-style: italic;
+    margin-top: 1px;
+  }
+
+  /* ── Side box for external ──────────────────────────────── */
+  .side-section {
+    display: flex;
+    gap: 18px;
+  }
+  .side-section .layer {
+    flex: 1;
+  }
+  .side-section .layer.external {
+    flex: 0 0 260px;
+  }
+
+  /* ── Separator rows ─────────────────────────────────────── */
+  .conn-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 2px 0;
+  }
+  .conn-row .pipe {
+    width: 1.5px;
+    height: 26px;
+    background: #999;
+    position: relative;
+  }
+  .conn-row .pipe.down::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #999;
+  }
+  .conn-row .pipe.up::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -3px;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-bottom: 5px solid #999;
+  }
+  .conn-row .pipe-label {
+    font-size: 9px;
+    color: #999;
+    font-style: italic;
+  }
+
+  .spread-arrows {
+    display: flex;
+    justify-content: space-around;
+    padding: 0 60px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Kabakal Gym Management and Analytics Website</h1>
+<p class="subtitle">UML Component Diagram &nbsp;·&nbsp; Derived from Codebase (June 2026)</p>
+
+<div class="diagram">
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!--  PRESENTATION LAYER                                                    -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="layer">
+    <span class="layer-title">PRESENTATION LAYER <span class="layer-tech">(React 19 + Vite · Hosted on Vercel)</span></span>
+    <div class="components">
+      <div class="component">
+        <span class="stereo">«component»</span>
+        <span class="name">Authentication UI</span>
+        <span class="desc">LoginPage, RegisterPage, VerifyPage, ForgotPasswordPage, ResetPasswordPage</span>
+      </div>
+      <div class="component">
+        <span class="stereo">«component»</span>
+        <span class="name">Landing Page</span>
+        <span class="desc">Public gym info, equipment carousel, live capacity counter</span>
+      </div>
+      <div class="component">
+        <span class="stereo">«component»</span>
+        <span class="name">Member Dashboard</span>
+        <span class="desc">QR code display, check-in status, subscription info</span>
+      </div>
+      <div class="component">
+        <span class="stereo">«component»</span>
+        <span class="name">Admin Dashboard</span>
+        <span class="desc">MemberManagement, EquipmentManagement (CRUD + CSV upload + images)</span>
+      </div>
+      <div class="component">
+        <span class="stereo">«component»</span>
+        <span class="name">Staff Dashboard</span>
+        <span class="desc">Pending check-in approvals, visit log viewer</span>
+      </div>
+      <div class="component">
+        <span class="stereo">«component»</span>
+        <span class="name">Gate Kiosk</span>
+        <span class="desc">QR Scanner Modal, real-time scan verification</span>
+      </div>
+      <div class="component">
+        <span class="stereo">«service»</span>
+        <span class="name">API Service (api.js)</span>
+        <span class="desc">Central HTTP client, JWT injection, all endpoint wrappers</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrows down -->
+  <div class="conn-row">
+    <div class="pipe down"></div>
+    <span class="pipe-label">HTTPS / REST API (JSON over JWT Bearer)</span>
+    <div class="pipe down"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!--  APPLICATION LAYER + EXTERNAL SYSTEMS                                  -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="side-section">
+
+    <!-- Main Application Layer -->
+    <div class="layer">
+      <span class="layer-title">APPLICATION LAYER <span class="layer-tech">(C# ASP.NET Core 10 · Hosted on Microsoft Azure)</span></span>
+
+      <!-- Provided Interfaces -->
+      <div class="interfaces" style="margin-bottom:8px;">
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">IAuthService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">ISubscriptionService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">ITransactionService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">IEquipmentService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">IMemberMgmtService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">ICheckInService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">IAiChatService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">IWorkoutGenService</span></div>
+        <div class="iface"><div class="dot"></div><div class="stick"></div><span class="lbl">IEmailService</span></div>
+      </div>
+
+      <div class="components">
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">Auth & Validation Engine</span>
+          <span class="desc">AuthController · AuthService · BCrypt hashing · JWT generation · OTP verification</span>
+        </div>
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">Membership Engine</span>
+          <span class="desc">MemberMgmtController · SubscriptionController · CRUD, plan upgrades</span>
+        </div>
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">Billing & Transaction Engine</span>
+          <span class="desc">TransactionController · TransactionService · payment recording, receipt generation</span>
+        </div>
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">Equipment Management Engine</span>
+          <span class="desc">EquipmentController · EquipmentService · CRUD, CSV bulk upload, image upload</span>
+        </div>
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">Attendance & Geolocation Engine</span>
+          <span class="desc">CheckInController · CheckInService · QR verify, GPS fencing, capacity tracking</span>
+        </div>
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">AI Chatbot Engine</span>
+          <span class="desc">AiController · AiChatService · Topic-locked Gemini chat, tier-based rate limiting</span>
+        </div>
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">Workout Generator Engine</span>
+          <span class="desc">WorkoutGeneratorService · Equipment-aware routine generation, hallucination validation</span>
+        </div>
+        <div class="component">
+          <span class="stereo">«component»</span>
+          <span class="name">Staff Operations Engine</span>
+          <span class="desc">StaffController · Pending check-in approval, visit log queries</span>
+        </div>
+      </div>
+
+      <!-- Cross-cutting -->
+      <div style="margin-top:12px; border-top: 1px dashed #aaa; padding-top:8px;">
+        <div style="font-size:10px; color:#888; font-weight:600; margin-bottom:6px; text-align:center;">Cross-Cutting Infrastructure</div>
+        <div class="components">
+          <div class="component" style="min-width:130px; max-width:155px; background:#f0f0f0;">
+            <span class="stereo">«middleware»</span>
+            <span class="name">Rate Limiter</span>
+            <span class="desc">GlobalPolicy, AuthPolicy, ResetPolicy, AiChatPolicy</span>
+          </div>
+          <div class="component" style="min-width:130px; max-width:155px; background:#f0f0f0;">
+            <span class="stereo">«middleware»</span>
+            <span class="name">JWT Bearer Auth</span>
+            <span class="desc">HMAC-SHA512 token validation, RBAC claims</span>
+          </div>
+          <div class="component" style="min-width:130px; max-width:155px; background:#f0f0f0;">
+            <span class="stereo">«middleware»</span>
+            <span class="name">CORS Policy</span>
+            <span class="desc">KabakalCors: Vercel + localhost origins</span>
+          </div>
+          <div class="component" style="min-width:130px; max-width:155px; background:#f0f0f0;">
+            <span class="stereo">«middleware»</span>
+            <span class="name">Security Headers</span>
+            <span class="desc">X-Content-Type, Referrer-Policy, ForwardedHeaders</span>
+          </div>
+          <div class="component" style="min-width:130px; max-width:155px; background:#f0f0f0;">
+            <span class="stereo">«infrastructure»</span>
+            <span class="name">Response Compression</span>
+            <span class="desc">Brotli/GZIP for all responses</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- External Systems -->
+    <div class="layer external" style="background:#fff8f0;">
+      <span class="layer-title">EXTERNAL SYSTEMS <span class="layer-tech">(Third-Party APIs)</span></span>
+      <div class="components" style="flex-direction:column;">
+        <div class="component ext">
+          <span class="stereo">«external»</span>
+          <span class="name">Google Gemini API</span>
+          <span class="desc">AI chat responses & structured workout JSON generation (gemini-2.5-flash)</span>
+        </div>
+        <div class="component ext">
+          <span class="stereo">«external»</span>
+          <span class="name">Brevo (Sendinblue) SMTP</span>
+          <span class="desc">Transactional emails: OTP verification, password reset links</span>
+        </div>
+        <div class="component ext">
+          <span class="stereo">«external»</span>
+          <span class="name">Browser Geolocation API</span>
+          <span class="desc">Client-side GPS coordinates for check-in radius validation</span>
+        </div>
+        <div class="component ext">
+          <span class="stereo">«external»</span>
+          <span class="name">Physical QR Code</span>
+          <span class="desc">Posted at gym entrance, scanned by Gate Kiosk component</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrows down -->
+  <div class="conn-row">
+    <div class="pipe down"></div>
+    <span class="pipe-label">Entity Framework Core 10 (Npgsql Provider)</span>
+    <div class="pipe down"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <!--  DATA LAYER                                                            -->
+  <!-- ═══════════════════════════════════════════════════════════════════════ -->
+  <div class="layer" style="background:#f0f7ff;">
+    <span class="layer-title">DATA LAYER <span class="layer-tech">(Neon.tech Serverless PostgreSQL)</span></span>
+
+    <div style="margin-top:4px; margin-bottom:8px; font-size:10px; color:#888; text-align:center; font-weight:600;">KabakalDbContext (10 DbSets)</div>
+
+    <div class="components">
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">Users</span>
+        <span class="desc">Credentials, profile, role (Admin/Member/Staff), email verification</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">Subscriptions</span>
+        <span class="desc">Plan type, payment status, expiration date</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">Transactions</span>
+        <span class="desc">Payment records, amounts, timestamps</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">Equipment</span>
+        <span class="desc">Gym machines, status, images, active flag</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">Exercises</span>
+        <span class="desc">Exercise catalog, muscle groups, movement types (FK → Equipment)</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">Routines</span>
+        <span class="desc">AI-generated workout plans per user per day</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">RoutineLists</span>
+        <span class="desc">Exercise entries within a routine (sets, reps, weight)</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">Visits</span>
+        <span class="desc">Check-in/check-out timestamps, GPS coords, approval status</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">PasswordResets</span>
+        <span class="desc">Reset tokens, expiry timestamps</span>
+      </div>
+      <div class="component db">
+        <span class="stereo">«table»</span>
+        <span class="name">AiUsageTrackers</span>
+        <span class="desc">Per-user chat prompt count, routine gen count, sliding windows</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>
