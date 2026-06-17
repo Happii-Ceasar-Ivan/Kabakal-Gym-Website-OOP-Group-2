@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { BASE_URL, getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv, deleteEquipment, uploadEquipmentImage } from '../../services/api';
+import { BASE_URL, getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv, deleteEquipment, updateEquipmentImageUrl } from '../../services/api';
+import { useCloudinaryUpload } from '../../hooks/useCloudinaryUpload';
 import { toast } from 'react-hot-toast';
 import styles from './Admin.module.css';
 
@@ -10,6 +11,7 @@ export default function AdminEquipmentManagementPage() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingEq, setEditingEq] = useState(null);
+  const { upload } = useCloudinaryUpload();
   
   // Default values for new equipment
   const [form, setForm] = useState({ equipmentName: '', equipmentStatus: 'Available', isActive: true });
@@ -123,7 +125,8 @@ export default function AdminEquipmentManagementPage() {
 
     try {
       setUploading(true);
-      await uploadEquipmentImage(activeEqIdForImage, file);
+      const secureUrl = await upload(file);
+      await updateEquipmentImageUrl(activeEqIdForImage, secureUrl);
       toast.success("Image uploaded successfully!");
       fetchEquipment();
     } catch (err) {
@@ -186,7 +189,11 @@ export default function AdminEquipmentManagementPage() {
               <tr key={eq.equipmentId}>
                 <td>
                   {eq.imageUrl ? (
-                    <img src={`${BASE_URL}${eq.imageUrl}`} alt={eq.equipmentName} style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} />
+                    <img 
+                      src={eq.imageUrl.startsWith('http') ? eq.imageUrl : `${BASE_URL}${eq.imageUrl}`} 
+                      alt={eq.equipmentName} 
+                      style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }} 
+                    />
                   ) : (
                     <div style={{ width: '50px', height: '50px', backgroundColor: '#333', borderRadius: '4px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '10px', color: '#888' }}>
                       No Img
