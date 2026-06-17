@@ -109,10 +109,17 @@ export async function getEquipment(page = 1, pageSize = 20, search = '') {
   return request(`/equipment?${params.toString()}`);
 }
 
-export async function createEquipment(data) {
+export async function createEquipment(equipmentData) {
   return request('/equipment', {
     method: 'POST',
-    body: JSON.stringify(data),
+    body: JSON.stringify(equipmentData)
+  });
+}
+
+export async function bulkCreateEquipment(items) {
+  return request('/equipment/bulk-create', {
+    method: 'POST',
+    body: JSON.stringify({ items })
   });
 }
 

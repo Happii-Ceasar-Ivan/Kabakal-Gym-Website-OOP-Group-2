@@ -49,6 +49,18 @@ public class EquipmentController : ControllerBase
         return StatusCode(StatusCodes.Status201Created, result.Data);
     }
 
+    [HttpPost("bulk-create")]
+    [Authorize(Roles = UserRoles.Admin)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> BulkCreate([FromBody] BulkCreateEquipmentRequestDto dto)
+    {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
+
+        var result = await _equipmentService.BulkCreateEquipmentAsync(dto);
+        return Ok(new { count = result.Data, message = $"Successfully added {result.Data} equipment items." });
+    }
+
     [HttpPut("{id:guid}")]
     [Authorize(Roles = UserRoles.Admin)]
     [ProducesResponseType(typeof(EquipmentDto), StatusCodes.Status200OK)]

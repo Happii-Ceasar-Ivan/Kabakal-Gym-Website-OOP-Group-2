@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { BASE_URL, getEquipment, createEquipment, updateEquipment, uploadEquipmentCsv, deleteEquipment, updateEquipmentImageUrl } from '../../services/api';
 import { useCloudinaryUpload } from '../../hooks/useCloudinaryUpload';
+import BulkEquipmentPanel from './BulkEquipmentPanel';
 import { toast } from 'react-hot-toast';
 import styles from './Admin.module.css';
 
@@ -10,6 +11,7 @@ export default function AdminEquipmentManagementPage() {
   const [error, setError] = useState(null);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBulkPanelOpen, setIsBulkPanelOpen] = useState(false);
   const [editingEq, setEditingEq] = useState(null);
   const { upload } = useCloudinaryUpload();
   
@@ -37,7 +39,7 @@ export default function AdminEquipmentManagementPage() {
     fetchEquipment();
   }, []);
 
-  const openModal = (eq = null) => {
+  const openModal = (eq) => {
     if (eq) {
       setEditingEq(eq);
       setForm({
@@ -45,11 +47,8 @@ export default function AdminEquipmentManagementPage() {
         equipmentStatus: eq.equipmentStatus,
         isActive: eq.isActive
       });
-    } else {
-      setEditingEq(null);
-      setForm({ equipmentName: '', equipmentStatus: 'Available', isActive: true });
+      setIsModalOpen(true);
     }
-    setIsModalOpen(true);
   };
 
   const closeModal = () => {
@@ -62,9 +61,6 @@ export default function AdminEquipmentManagementPage() {
       if (editingEq) {
         await updateEquipment(editingEq.equipmentId, form);
         toast.success('Equipment updated successfully!');
-      } else {
-        await createEquipment({ equipmentName: form.equipmentName });
-        toast.success('Equipment added successfully!');
       }
       closeModal();
       fetchEquipment();
@@ -167,7 +163,7 @@ export default function AdminEquipmentManagementPage() {
           >
             {uploading ? 'Uploading...' : '📁 Upload CSV'}
           </button>
-          <button onClick={() => openModal()} className={styles.primaryBtn}>
+          <button onClick={() => setIsBulkPanelOpen(true)} className={styles.primaryBtn}>
             + Add Equipment
           </button>
         </div>
@@ -241,7 +237,7 @@ export default function AdminEquipmentManagementPage() {
         <div className={styles.modalOverlay}>
           <div className={styles.modalContent}>
             <h2 className={styles.modalTitle}>
-              {editingEq ? 'Edit Equipment' : 'Add Equipment'}
+              Edit Equipment
             </h2>
             <form onSubmit={handleSubmit}>
               <div className={styles.formGroup}>
@@ -283,12 +279,19 @@ export default function AdminEquipmentManagementPage() {
               <div className={styles.modalActions}>
                 <button type="button" onClick={closeModal} className={styles.secondaryBtn}>Cancel</button>
                 <button type="submit" className={styles.primaryBtn}>
-                  {editingEq ? 'Save Changes' : 'Add Equipment'}
+                  Save Changes
                 </button>
               </div>
             </form>
           </div>
         </div>
+      )}
+
+      {isBulkPanelOpen && (
+        <BulkEquipmentPanel 
+          onClose={() => setIsBulkPanelOpen(false)} 
+          onSuccess={() => { setIsBulkPanelOpen(false); fetchEquipment(); }} 
+        />
       )}
     </div>
   );

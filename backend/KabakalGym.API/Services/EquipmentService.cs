@@ -86,6 +86,35 @@ public sealed class EquipmentService : IEquipmentService
         return ServiceResult<EquipmentDto>.Success(new EquipmentDto(eq.EquipmentId, eq.EquipmentName, eq.EquipmentStatus, eq.IsActive, eq.ImageUrl));
     }
 
+    public async Task<ServiceResult<int>> BulkCreateEquipmentAsync(BulkCreateEquipmentRequestDto req)
+    {
+        int count = 0;
+        foreach (var item in req.Items)
+        {
+            for (int i = 0; i < item.Quantity; i++)
+            {
+                var eq = new Equipment
+                {
+                    EquipmentId = Guid.NewGuid(),
+                    EquipmentName = item.EquipmentName.Trim(),
+                    EquipmentStatus = "Available",
+                    IsActive = true,
+                    ImageUrl = item.ImageUrl
+                };
+                _context.Equipments.Add(eq);
+                count++;
+            }
+        }
+
+        if (count > 0)
+        {
+            await _context.SaveChangesAsync();
+            _cache.Remove("AllEquipmentList");
+        }
+
+        return ServiceResult<int>.Success(count);
+    }
+
     public async Task<ServiceResult<EquipmentDto>> UpdateEquipmentAsync(Guid id, UpdateEquipmentDto dto)
     {
         var eq = await _context.Equipments.AsTracking().FirstOrDefaultAsync(e => e.EquipmentId == id);
