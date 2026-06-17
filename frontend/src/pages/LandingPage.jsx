@@ -139,7 +139,7 @@ export default function LandingPage() {
                    {item.imageUrl ? (
                      <div 
                        className={styles.arsenalImageBg} 
-                       style={{ backgroundImage: `url(${BASE_URL}${item.imageUrl})` }}
+                       style={{ backgroundImage: `url(${item.imageUrl.startsWith('http') ? item.imageUrl : BASE_URL + item.imageUrl})` }}
                      >
                        <div className={styles.arsenalCardContentOverlay}>
                          <span className={styles.arsenalName}>
