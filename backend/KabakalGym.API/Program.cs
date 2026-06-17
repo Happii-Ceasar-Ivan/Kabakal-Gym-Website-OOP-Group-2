@@ -74,6 +74,11 @@ builder.Services.Configure<GeminiSettings>(
 builder.Services.AddHttpClient<IAiChatService, AiChatService>();
 builder.Services.AddHttpClient<IWorkoutGeneratorService, WorkoutGeneratorService>();
 
+// ── Cloudinary Signed Uploads (image files never touch this server) ──
+builder.Services.Configure<CloudinarySettings>(
+    builder.Configuration.GetSection(CloudinarySettings.SectionName)
+);
+
 // ── JWT Bearer Authentication ──
 // Read settings here for TokenValidationParameters — IOptions not available yet at this stage
 var jwtSettings = builder.Configuration

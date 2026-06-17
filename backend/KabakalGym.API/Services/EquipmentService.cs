@@ -244,61 +244,23 @@ public sealed class EquipmentService : IEquipmentService
         return ServiceResult<int>.Success(addedCount);
     }
 
-    public async Task<ServiceResult<string>> UploadEquipmentImageAsync(Guid id, IFormFile file)
+    public async Task<ServiceResult<string>> UpdateEquipmentImageUrlAsync(Guid id, string imageUrl)
     {
         var eq = await _context.Equipments.AsTracking().FirstOrDefaultAsync(e => e.EquipmentId == id);
         if (eq == null) return ServiceResult<string>.Fail("Equipment not found.");
 
-        if (file == null || file.Length == 0)
-            return ServiceResult<string>.Fail("File is empty.");
-
-        if (file.Length > 5 * 1024 * 1024)
-            return ServiceResult<string>.Fail("File size exceeds the 5MB limit.");
-
-        var extension = Path.GetExtension(file.FileName).ToLower();
-        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-        if (!allowedExtensions.Contains(extension))
-            return ServiceResult<string>.Fail("Invalid file type. Only .jpg, .jpeg, and .png are allowed.");
-
-        // Additional MIME type validation
-        var mimeType = file.ContentType.ToLower();
-        var allowedMimeTypes = new[] { "image/jpeg", "image/png" };
-        if (!allowedMimeTypes.Contains(mimeType))
-            return ServiceResult<string>.Fail("Invalid MIME type.");
-
-        // Secure filename to prevent path traversal
-        var fileName = $"{Guid.NewGuid()}{extension}";
-        var folderPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images", "equipment");
-        
-        if (!Directory.Exists(folderPath))
-            Directory.CreateDirectory(folderPath);
-
-        var filePath = Path.Combine(folderPath, fileName);
-
-        using (var stream = new FileStream(filePath, FileMode.Create))
+        // Only accept URLs from Cloudinary's CDN to prevent injection of arbitrary URLs
+        if (string.IsNullOrWhiteSpace(imageUrl) ||
+            !imageUrl.StartsWith("https://res.cloudinary.com/", StringComparison.OrdinalIgnoreCase))
         {
-            await file.CopyToAsync(stream);
+            return ServiceResult<string>.Fail("Invalid image URL. Only Cloudinary URLs are accepted.");
         }
 
-        // Delete old image if it exists to save space (Optional but good practice)
-        if (!string.IsNullOrEmpty(eq.ImageUrl))
-        {
-            try
-            {
-                var oldFileName = Path.GetFileName(eq.ImageUrl);
-                var oldFilePath = Path.Combine(folderPath, oldFileName);
-                if (File.Exists(oldFilePath))
-                {
-                    File.Delete(oldFilePath);
-                }
-            }
-            catch { /* Ignore deletion errors */ }
-        }
-
-        eq.ImageUrl = $"/images/equipment/{fileName}";
+        eq.ImageUrl = imageUrl;
         await _context.SaveChangesAsync();
         _cache.Remove("AllEquipmentList");
 
         return ServiceResult<string>.Success(eq.ImageUrl);
     }
+
 }
