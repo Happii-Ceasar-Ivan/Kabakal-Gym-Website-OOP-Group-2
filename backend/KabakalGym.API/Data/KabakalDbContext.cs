@@ -79,6 +79,10 @@ public class KabakalDbContext : DbContext
             entity.HasIndex(t => new { t.UserId, t.Timestamp })
                   .HasDatabaseName("IX_Transactions_UserId_Timestamp");
 
+            // Sprint 7: Analytics Engine optimization
+            entity.HasIndex(t => t.Timestamp)
+                  .HasDatabaseName("IX_Transactions_Timestamp");
+
             // PostgreSQL default for Timestamp column
             entity.Property(t => t.Timestamp)
                   .HasDefaultValueSql("NOW()");
@@ -104,6 +108,10 @@ public class KabakalDbContext : DbContext
             // Optimize attendance queries.
             entity.HasIndex(v => new { v.UserId, v.CheckIn })
                   .HasDatabaseName("IX_Visits_UserId_CheckIn");
+
+            // Sprint 7: Analytics Engine optimization
+            entity.HasIndex(v => v.CheckIn)
+                  .HasDatabaseName("IX_Visits_CheckIn");
 
             entity.Property(v => v.CheckIn)
                   .HasDefaultValueSql("NOW()");

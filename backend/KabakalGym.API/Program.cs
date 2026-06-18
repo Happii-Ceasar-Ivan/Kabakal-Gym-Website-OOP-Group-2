@@ -74,6 +74,10 @@ builder.Services.Configure<GeminiSettings>(
 builder.Services.AddHttpClient<IAiChatService, AiChatService>();
 builder.Services.AddHttpClient<IWorkoutGeneratorService, WorkoutGeneratorService>();
 
+// ── Sprint 7: Business Analytics Engine ──
+builder.Services.AddMemoryCache();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
+
 // ── Cloudinary Signed Uploads (image files never touch this server) ──
 builder.Services.Configure<CloudinarySettings>(
     builder.Configuration.GetSection(CloudinarySettings.SectionName)

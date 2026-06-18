@@ -269,6 +269,18 @@
     justify-content: space-around;
     padding: 0 60px;
   }
+
+  /* ── Print / PDF Export Optimization ───────────────────── */
+  @media print {
+    @page { size: portrait; margin: 8mm; }
+    body { padding: 0; margin: 0; background: #fff; zoom: 0.85; }
+    .diagram { gap: 10px; max-width: 100%; }
+    .layer, .component, .side-section { 
+      page-break-inside: avoid; 
+      break-inside: avoid; 
+    }
+    .side-section { gap: 8px; }
+  }
 </style>
 </head>
 <body>
