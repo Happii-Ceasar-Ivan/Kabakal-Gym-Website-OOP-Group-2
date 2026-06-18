@@ -28,8 +28,17 @@ public class Transaction
     /// Supported: Cash, GCash, Card, QR-Code.
     /// </summary>
     [Required]
-    [MaxLength(50)]
+    [MaxLength(20)]
     public string PaymentMethod { get; set; } = string.Empty;
+
+    // Default to Paid for legacy manual transactions
+    [Required]
+    [MaxLength(20)]
+    public string Status { get; set; } = "Paid"; // Pending, Paid, Failed
+
+    // To link with Xendit
+    [MaxLength(100)]
+    public string? ExternalInvoiceId { get; set; }
 
     /// <summary>
     /// UTC timestamp of the payment event.

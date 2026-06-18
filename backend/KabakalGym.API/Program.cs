@@ -78,6 +78,12 @@ builder.Services.AddHttpClient<IWorkoutGeneratorService, WorkoutGeneratorService
 builder.Services.AddMemoryCache();
 builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
+// ── Sprint 8: Xendit Payment Gateway ──
+builder.Services.Configure<XenditSettings>(
+    builder.Configuration.GetSection(XenditSettings.SectionName)
+);
+builder.Services.AddHttpClient<IPaymentGatewayService, XenditService>();
+
 // ── Cloudinary Signed Uploads (image files never touch this server) ──
 builder.Services.Configure<CloudinarySettings>(
     builder.Configuration.GetSection(CloudinarySettings.SectionName)
