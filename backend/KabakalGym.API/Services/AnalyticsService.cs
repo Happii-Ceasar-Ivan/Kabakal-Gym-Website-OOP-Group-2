@@ -32,7 +32,7 @@ public class AnalyticsService : IAnalyticsService
         var totalRevenue = await _context.Transactions
             .AsNoTracking()
             .Where(t => t.Timestamp.Year == year && t.Timestamp.Month == month)
-            .SumAsync(t => t.AmountPaid);
+            .SumAsync(t => (decimal?)t.AmountPaid) ?? 0m;
 
         // 2. Active Members Query
         var totalMembers = await _context.Users
