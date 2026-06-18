@@ -22,7 +22,7 @@ const AdminDashboardPage = () => {
       const now = new Date();
       // Fetch current month's data
       const response = await getDashboardAnalytics(now.getFullYear(), now.getMonth() + 1);
-      setData(response.data);
+      setData(response);
     } catch (err) {
       console.error(err);
       setError('Failed to load analytics data.');
