@@ -90,6 +90,10 @@ export async function getMembers(page = 1, pageSize = 20, search = '') {
   return request(`/members?${params.toString()}`);
 }
 
+export async function getDashboardAnalytics(year, month) {
+  return request(`/analytics/dashboard?year=${year}&month=${month}`);
+}
+
 export async function getMember(id) {
   return request(`/members/${id}`);
 }

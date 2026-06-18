@@ -15,6 +15,7 @@ const VerifyPage = lazy(() => import('./pages/auth/VerifyPage'));
 
 // Lazy load roles
 const AdminLayout = lazy(() => import('./components/AdminLayout'));
+const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
 const AdminMemberManagementPage = lazy(() => import('./pages/admin/AdminMemberManagementPage'));
 const AdminEquipmentManagementPage = lazy(() => import('./pages/admin/AdminEquipmentManagementPage'));
 const GateKioskPage = lazy(() => import('./pages/kiosk/GateKioskPage'));
@@ -64,6 +65,7 @@ function App() {
 
           {/* Protected Admin Routes (Lazy Loaded) */}
           <Route path="/admin" element={<AdminLayout />}>
+            <Route path="dashboard" element={<AdminDashboardPage />} />
             <Route path="members" element={<AdminMemberManagementPage />} />
             <Route path="equipment" element={<AdminEquipmentManagementPage />} />
           </Route>

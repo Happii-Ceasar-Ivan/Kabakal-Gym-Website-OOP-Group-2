@@ -37,6 +37,9 @@ const AdminLayout = () => {
         </div>
         
         <nav className={styles.nav}>
+          <Link to="/admin/dashboard" className={styles.navLink}>
+            📊 Dashboard
+          </Link>
           <Link to="/admin/members" className={styles.navLink}>
             👥 Member Management
           </Link>
