@@ -94,6 +94,33 @@ export async function getDashboardAnalytics(year, month) {
   return request(`/analytics/dashboard?year=${year}&month=${month}`);
 }
 
+export async function getHistoricalRevenue(months = 6) {
+  return request(`/analytics/historical-revenue?months=${months}`);
+}
+
+export async function exportAndArchiveData(monthsAgo = 3) {
+  const token = localStorage.getItem('kabakal_token');
+  const response = await fetch(`${BASE_URL}/api/analytics/export-archive?monthsAgo=${monthsAgo}`, {
+    method: 'DELETE',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to export and archive data.');
+  }
+
+  // Handle file download directly
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kabakal_archive_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
 export async function getMember(id) {
   return request(`/members/${id}`);
 }
