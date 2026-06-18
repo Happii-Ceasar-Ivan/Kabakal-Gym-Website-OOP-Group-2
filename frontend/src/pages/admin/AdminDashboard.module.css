@@ -123,6 +123,107 @@
   font-weight: bold;
 }
 
+/* Top Bar with Date Picker & Actions */
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.datePickerWrapper {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.dateLabel {
+  font-family: var(--font-heading);
+  color: #aaa;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+}
+
+.monthInput {
+  background: rgba(31, 27, 34, 0.8);
+  border: 1px solid rgba(247, 240, 20, 0.3);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.monthInput:focus {
+  border-color: var(--accent-yellow);
+  box-shadow: 0 0 8px rgba(247, 240, 20, 0.3);
+}
+
+.archiveBtn {
+  background: transparent;
+  color: #ff4444;
+  border: 1px solid #ff4444;
+  padding: 0.6rem 1.2rem;
+  border-radius: 4px;
+  font-family: var(--font-heading);
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.archiveBtn:hover {
+  background: #ff4444;
+  color: #fff;
+  box-shadow: 0 4px 12px rgba(255, 68, 68, 0.4);
+  transform: translateY(-2px);
+}
+
+/* Data Table */
+.tableContainer {
+  background: rgba(31, 27, 34, 0.6);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 1.5rem;
+  overflow-x: auto;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.dataTable th {
+  padding: 1rem;
+  font-family: var(--font-heading);
+  color: var(--accent-yellow);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+}
+
+.dataTable td {
+  padding: 1rem;
+  color: #ddd;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.95rem;
+}
+
+.dataTable tr:last-child td {
+  border-bottom: none;
+}
+
+.dataTable tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
 /* Loader */
 .loaderContainer {
   display: flex;

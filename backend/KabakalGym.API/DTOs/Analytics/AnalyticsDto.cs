@@ -1,21 +1,28 @@
 namespace KabakalGym.API.DTOs.Analytics;
 
-public class MonthlyRevenueDto
+public class DailyRevenueDto
 {
-    public int Year { get; set; }
-    public int Month { get; set; }
-    public decimal TotalRevenue { get; set; }
+    public DateTime Date { get; set; }
+    public decimal Revenue { get; set; }
 }
 
 public class PeakHourUsageDto
 {
-    public int Hour { get; set; } // 0-23
+    public int HourOfDay { get; set; } // 0-23
     public int VisitCount { get; set; }
 }
 
 public class BusinessAnalyticsResponseDto
 {
-    public MonthlyRevenueDto CurrentMonthRevenue { get; set; } = new();
-    public List<PeakHourUsageDto> PeakUsageHistogram { get; set; } = new();
-    public int TotalActiveMembers { get; set; }
+    public decimal TotalRevenue { get; set; }
+    public int ActiveMembersCount { get; set; }
+    public int TotalWalkIns { get; set; }
+    public List<DailyRevenueDto> DailyRevenue { get; set; } = new();
+    public List<PeakHourUsageDto> PeakUsageHours { get; set; } = new();
+}
+
+public class HistoricalRevenueDto
+{
+    public string MonthName { get; set; } = string.Empty;
+    public decimal Revenue { get; set; }
 }
