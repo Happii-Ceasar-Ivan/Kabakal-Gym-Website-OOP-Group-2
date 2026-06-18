@@ -119,7 +119,7 @@ public class AnalyticsService : IAnalyticsService
         }
 
         var startDate = DateTime.UtcNow.Date.AddMonths(-months + 1);
-        startDate = new DateTime(startDate.Year, startDate.Month, 1); // First day of the starting month
+        startDate = new DateTime(startDate.Year, startDate.Month, 1, 0, 0, 0, DateTimeKind.Utc); // First day of the starting month
 
         var recentTransactions = await _context.Transactions
             .AsNoTracking()
