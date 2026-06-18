@@ -36,8 +36,9 @@ public class AnalyticsService : IAnalyticsService
 
         // 2. Active Members Query
         var totalMembers = await _context.Users
+            .Include(u => u.Subscription)
             .AsNoTracking()
-            .CountAsync(u => u.Role == "Member" && u.IsActive);
+            .CountAsync(u => u.Role == "Member" && u.IsActive && u.Subscription != null && u.Subscription.ExpirationDate > DateTime.UtcNow);
 
         // 3. Walk-ins Query (Transactions == 50)
         var totalWalkIns = await _context.Transactions
