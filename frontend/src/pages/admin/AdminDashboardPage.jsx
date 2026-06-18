@@ -68,12 +68,12 @@ const AdminDashboardPage = () => {
   };
 
   // Prepare Chart Data
-  const dailyRevenueData = data.dailyRevenue.map(d => ({
+  const dailyRevenueData = (data?.dailyRevenue || []).map(d => ({
     date: new Date(d.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
     revenue: d.revenue
   }));
 
-  const peakUsageData = data.peakUsageHours.map(d => ({
+  const peakUsageData = (data?.peakUsageHours || []).map(d => ({
     hour: `${d.hourOfDay}:00`,
     visits: d.visitCount
   }));
@@ -111,26 +111,26 @@ const AdminDashboardPage = () => {
         <div className={styles.metricsGrid}>
           <motion.div className={styles.metricCard} variants={itemVariants}>
             <div className={styles.metricTitle}>Total Revenue</div>
-            <div className={styles.metricValue}>₱{data.totalRevenue.toLocaleString()}</div>
+            <div className={styles.metricValue}>₱{(data?.totalRevenue || 0).toLocaleString()}</div>
             <div className={styles.metricSubtext}>Current Month</div>
           </motion.div>
 
           <motion.div className={styles.metricCard} variants={itemVariants}>
             <div className={styles.metricTitle}>Active Members</div>
-            <div className={styles.metricValue}>{data.activeMembersCount}</div>
+            <div className={styles.metricValue}>{data?.activeMembersCount || 0}</div>
             <div className={styles.metricSubtext}>Currently Subscribed</div>
           </motion.div>
 
           <motion.div className={styles.metricCard} variants={itemVariants}>
             <div className={styles.metricTitle}>Total Equipment</div>
-            <div className={styles.metricValue}>{data.totalEquipmentCount}</div>
+            <div className={styles.metricValue}>{data?.totalEquipmentCount || 0}</div>
             <div className={styles.metricSubtext}>Across all categories</div>
           </motion.div>
 
           <motion.div className={styles.metricCard} variants={itemVariants}>
             <div className={styles.metricTitle}>Peak Hour</div>
             <div className={styles.metricValue}>
-              {data.peakUsageHours.length > 0 ? `${data.peakUsageHours[0].hourOfDay}:00` : 'N/A'}
+              {(data?.peakUsageHours && data.peakUsageHours.length > 0) ? `${data.peakUsageHours[0].hourOfDay}:00` : 'N/A'}
             </div>
             <div className={styles.metricSubtext}>Most crowded time</div>
           </motion.div>
