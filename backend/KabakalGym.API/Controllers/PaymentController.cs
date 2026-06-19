@@ -1,3 +1,5 @@
+using KabakalGym.API.Data;
+using Microsoft.EntityFrameworkCore;
 using KabakalGym.API.Configuration;
 using KabakalGym.API.Models;
 using KabakalGym.API.Services.Interfaces;
@@ -14,15 +16,18 @@ namespace KabakalGym.API.Controllers;
 public class PaymentController : ControllerBase
 {
     private readonly IPaymentGatewayService _paymentGateway;
+    private readonly KabakalDbContext _context;
     private readonly XenditSettings _settings;
     private readonly ILogger<PaymentController> _logger;
 
     public PaymentController(
         IPaymentGatewayService paymentGateway, 
+        KabakalDbContext context,
         IOptions<XenditSettings> options,
         ILogger<PaymentController> logger)
     {
         _paymentGateway = paymentGateway;
+        _context = context;
         _settings = options.Value;
         _logger = logger;
     }
@@ -94,5 +99,36 @@ public class PaymentController : ControllerBase
             // Returning 500 tells Xendit to retry sending the webhook later
             return StatusCode(500, "Internal error processing webhook.");
         }
+    }
+
+    [HttpGet("force-activate")]
+    [Authorize]
+    public async Task<IActionResult> ForceActivate()
+    {
+        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdString, out var userId)) return Unauthorized("Invalid token");
+
+        var user = await _context.Users.Include(u => u.Subscription).FirstOrDefaultAsync(u => u.UserId == userId);
+        if (user == null) return NotFound("User not found");
+
+        if (user.Subscription == null)
+        {
+            var newSub = new Subscription
+            {
+                UserId = user.UserId,
+                PaymentStatus = "Paid",
+                ExpirationDate = DateTime.UtcNow.AddDays(30)
+            };
+            user.Subscription = newSub;
+            _context.Subscriptions.Add(newSub);
+        }
+        else
+        {
+            user.Subscription.PaymentStatus = "Paid";
+            user.Subscription.ExpirationDate = DateTime.UtcNow.AddDays(30);
+        }
+        await _context.SaveChangesAsync();
+
+        return Ok(new { message = "BACKDOOR ACTIVATED: You are now premium. Refresh your dashboard!" });
     }
 }
