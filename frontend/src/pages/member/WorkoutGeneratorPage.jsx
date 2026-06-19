@@ -61,7 +61,22 @@ const WorkoutGeneratorPage = () => {
     if (!routine) return;
     setSaving(true);
     try {
-      await saveRoutine({ routineId: routine.routineId });
+      const payload = {
+        goal: fitnessGoal,
+        fitnessLevel: experienceLabels[experienceLevel],
+        days: routine.days.map(day => ({
+          dayLabel: day.dayLabel || 'Day',
+          focusArea: day.focusArea || 'General',
+          isRestDay: !!day.isRestDay,
+          exercises: (day.exercises || []).map(ex => ({
+            exerciseName: ex.exerciseName || '',
+            sets: ex.sets || '3',
+            reps: ex.reps || '10',
+            startingWeight: ex.startingWeight || 'Bodyweight'
+          }))
+        }))
+      };
+      await saveRoutine(payload);
       alert("Routine saved successfully to your profile!");
       navigate('/member/dashboard');
     } catch (err) {
