@@ -126,7 +126,12 @@ export async function getMember(id) {
 }
 
 export async function getMyProfile() {
-  return request('/me');
+  return request('/me', {
+    headers: {
+      'Cache-Control': 'no-cache',
+      'Pragma': 'no-cache'
+    }
+  });
 }
 
 export async function getMyStats() {

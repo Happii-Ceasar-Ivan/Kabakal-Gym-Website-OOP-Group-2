@@ -16,6 +16,9 @@ public sealed record TransactionDto(
     /// <summary>"Cash" | "GCash" | "Card" | "QR-Code"</summary>
     string   PaymentMethod,
 
+    /// <summary>Status of the transaction, e.g. "Pending" or "Paid"</summary>
+    string   Status,
+
     /// <summary>UTC timestamp of when the payment was recorded.</summary>
     DateTime Timestamp
 );

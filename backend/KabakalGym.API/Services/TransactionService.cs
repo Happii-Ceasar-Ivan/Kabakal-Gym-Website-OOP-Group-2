@@ -73,6 +73,7 @@ public sealed class TransactionService : ITransactionService
                 t.UserId,
                 t.AmountPaid,
                 t.PaymentMethod,
+                t.Status,
                 t.Timestamp
             ))
             .ToListAsync();
@@ -159,6 +160,7 @@ public sealed class TransactionService : ITransactionService
             transaction.UserId,
             transaction.AmountPaid,
             transaction.PaymentMethod,
+            transaction.Status,
             transaction.Timestamp
         );
 

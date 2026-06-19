@@ -31,7 +31,7 @@ public class AnalyticsService : IAnalyticsService
         // 1. Total Revenue Query
         var totalRevenue = await _context.Transactions
             .AsNoTracking()
-            .Where(t => t.Timestamp.Year == year && t.Timestamp.Month == month)
+            .Where(t => t.Timestamp.Year == year && t.Timestamp.Month == month && t.Status == "Paid")
             .SumAsync(t => (decimal?)t.AmountPaid) ?? 0m;
 
         // 2. Active Members Query
@@ -43,12 +43,12 @@ public class AnalyticsService : IAnalyticsService
         // 3. Walk-ins Query (Transactions == 50)
         var totalWalkIns = await _context.Transactions
             .AsNoTracking()
-            .CountAsync(t => t.Timestamp.Year == year && t.Timestamp.Month == month && t.AmountPaid == 50.00m);
+            .CountAsync(t => t.Timestamp.Year == year && t.Timestamp.Month == month && t.AmountPaid == 50.00m && t.Status == "Paid");
 
         // 4. Daily Revenue Query
         var monthTransactions = await _context.Transactions
             .AsNoTracking()
-            .Where(t => t.Timestamp.Year == year && t.Timestamp.Month == month)
+            .Where(t => t.Timestamp.Year == year && t.Timestamp.Month == month && t.Status == "Paid")
             .Select(t => new { t.Timestamp, t.AmountPaid })
             .ToListAsync();
 
@@ -124,7 +124,7 @@ public class AnalyticsService : IAnalyticsService
 
         var recentTransactions = await _context.Transactions
             .AsNoTracking()
-            .Where(t => t.Timestamp >= startDate)
+            .Where(t => t.Timestamp >= startDate && t.Status == "Paid")
             .Select(t => new { t.Timestamp, t.AmountPaid })
             .ToListAsync();
 
@@ -171,10 +171,10 @@ public class AnalyticsService : IAnalyticsService
         sb.AppendLine();
         
         sb.AppendLine("--- TRANSACTIONS ---");
-        sb.AppendLine("TransactionId,UserId,UserEmail,AmountPaid,PaymentMethod,Timestamp");
+        sb.AppendLine("TransactionId,UserId,UserEmail,AmountPaid,PaymentMethod,Status,Timestamp");
         foreach (var t in oldTransactions)
         {
-            sb.AppendLine($"{t.TransactionId},{t.UserId},{t.User?.Email},{t.AmountPaid},{t.PaymentMethod},{t.Timestamp:yyyy-MM-dd HH:mm:ss}");
+            sb.AppendLine($"{t.TransactionId},{t.UserId},{t.User?.Email},{t.AmountPaid},{t.PaymentMethod},{t.Status},{t.Timestamp:yyyy-MM-dd HH:mm:ss}");
         }
 
         sb.AppendLine();
