@@ -28,21 +28,21 @@ public class RoutineList
     /// Target sets (e.g., "3-4").
     /// </summary>
     [Required]
-    [MaxLength(10)]
+    [MaxLength(50)]
     public string Sets { get; set; } = string.Empty;
 
     /// <summary>
     /// Target rep range (e.g., "8-12").
     /// </summary>
     [Required]
-    [MaxLength(10)]
+    [MaxLength(50)]
     public string Reps { get; set; } = string.Empty;
 
     /// <summary>
     /// Recommended starting weight based on experience.
     /// </summary>
     [Required]
-    [MaxLength(50)]
+    [MaxLength(100)]
     public string StartingWeight { get; set; } = string.Empty;
 
     // ── Navigation ─────────────────────────────────────────────────────────

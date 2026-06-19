@@ -19,7 +19,7 @@ public class Routine
     /// Display label (e.g., "Day 1").
     /// </summary>
     [Required]
-    [MaxLength(20)]
+    [MaxLength(50)]
     public string DayLabel { get; set; } = string.Empty;
 
     /// <summary>
