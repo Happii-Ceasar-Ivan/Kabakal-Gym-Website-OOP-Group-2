@@ -1,86 +1,159 @@
+/* Update to deep matte background, clean hierarchy */
 .calendarContainer {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    color: #f7f014;
-    padding: 20px 15px;
+    color: #e0e0e0;
+    padding: 32px 40px;
+    background-color: #030303; /* Deep matte background */
+    min-height: 100vh;
+    width: 100%;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
-.tabsTitle, .calendarMonth { 
-    text-align: center; 
-    text-transform: uppercase; 
-    font-family: 'Archive', sans-serif;
-    margin: 5px 0;
+.headerContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
 }
 
 .tabsTitle {
-    font-size: 1.2rem;
-    color: #f7f014;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0 0 4px 0;
 }
 
 .calendarMonth {
-    font-size: 1rem;
-    font-weight: normal;
+    font-size: 1.5rem;
+    font-weight: 600;
     color: #fff;
+    margin: 0 0 24px 0;
+    letter-spacing: -0.02em;
 }
 
-/* Date Buttons */
+/* Date Buttons - tight, snappy */
 .dateSelector { 
     display: flex; 
-    gap: 10px; 
-    justify-content: center; 
+    gap: 8px; 
     align-items: center;
-    margin: 20px 0; 
+    margin-bottom: 40px; 
+    width: 100%;
+    max-width: 1200px;
+    overflow-x: auto;
+    margin-left: auto;
+    margin-right: auto;
+    padding-bottom: 8px; /* Room for horizontal scrollbar if needed */
 }
 
 .dateItem {
     background: transparent;
-    border: 2px solid #f7f014;
-    color: #f7f014;
-    padding: 10px 15px;
-    border-radius: 20px;
+    border: 1px solid #222;
+    color: #888;
+    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
-    font-weight: bold;
-    transition: all 0.2s ease;
-    font-size: 14px;
+    font-weight: 600;
+    font-size: 13px;
+    transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1);
+    white-space: nowrap;
 }
 
-.dateItem.active, .dateItem:hover { 
-    background: #f7f014; 
-    color: #060407; 
+.dateItem.active {
+    background: #f7f014;
+    border-color: #f7f014;
+    color: #000;
+    transform: scale(1.05);
+}
+
+.dateItem:hover:not(.active) {
+    background: #111;
+    color: #fff;
+    border-color: #444;
 }
 
 .navArrow {
     background: transparent;
     border: none;
-    color: #f7f014;
-    font-size: 1.5rem;
+    color: #888;
+    font-size: 1.2rem;
     cursor: pointer;
-    padding: 0 10px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 250ms cubic-bezier(0.32, 0.72, 0, 1), transform 250ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
-/* Sections */
+.navArrow:hover {
+    color: #fff;
+    transform: scale(1.1);
+}
+
+/* Responsive Content Grid */
+.contentGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+    .contentGrid {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+    }
+}
+
+.leftColumn, .rightColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+/* Sections - fill column */
 .logSection, .sessionSection, .alertSection {
     width: 100%;
-    max-width: 380px;
-    margin-bottom: 25px;
+    max-width: none;
+    margin-bottom: 0;
 }
 
 .sectionText h4 {
-    font-family: 'Archive', sans-serif;
-    margin-bottom: 10px;
-    color: #fff;
-    font-size: 14px;
-    letter-spacing: 1px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 12px;
 }
 
 /* Cards */
 .logCard, .sessionItem, .alertContainer {
-    border: 2px solid #f7f014;
-    padding: 15px;
-    border-radius: 16px;
-    margin-bottom: 15px;
-    background-color: #060407;
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    transition: transform 250ms cubic-bezier(0.32, 0.72, 0, 1), border-color 250ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.logCard:hover, .sessionItem:hover {
+    transform: translateY(-2px);
+    border-color: #333;
+}
+
+.sessionContainer {
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 /* Gate Log */
@@ -88,74 +161,128 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
-    font-weight: bold;
-    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.logHeader > span:first-child {
+    font-weight: 600;
+    font-size: 14px;
+    color: #fff;
 }
 
 .statusBadge { 
-    font-size: 0.7rem; 
-    background: #228B22; 
-    color: #fff; 
+    font-size: 10px;
+    font-weight: 700;
+    background: rgba(34, 139, 34, 0.15);
+    color: #4caf50;
     padding: 4px 8px; 
-    border-radius: 10px; 
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.statusBadge.pending {
+    background: rgba(247, 240, 20, 0.1);
+    color: #f7f014;
 }
 
 .logTimes {
     font-family: 'Fira Code', monospace;
-    font-size: 12px;
-    color: #ccc;
+    font-size: 11px;
+    color: #888;
 }
 
 /* Today's Session */
 .sessionItem {
     display: flex;
-    align-items: center;
-    gap: 15px;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
+    background-color: transparent;
+    border: none;
+    margin-bottom: 0;
+    transition: background-color 250ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.sessionItem:hover {
+    background-color: #111;
+    transform: none;
+    border-color: transparent;
 }
 
 .sessionNumber {
-    font-family: 'Archive', sans-serif;
-    font-size: 24px;
-    color: #f7f014;
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: #555;
+    padding-top: 2px;
 }
 
 .sessionInfo {
     font-size: 13px;
-    line-height: 1.4;
+    line-height: 1.5;
+    color: #999;
+    flex-grow: 1;
 }
 
 .sessionInfo strong {
     color: #fff;
+    font-weight: 600;
+    display: block;
+    font-size: 14px;
+    margin-bottom: 2px;
+}
+
+.sessionDivider {
+    height: 1px;
+    background-color: #1a1a1a;
+    margin: 0 16px;
 }
 
 /* Alert Section */
 .alertContainer {
-    border-color: #ff3333;
-    text-align: center;
+    border: 1px solid rgba(255, 51, 51, 0.3);
+    background-color: rgba(255, 51, 51, 0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
 }
 
 .alertContainer p {
-    color: #ff3333;
-    font-weight: bold;
-    margin-bottom: 15px;
+    color: #ff5555;
+    font-size: 13px;
+    margin: 0 0 16px 0;
     line-height: 1.5;
+}
+
+.alertContainer p strong {
+    font-weight: 700;
+    display: block;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 11px;
 }
 
 .ctaButton {
     background-color: #f7f014;
-    color: #060407;
+    color: #000;
     border: none;
-    border-radius: 50px;
-    padding: 12px 20px;
-    width: 100%;
-    font-weight: bold;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 12px;
+    font-weight: 700;
     cursor: pointer;
-    font-family: 'Archive', sans-serif;
-    transition: all 0.2s ease;
+    transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
 }
 
 .ctaButton:hover { 
-    background-color: #595326; 
-    color: #f7f014; 
+    background-color: #fff;
+    transform: translateY(-1px);
+}
+
+.ctaButton:active {
+    transform: translateY(1px);
 }

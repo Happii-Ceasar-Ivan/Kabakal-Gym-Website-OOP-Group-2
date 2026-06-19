@@ -130,7 +130,11 @@ export async function getMyProfile() {
 }
 
 export async function getMyStats() {
-  return request('/me/stats');
+  return request('/me/stats', { method: 'GET' });
+}
+
+export async function getCalendarData(dateString) {
+  return request(`/me/calendar/${dateString}`, { method: 'GET' });
 }
 
 export async function getMyLatestRoutine() {
@@ -159,10 +163,9 @@ export async function getEquipment(page = 1, pageSize = 20, search = '') {
   return request(`/equipment?${params.toString()}`);
 }
 
-export async function processPayment(paymentData) {
-  return request('/payments/process', {
-    method: 'POST',
-    body: JSON.stringify(paymentData),
+export async function processPayment() {
+  return request('/payment/checkout', {
+    method: 'POST'
   });
 }
 

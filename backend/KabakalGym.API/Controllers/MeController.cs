@@ -163,6 +163,66 @@ public class MeController : ControllerBase
 
         return Ok(new { hasRoutine = true, routine });
     }
+
+    /// <summary>
+    /// Gets gate log (visits) and assigned workout routine for a specific date.
+    /// </summary>
+    [HttpGet("calendar/{date}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCalendarData(string date)
+    {
+        var userId = User.GetUserId();
+
+        if (!DateOnly.TryParse(date, out var targetDate))
+            return BadRequest(new { error = "Invalid date format. Use YYYY-MM-DD." });
+
+        // 1. Fetch Visits
+        var targetDateTime = targetDate.ToDateTime(TimeOnly.MinValue);
+        var nextDayDateTime = targetDate.AddDays(1).ToDateTime(TimeOnly.MinValue);
+
+        var visits = await _context.Visits
+            .AsNoTracking()
+            .Where(v => v.UserId == userId && v.CheckIn >= targetDateTime && v.CheckIn < nextDayDateTime)
+            .OrderByDescending(v => v.CheckIn)
+            .Select(v => new 
+            {
+                v.VisitId,
+                v.CheckIn,
+                v.CheckOut,
+                v.IsApproved
+            })
+            .ToListAsync();
+
+        // 2. Fetch Routine for that date
+        var routine = await _context.Routines
+            .AsNoTracking()
+            .Include(r => r.RoutineLists)
+                .ThenInclude(rl => rl.Exercise)
+            .Where(r => r.UserId == userId && r.DateAssigned == targetDate)
+            .Select(r => new
+            {
+                r.RoutineId,
+                r.DayLabel,
+                r.FocusArea,
+                r.IsRestDay,
+                r.IsCompleted,
+                Exercises = r.RoutineLists.OrderBy(rl => rl.OrderIndex).Select(rl => new 
+                {
+                    rl.Exercise.ExerciseName,
+                    rl.Sets,
+                    rl.Reps,
+                    rl.StartingWeight
+                }).ToList()
+            })
+            .FirstOrDefaultAsync();
+
+        return Ok(new
+        {
+            date = targetDate.ToString("yyyy-MM-dd"),
+            visits,
+            routine
+        });
+    }
 }
 
 public class UpdateProfilePictureDto

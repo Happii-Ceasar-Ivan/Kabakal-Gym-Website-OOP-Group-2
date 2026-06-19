@@ -42,8 +42,8 @@ public class PaymentController : ControllerBase
 
         try
         {
-            // Monthly payment is fixed at 1500 PHP for this example
-            var invoiceUrl = await _paymentGateway.CreateInvoiceAsync(userId, userEmail, 1500m, "Monthly Plan");
+            // Monthly payment is fixed at 699 PHP for this example
+            var invoiceUrl = await _paymentGateway.CreateInvoiceAsync(userId, userEmail, 699m, "Monthly Plan");
             return Ok(new { url = invoiceUrl });
         }
         catch (Exception ex)
