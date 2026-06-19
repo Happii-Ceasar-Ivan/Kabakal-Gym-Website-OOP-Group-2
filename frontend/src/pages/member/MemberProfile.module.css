@@ -1,43 +1,47 @@
-/* For upper header 1: Bg picture, Back button at top left */
-.headerBackground {
-    position: relative;
-    height: 350px;
-    background:
-        linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.85)),
-        url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600') center/cover no-repeat;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-end;
-    padding-bottom: 20px;
-}
+/* Anti-Slop UI CSS for Member Profile */
 
 .profileContainer {
     width: 100%;
     background-color: #060407;
-    border-radius: 16px;
+    border-radius: 12px;
     display: flex;
     flex-direction: column;
     position: relative;
-    padding-bottom: 20px;
+    padding-bottom: 60px;
+    overflow: hidden;
+    font-family: 'Fira Code', monospace;
 }
 
-/* Avatar profile */
+/* For upper header */
+.headerBackground {
+    position: relative;
+    height: 280px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+}
+
 .avatarWrapper {
     position: relative;
-    margin-bottom: 15px;
+    z-index: 2;
+    transform: translateY(50%); /* Pull avatar down */
 }
 
 .avatarCircle {
-    width: 100px;
-    height: 100px;
-    border: 4px solid #f7f014;
+    width: 120px;
+    height: 120px;
+    border: 4px solid #060407;
     border-radius: 50%;
-    background-color: #060407;
+    background-color: #111;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: hidden;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.8);
 }
 
 .avatarIcon {
@@ -46,155 +50,275 @@
     object-fit: cover;
 }
 
+.profileInfoWrapper {
+    margin-top: 70px; /* Space for the translated avatar */
+    text-align: center;
+    padding: 0 20px;
+}
+
 .profileName {
-    color: #f7f014;
+    color: #fff;
     font-family: 'Archive', sans-serif;
-    font-size: 20px;
+    font-size: 28px;
     font-weight: 800;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
     text-transform: uppercase;
 }
 
 .profileSubtextQuote {
-    color: #f7f014;
-    font-family: 'Archive', sans-serif;
-    font-size: 11px;
-    text-align: center;
-    line-height: 1.4;
-    font-weight: normal;
-    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+    color: #888;
+    font-family: 'Tomorrow', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 500;
+    font-style: italic;
+    max-width: 400px;
+    margin: 0 auto;
 }
 
-/* Main settings below (after profile) */
+/* Main settings below */
 .settingContent {
     flex: 1;
-    background-color: #060407;
-    padding: 25px 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border: 2px solid #f7f014;
-    border-radius: 20px;
-    margin: 0 15px; /* Spacing from edges */
+    background-color: transparent;
+    padding: 0 20px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    width: 100%;
+    max-width: 900px;
+    margin: 40px auto 0 auto;
+    box-sizing: border-box;
+}
+
+@media (min-width: 768px) {
+    .settingContent {
+        grid-template-columns: 1fr 1fr;
+        align-items: start;
+        padding: 0 40px;
+    }
 }
 
 /* Sections, titles */
 .settingGroup {
     width: 100%;
-    margin-bottom: 20px;
+    background-color: #0a0a0a;
+    border: 1px solid #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .settingGroupTitle {
-    color: #f7f014;
+    color: #fff;
     font-family: 'Archive', sans-serif;
-    font-size: 16px;
-    font-weight: bold;
-    letter-spacing: 1px;
-    padding: 15px 10px 10px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 16px 20px;
     text-transform: uppercase;
-    border-bottom: 1px solid #f7f014; 
-    margin-bottom: 15px;
+    border-bottom: 1px solid #1a1a1a; 
+    background-color: rgba(255,255,255,0.02);
 }
 
 .settingGroupBody {
-    padding: 0 10px;
-    background-color: #060407;
+    padding: 20px;
 }
 
 /* Sub section: Member profile */
 .infoRow {
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     font-family: 'Fira Code', monospace;
     font-size: 13px;
-    font-weight: bold;
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
-    gap: 10px;
 }
 
 .infoRow:last-child {
     margin-bottom: 0;
 }
 
-.divider {
-    color: #f7f014;
-}
-
 .label {
-    color: #f7f014;
+    color: #666;
+    font-weight: 500;
 }
 
 .value {
-    color: #f7f014;
+    color: #fff;
+    font-weight: 600;
+    text-align: right;
 }
 
 .statusBadge {
-    background-color: #228B22;
-    color: #ffffff;
-    font-size: 11px;
+    background-color: rgba(34, 139, 34, 0.15);
+    color: #4caf50;
+    font-family: 'Archive', sans-serif;
+    font-size: 10px;
     font-weight: bold;
-    padding: 2px 8px;
-    border-radius: 6px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.statusBadge.inactive {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #aaa;
 }
 
 /* Sub section: Account settings */
 .menuList {
-    padding: 5px 15px;
-    border: 1px solid #f7f014;
-    border-radius: 8px;
-    background-color: #060407;
+    display: flex;
+    flex-direction: column;
 }
 
 .menuItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 0;
+    padding: 12px 16px;
+    margin-bottom: 8px;
     text-decoration: none;
-    color: #f7f014;
+    color: #ccc;
     font-family: 'Fira Code', monospace;
-    font-size: 15px;
-    font-weight: normal;
-    border-bottom: 1px solid #f7f014;
+    font-size: 13px;
+    font-weight: 500;
+    background-color: #111;
+    border: 1px solid transparent;
+    border-radius: 6px;
     cursor: pointer;
+    transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 .menuItem:last-child {
-    border-bottom: none;
+    margin-bottom: 0;
 }
 
-.menuItem::after {
-    content: "";
-    display: inline-block;
-    width: 0;
-    height: 0; 
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-    border-left: 10px solid #f7f014;
-    margin-left: 10px;
-    vertical-align: middle;
+.menuItem:hover {
+    background-color: #1a1a1a;
+    border-color: #333;
+    color: #fff;
+    transform: translateX(4px);
+}
+
+.menuItem.danger {
+    color: #ff5555;
+    background-color: rgba(255, 85, 85, 0.05);
+}
+
+.menuItem.danger:hover {
+    background-color: rgba(255, 85, 85, 0.1);
+    border-color: rgba(255, 85, 85, 0.3);
+    color: #ff3333;
+}
+
+.arrowIcon {
+    opacity: 0.5;
+    transition: opacity 250ms ease;
+}
+
+.menuItem:hover .arrowIcon {
+    opacity: 1;
 }
 
 /* Logout button */
+.logoutContainer {
+    grid-column: 1 / -1;
+    display: flex;
+    justify-content: center;
+    margin-top: 16px;
+}
+
 .logoutBtn {
-    margin-top: 20px;
-    width: 80%;
     background: transparent;
-    border: 2px solid #f7f014;
-    color: #f7f014;
-    padding: 12px 0;
-    border-radius: 25px;
+    border: 1px solid #333;
+    color: #888;
+    padding: 12px 40px;
+    border-radius: 6px;
     font-family: 'Archive', sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    transition: all 0.2s ease;
+    letter-spacing: 0.1em;
+    transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1);
     cursor: pointer;
 }
 
 .logoutBtn:hover {
-    background-color: #f7f014;
-    color: #060407;
+    background-color: #fff;
+    color: #000;
+    border-color: #fff;
+    transform: translateY(-2px);
 }
+
+/* Modals */
+.modalOverlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(6, 4, 7, 0.9); z-index: 9999; display: flex;
+    justify-content: center; align-items: center; backdrop-filter: blur(8px);
+}
+
+.modalContent {
+    background-color: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 8px;
+    padding: 32px; width: 90%; max-width: 420px; text-align: left;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+}
+
+.modalTitle {
+    color: #fff; font-family: 'Archive', sans-serif; font-size: 18px; margin: 0 0 24px 0; letter-spacing: 1px; text-align: left;
+}
+
+.modalUploadBtn {
+    width: 100%; padding: 12px 16px; border: 1px solid #222; border-radius: 6px; 
+    cursor: pointer; color: #ccc; display: flex; justify-content: space-between;
+    background-color: #111; transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1);
+    font-family: 'Fira Code', monospace; font-size: 13px; box-sizing: border-box;
+}
+
+.modalUploadBtn:hover {
+    border-color: #444; background-color: #1a1a1a; color: #fff;
+}
+
+.modalUploadBtn span:last-child {
+    color: #F7F014; font-weight: bold; font-family: 'Archive', sans-serif; letter-spacing: 0.05em;
+}
+
+.modalTextarea {
+    width: 100%; box-sizing: border-box; background: #111; border: 1px solid #222; 
+    color: #fff; padding: 12px; border-radius: 6px; margin-top: 8px; resize: none;
+    font-family: 'Fira Code', monospace; font-size: 13px; transition: border-color 250ms ease;
+}
+
+.modalTextarea:focus {
+    outline: none; border-color: #F7F014;
+}
+
+.modalBtnPrimary {
+    flex: 1; padding: 12px; background: #F7F014; color: #060407; border: none; 
+    border-radius: 4px; font-weight: bold; cursor: pointer; font-family: 'Archive', sans-serif;
+    font-size: 12px; letter-spacing: 0.05em; transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.modalBtnPrimary:hover {
+    background: #fff; transform: translateY(-1px);
+}
+
+.modalBtnSecondary {
+    flex: 1; padding: 12px; background: transparent; color: #888; border: 1px solid #333; 
+    border-radius: 4px; cursor: pointer; font-family: 'Archive', sans-serif;
+    font-size: 12px; letter-spacing: 0.05em; transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+.modalBtnSecondary:hover {
+    color: #fff; border-color: #666;
+}
+
+.modalBtnDanger {
+    width: 100%; padding: 12px; background: rgba(255, 68, 68, 0.1); border: 1px solid rgba(255, 68, 68, 0.3); 
+    color: #ff4444; border-radius: 4px; font-weight: bold; cursor: pointer; font-family: 'Archive', sans-serif;
+    font-size: 12px; letter-spacing: 0.05em; transition: all 250ms cubic-bezier(0.32, 0.72, 0, 1); margin-bottom: 12px; box-sizing: border-box;
+}
+
+.modalBtnDanger:hover {
+    background: #ff4444; color: #fff; transform: translateY(-1px);
+}
+

@@ -13,10 +13,12 @@ const MemberProfilePage = () => {
   const { upload: uploadPfp, uploading: uploadingPfp } = useCloudinaryUpload();
   const { upload: uploadBg, uploading: uploadingBg } = useCloudinaryUpload();
   
-  const [isEditing, setIsEditing] = useState(false);
-  const [bioInput, setBioInput] = useState('');
-  
+  // Modal states
+  const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  
+  // Edit Form state
+  const [bioInput, setBioInput] = useState('');
   const [deleting, setDeleting] = useState(false);
 
   const navigate = useNavigate();
@@ -29,7 +31,6 @@ const MemberProfilePage = () => {
     try {
       const data = await getMyProfile();
       setProfile(data);
-      setBioInput(data.bio || '');
     } catch (err) {
       console.error('Failed to load profile', err);
       toast.error("Failed to load profile.");
@@ -42,6 +43,11 @@ const MemberProfilePage = () => {
     localStorage.removeItem('kabakal_token');
     localStorage.removeItem('kabakal_user');
     navigate('/login');
+  };
+
+  const openEditModal = () => {
+    setBioInput(profile?.bio || '');
+    setShowEditModal(true);
   };
 
   const handlePfpUpload = async (e) => {
@@ -78,7 +84,7 @@ const MemberProfilePage = () => {
     try {
       await updateProfileSettings({ bio: bioInput });
       setProfile(prev => ({ ...prev, bio: bioInput }));
-      setIsEditing(false);
+      setShowEditModal(false);
       toast.success("Bio updated!");
     } catch (err) {
       toast.error("Failed to update bio.");
@@ -116,73 +122,37 @@ const MemberProfilePage = () => {
   };
 
   if (loading) {
-    return <div style={{ color: '#f7f014', textAlign: 'center', marginTop: '50px' }}>Loading profile...</div>;
+    return <div style={{ color: '#888', textAlign: 'center', marginTop: '50px', fontFamily: "'Fira Code', monospace", fontSize: '13px' }}>Loading profile...</div>;
   }
 
   const activeSub = profile?.subscriptions?.find(s => s.status === 'Active' && new Date(s.endDate) > new Date());
   const tier = activeSub ? activeSub.plan.name : 'Basic';
   const status = activeSub ? 'ACTIVE' : 'INACTIVE';
   
-  const bgStyle = profile?.backgroundPictureUrl 
-    ? { backgroundImage: `linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.85)), url(${profile.backgroundPictureUrl})` }
-    : {};
+  const bgStyle = { 
+    backgroundImage: `linear-gradient(to bottom, rgba(6, 4, 7, 0.2), #060407), url(${profile?.backgroundPictureUrl || 'https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600'})` 
+  };
 
   return (
     <div className={styles.profileContainer}>
       <div className={styles.headerBackground} style={bgStyle}>
-        <div className={styles.headerArrowContainer}>
-           <label style={{ position: 'absolute', top: 20, right: 20, cursor: uploadingBg ? 'not-allowed' : 'pointer', color: '#f7f014', fontSize: '12px', border: '1px solid #f7f014', padding: '5px 10px', borderRadius: '5px', backgroundColor: 'rgba(0,0,0,0.5)'}}>
-              {uploadingBg ? "Uploading..." : "Change Banner"}
-              <input type="file" accept="image/jpeg, image/png, image/webp" style={{ display: 'none' }} onChange={handleBgUpload} disabled={uploadingBg} />
-           </label>
-        </div>
-
-        <label className={styles.avatarWrapper} style={{ cursor: uploadingPfp ? 'not-allowed' : 'pointer' }}>
-          <div className={styles.avatarCircle} style={{ opacity: uploadingPfp ? 0.5 : 1 }}>
-            {uploadingPfp ? (
-              <div style={{ color: '#f7f014', fontSize: '12px' }}>Uploading...</div>
-            ) : (
-              <img 
-                src={profile?.profilePictureUrl || "/assets/placeholderforpfp.png"} 
-                alt="Avatar" 
-                className={styles.avatarIcon} 
-                style={profile?.profilePictureUrl ? { width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' } : {}}
-              />
-            )}
+        <div className={styles.avatarWrapper}>
+          <div className={styles.avatarCircle}>
+            <img 
+              src={profile?.profilePictureUrl || "/assets/placeholderforpfp.png"} 
+              alt="Avatar" 
+              className={styles.avatarIcon} 
+            />
           </div>
-          <input 
-            type="file" 
-            accept="image/jpeg, image/png, image/webp" 
-            style={{ display: 'none' }} 
-            onChange={handlePfpUpload}
-            disabled={uploadingPfp}
-          />
-        </label>
+        </div>
+      </div>
 
+      <div className={styles.profileInfoWrapper}>
         <div className={styles.profileName}>
           {profile?.firstName} {profile?.lastName}
         </div>
         <div className={styles.profileSubtextQuote}>
-          {isEditing ? (
-             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '5px' }}>
-                <input 
-                  type="text" 
-                  value={bioInput} 
-                  onChange={(e) => setBioInput(e.target.value)} 
-                  maxLength={150}
-                  style={{ background: 'transparent', border: '1px solid #f7f014', color: '#fff', textAlign: 'center', padding: '5px', borderRadius: '5px', width: '250px'}}
-                />
-                <div style={{ display: 'flex', gap: '10px' }}>
-                   <button onClick={saveBio} style={{ background: '#f7f014', color: '#000', border: 'none', padding: '3px 10px', cursor: 'pointer', borderRadius: '3px', fontWeight: 'bold' }}>Save</button>
-                   <button onClick={() => { setIsEditing(false); setBioInput(profile.bio || ''); }} style={{ background: 'transparent', color: '#f7f014', border: '1px solid #f7f014', padding: '3px 10px', cursor: 'pointer', borderRadius: '3px' }}>Cancel</button>
-                </div>
-             </div>
-          ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', justifyContent: 'center' }}>
-               "{profile?.bio || 'Embrace the struggle.'}"
-               <button onClick={() => setIsEditing(true)} style={{ background: 'none', border: 'none', color: '#888', cursor: 'pointer', fontSize: '12px' }}>✎</button>
-            </div>
-          )}
+           "{profile?.bio || 'Embrace the struggle.'}"
         </div>
       </div>
 
@@ -193,15 +163,16 @@ const MemberProfilePage = () => {
           <div className={styles.settingGroupTitle}>Personal Information</div>
           <div className={styles.settingGroupBody}>
             <div className={styles.infoRow}>
-              <span className={styles.label}>Email:</span>
+              <span className={styles.label}>Email Address</span>
               <span className={styles.value}>{profile?.email}</span>
             </div>
             <div className={styles.infoRow}>
-              <span className={styles.label}>Tier:</span>
+              <span className={styles.label}>Membership Tier</span>
               <span className={styles.value}>{tier}</span>
-              <span className={styles.divider}>|</span>
-              <span className={styles.label}>Status:</span>
-              <span className={styles.statusBadge} style={{ backgroundColor: status === 'ACTIVE' ? '#228B22' : '#555' }}>
+            </div>
+            <div className={styles.infoRow}>
+              <span className={styles.label}>Account Status</span>
+              <span className={`${styles.statusBadge} ${status !== 'ACTIVE' ? styles.inactive : ''}`}>
                 {status}
               </span>
             </div>
@@ -211,58 +182,97 @@ const MemberProfilePage = () => {
         {/* Account Management Group */}
         <div className={styles.settingGroup}>
           <div className={styles.settingGroupTitle}>Account Management</div>
-          <div className={styles.settingGroupBody}>
+          <div className={styles.settingGroupBody} style={{ padding: '8px' }}>
             <div className={styles.menuList}>
-              <div className={styles.menuItem} onClick={handleExportData}>
-                Export My Data
+              <div className={styles.menuItem} onClick={openEditModal}>
+                <span>Edit Personal Information</span>
+                <svg className={styles.arrowIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </div>
-              <div className={styles.menuItem} onClick={() => setShowDeleteModal(true)} style={{ color: '#ff4444', borderBottom: 'none' }}>
-                Delete Account
+              <div className={styles.menuItem} onClick={handleExportData}>
+                <span>Export My Data</span>
+                <svg className={styles.arrowIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </div>
+              <div className={`${styles.menuItem} ${styles.danger}`} onClick={() => setShowDeleteModal(true)}>
+                <span>Delete Account</span>
+                <svg className={styles.arrowIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
               </div>
             </div>
           </div>
         </div>
 
-        <button className={styles.logoutBtn} onClick={handleLogout}>
-          LOG OUT
-        </button>
+        <div className={styles.logoutContainer}>
+          <button className={styles.logoutBtn} onClick={handleLogout}>
+            LOG OUT
+          </button>
+        </div>
 
       </div>
 
+      {/* EDIT PROFILE MODAL */}
+      {showEditModal && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h2 className={styles.modalTitle}>EDIT PROFILE</h2>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              
+              <label className={styles.modalUploadBtn} style={{ cursor: uploadingPfp ? 'not-allowed' : 'pointer' }}>
+                <span>{uploadingPfp ? 'Uploading...' : 'Update Profile Picture'}</span>
+                <span>Upload</span>
+                <input type="file" accept="image/jpeg, image/png, image/webp" style={{ display: 'none' }} onChange={handlePfpUpload} disabled={uploadingPfp} />
+              </label>
+
+              <label className={styles.modalUploadBtn} style={{ cursor: uploadingBg ? 'not-allowed' : 'pointer' }}>
+                <span>{uploadingBg ? 'Uploading...' : 'Update Background Banner'}</span>
+                <span>Upload</span>
+                <input type="file" accept="image/jpeg, image/png, image/webp" style={{ display: 'none' }} onChange={handleBgUpload} disabled={uploadingBg} />
+              </label>
+
+              <div style={{ width: '100%', marginTop: '8px' }}>
+                 <label style={{ color: '#888', fontSize: '11px', textTransform: 'uppercase', fontFamily: "'Archive', sans-serif", letterSpacing: '0.1em' }}>Update Bio</label>
+                 <textarea 
+                   className={styles.modalTextarea}
+                   value={bioInput}
+                   onChange={(e) => setBioInput(e.target.value)}
+                   maxLength={150}
+                   rows={3}
+                 />
+              </div>
+
+              <div style={{ display: 'flex', gap: '16px', width: '100%', marginTop: '16px' }}>
+                 <button onClick={() => setShowEditModal(false)} className={styles.modalBtnSecondary}>CANCEL</button>
+                 <button onClick={saveBio} className={styles.modalBtnPrimary}>SAVE CHANGES</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* DELETE ACCOUNT MODAL */}
       {showDeleteModal && (
-        <div style={{
-          position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
-          backgroundColor: 'rgba(0,0,0,0.8)', zIndex: 9999, display: 'flex',
-          justifyContent: 'center', alignItems: 'center', backdropFilter: 'blur(5px)'
-        }}>
-          <div style={{
-            backgroundColor: '#060407', border: '2px solid #ff4444', borderRadius: '12px',
-            padding: '30px', maxWidth: '400px', textAlign: 'center'
-          }}>
-            <h2 style={{ color: '#ff4444', fontFamily: "'Archive', sans-serif", margin: '0 0 15px 0' }}>DELETE ACCOUNT</h2>
-            <p style={{ color: '#ccc', fontSize: '14px', marginBottom: '25px', lineHeight: '1.5' }}>
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <h2 className={styles.modalTitle} style={{ color: '#ff4444' }}>DELETE ACCOUNT</h2>
+            <p style={{ color: '#aaa', fontSize: '13px', marginBottom: '32px', lineHeight: '1.6', fontFamily: "'Fira Code', monospace" }}>
               You are about to delete your account. Do you want to temporarily deactivate it, or permanently destroy all your personal data?
             </p>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               <button 
                 onClick={() => executeDelete(false)}
                 disabled={deleting}
-                style={{ 
-                  padding: '12px', backgroundColor: 'transparent', border: '2px solid #f7f014', color: '#f7f014',
-                  borderRadius: '8px', fontWeight: 'bold', cursor: deleting ? 'not-allowed' : 'pointer', fontFamily: "'Fira Code', monospace" 
-                }}>
+                className={styles.modalBtnSecondary}
+                style={{ marginBottom: '16px', color: '#fff', borderColor: '#444' }}
+              >
                 DEACTIVATE (Can be restored)
               </button>
               
               <button 
                 onClick={() => executeDelete(true)}
                 disabled={deleting}
-                style={{ 
-                  padding: '12px', backgroundColor: '#ff4444', border: 'none', color: '#fff',
-                  borderRadius: '8px', fontWeight: 'bold', cursor: deleting ? 'not-allowed' : 'pointer', fontFamily: "'Fira Code', monospace" 
-                }}>
+                className={styles.modalBtnDanger}
+              >
                 PERMANENTLY DELETE DATA
               </button>
 
@@ -270,10 +280,10 @@ const MemberProfilePage = () => {
                 onClick={() => setShowDeleteModal(false)}
                 disabled={deleting}
                 style={{ 
-                  padding: '10px', backgroundColor: 'transparent', border: 'none', color: '#888',
-                  cursor: 'pointer', marginTop: '10px'
+                  padding: '12px', backgroundColor: 'transparent', border: 'none', color: '#888',
+                  cursor: 'pointer', marginTop: '8px', fontFamily: "'Archive', sans-serif", fontSize: '11px', letterSpacing: '0.05em'
                 }}>
-                Cancel
+                CANCEL
               </button>
             </div>
           </div>
