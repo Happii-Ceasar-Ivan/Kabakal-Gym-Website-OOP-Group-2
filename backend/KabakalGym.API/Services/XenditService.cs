@@ -103,11 +103,11 @@ public class XenditService : IPaymentGatewayService
         }
 
         // IDEMPOTENCY CHECK
-        // If the transaction is already "Paid", we safely ignore this webhook.
-        // This prevents double-crediting the user if Xendit retries the webhook, or if the user double-clicked.
-        if (transaction.Status == "Paid")
+        // Only ignore if BOTH the transaction and the subscription are Paid.
+        // This handles cases where the transaction saved but the subscription failed to create.
+        if (transaction.Status == "Paid" && transaction.User?.Subscription?.PaymentStatus == "Paid")
         {
-            _logger.LogInformation("Webhook received for already paid invoice: {InvoiceId}. Ignoring.", invoiceId);
+            _logger.LogInformation("Webhook received for already fully processed invoice: {InvoiceId}. Ignoring.", invoiceId);
             return;
         }
 
