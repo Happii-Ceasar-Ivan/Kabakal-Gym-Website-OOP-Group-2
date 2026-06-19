@@ -60,15 +60,43 @@ public sealed class AuthService : IAuthService
     {
         var normalizedEmail = dto.Email.ToLower().Trim();
 
-        // 1. Check email uniqueness — hits IX_Users_Email_Unique index (O(log n))
-        var emailTaken = await _context.Users
-            .AsNoTracking()
-            .AnyAsync(u => u.Email == normalizedEmail);
+        // 1. Check email uniqueness & Reactivation
+        var existingUser = await _context.Users
+            .AsTracking()
+            .FirstOrDefaultAsync(u => u.Email == normalizedEmail);
 
-        if (emailTaken)
-            return ServiceResult<string>.Fail(
-                "An account with this email already exists."
-            );
+        if (existingUser != null)
+        {
+            if (existingUser.IsActive)
+            {
+                return ServiceResult<string>.Fail("An account with this email already exists.");
+            }
+            else
+            {
+                // Reactivate soft-deleted account
+                existingUser.IsActive = true;
+                existingUser.FirstName = dto.FirstName.Trim();
+                existingUser.LastName = dto.LastName.Trim();
+                existingUser.PasswordHash = _hasher.HashPassword(existingUser, dto.Password);
+                
+                var reactivateOtp = Random.Shared.Next(100000, 999999).ToString();
+                existingUser.VerificationToken = reactivateOtp;
+                existingUser.VerificationTokenExpiresAt = DateTime.UtcNow.AddMinutes(15);
+                existingUser.IsVerified = false;
+
+                await _context.SaveChangesAsync();
+                
+                try
+                {
+                    await _emailService.SendVerificationEmailAsync(existingUser.Email, reactivateOtp);
+                    return ServiceResult<string>.Success("Account reactivated. Please check your email to verify your account.");
+                }
+                catch (Exception)
+                {
+                    return ServiceResult<string>.Fail("Registration failed: Could not send verification email. Please try again later.");
+                }
+            }
+        }
 
         // 2. Build the User entity (Role defaults to Member; IsActive = true)
         var user = new User

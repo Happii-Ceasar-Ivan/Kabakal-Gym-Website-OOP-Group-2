@@ -62,7 +62,8 @@ public class XenditService : IPaymentGatewayService
             payer_email = email,
             description = $"Kabakal Gym Subscription - {planType}",
             success_redirect_url = "https://kabakal-gym.vercel.app/member/billing?success=true",
-            failure_redirect_url = "https://kabakal-gym.vercel.app/member/billing?success=false"
+            failure_redirect_url = "https://kabakal-gym.vercel.app/member/billing?success=false",
+            currency = "PHP"
         };
 
         var content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");

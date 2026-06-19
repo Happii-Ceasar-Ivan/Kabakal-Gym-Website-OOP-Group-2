@@ -148,6 +148,25 @@ export async function updateProfilePicture(profilePictureUrl) {
   });
 }
 
+export async function updateProfileSettings(data) {
+  return request('/me/settings', {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function exportAccountData() {
+  return request('/me/export', {
+    method: 'GET'
+  });
+}
+
+export async function deleteAccount(permanent = false) {
+  return request(`/me/account?permanent=${permanent}`, {
+    method: 'DELETE'
+  });
+}
+
 export async function updateMember(id, data) {
   return request(`/members/${id}`, {
     method: 'PUT',

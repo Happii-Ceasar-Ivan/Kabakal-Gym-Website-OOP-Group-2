@@ -113,7 +113,9 @@ public sealed class SubscriptionService : ISubscriptionService
                     || u.Subscription.PaymentStatus != PaymentStatuses.Paid
                     || (u.Subscription.ExpirationDate.HasValue
                         && u.Subscription.ExpirationDate.Value < DateTime.UtcNow),
-                u.ProfilePictureUrl
+                u.ProfilePictureUrl,
+                u.BackgroundPictureUrl,
+                u.Bio
             ))
             .ToListAsync();
 

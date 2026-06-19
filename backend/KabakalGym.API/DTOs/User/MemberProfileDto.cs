@@ -37,5 +37,15 @@ public sealed record MemberProfileDto(
     /// <summary>
     /// Optional URL for the user's profile picture, hosted on Cloudinary.
     /// </summary>
-    string?   ProfilePictureUrl
+    string?   ProfilePictureUrl,
+
+    /// <summary>
+    /// Optional URL for the user's background banner picture, hosted on Cloudinary.
+    /// </summary>
+    string?   BackgroundPictureUrl,
+
+    /// <summary>
+    /// Short biography or quote for the profile.
+    /// </summary>
+    string?   Bio
 );

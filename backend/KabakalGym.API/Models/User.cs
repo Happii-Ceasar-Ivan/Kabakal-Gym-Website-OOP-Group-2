@@ -67,6 +67,18 @@ public class User
     /// </summary>
     public string? ProfilePictureUrl { get; set; }
 
+    /// <summary>
+    /// Optional URL for the user's background banner picture, hosted on Cloudinary.
+    /// </summary>
+    [MaxLength(500)]
+    public string? BackgroundPictureUrl { get; set; }
+
+    /// <summary>
+    /// Short biography or quote for the profile.
+    /// </summary>
+    [MaxLength(200)]
+    public string? Bio { get; set; }
+
     // ── Navigation ─────────────────────────────────────────────────────────
     public Subscription? Subscription { get; set; }
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

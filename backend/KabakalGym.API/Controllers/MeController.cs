@@ -42,36 +42,95 @@ public class MeController : ControllerBase
     }
 
     /// <summary>
-    /// Securely updates the user's profile picture URL after a Cloudinary upload.
+    /// Updates the user's profile settings (Bio, Profile Picture, Background Picture)
     /// </summary>
-    [HttpPatch("profile-picture")]
+    [HttpPatch("settings")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> UpdateProfilePicture([FromBody] UpdateProfilePictureDto dto)
+    public async Task<IActionResult> UpdateProfileSettings([FromBody] UpdateProfileSettingsDto dto)
     {
         var userId = User.GetUserId();
-
-        // Security check: MUST be a valid Cloudinary URL
-        if (string.IsNullOrWhiteSpace(dto.ProfilePictureUrl) || 
-            !dto.ProfilePictureUrl.StartsWith("https://res.cloudinary.com/", StringComparison.OrdinalIgnoreCase))
-        {
-            return BadRequest(new { error = "Invalid image URL. Only secure Cloudinary URLs are accepted." });
-        }
-
-        // Validate URL length to prevent buffer bloat
-        if (dto.ProfilePictureUrl.Length > 500)
-        {
-            return BadRequest(new { error = "Image URL is too long." });
-        }
-
         var user = await _context.Users.FindAsync(userId);
         if (user == null)
             return NotFound(new { error = "User not found." });
 
-        user.ProfilePictureUrl = dto.ProfilePictureUrl;
-        await _context.SaveChangesAsync();
+        if (!string.IsNullOrWhiteSpace(dto.ProfilePictureUrl))
+        {
+            if (!dto.ProfilePictureUrl.StartsWith("https://res.cloudinary.com/", StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new { error = "Invalid profile image URL." });
+            user.ProfilePictureUrl = dto.ProfilePictureUrl;
+        }
 
-        return Ok(new { message = "Profile picture updated successfully." });
+        if (!string.IsNullOrWhiteSpace(dto.BackgroundPictureUrl))
+        {
+            if (!dto.BackgroundPictureUrl.StartsWith("https://res.cloudinary.com/", StringComparison.OrdinalIgnoreCase))
+                return BadRequest(new { error = "Invalid background image URL." });
+            user.BackgroundPictureUrl = dto.BackgroundPictureUrl;
+        }
+
+        if (dto.Bio != null)
+        {
+            user.Bio = dto.Bio.Trim();
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok(new { message = "Profile settings updated successfully." });
+    }
+
+    /// <summary>
+    /// Export user data as JSON
+    /// </summary>
+    [HttpGet("export")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> ExportAccountData()
+    {
+        var userId = User.GetUserId();
+        var user = await _context.Users
+            .Include(u => u.Transactions)
+            .Include(u => u.Routines)
+            .Include(u => u.Visits)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.UserId == userId);
+
+        if (user == null) return NotFound(new { error = "User not found." });
+
+        var exportData = new
+        {
+            Profile = new { user.FirstName, user.LastName, user.Email, user.Bio, user.Role },
+            Transactions = user.Transactions.Select(t => new { t.AmountPaid, t.PaymentMethod, t.Status, t.Timestamp }),
+            Routines = user.Routines.Select(r => new { r.DayLabel, r.FocusArea, r.IsRestDay, r.DateAssigned, r.CompletedAt }),
+            Visits = user.Visits.Select(v => new { v.CheckIn, v.IsApproved })
+        };
+
+        return Ok(exportData);
+    }
+
+    /// <summary>
+    /// Hybrid Account Deletion (Deactivate or Permanent)
+    /// </summary>
+    [HttpDelete("account")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> DeleteAccount([FromQuery] bool permanent = false)
+    {
+        var userId = User.GetUserId();
+        var user = await _context.Users.FindAsync(userId);
+        if (user == null) return NotFound(new { error = "User not found." });
+
+        user.IsActive = false; // Soft delete
+
+        if (permanent)
+        {
+            // Scramble identifying info completely
+            user.Email = $"deleted_{Guid.NewGuid()}@kabakalgym.com";
+            user.FirstName = "Deleted";
+            user.LastName = "User";
+            user.Bio = null;
+            user.ProfilePictureUrl = null;
+            user.BackgroundPictureUrl = null;
+        }
+
+        await _context.SaveChangesAsync();
+        return Ok(new { message = permanent ? "Account permanently deleted." : "Account deactivated." });
     }
 
     /// <summary>

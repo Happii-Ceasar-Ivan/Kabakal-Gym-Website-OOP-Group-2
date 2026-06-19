@@ -39,7 +39,9 @@ public sealed class MemberManagementService : IMemberManagementService
             user.Subscription == null 
                 || user.Subscription.PaymentStatus != PaymentStatuses.Paid 
                 || (user.Subscription.ExpirationDate.HasValue && user.Subscription.ExpirationDate.Value < DateTime.UtcNow),
-            user.ProfilePictureUrl
+            user.ProfilePictureUrl,
+            user.BackgroundPictureUrl,
+            user.Bio
         );
 
         return ServiceResult<MemberProfileDto>.Success(dto);
