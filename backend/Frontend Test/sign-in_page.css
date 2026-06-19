@@ -1,0 +1,83 @@
+* { box-sizing: border-box; }
+
+body {
+    background: radial-gradient(circle, #1a1a1a 0%, #0d0d0d 100%);
+    color: #ffd700;
+    font-family: system-ui, -apple-system, 'Fira Code', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.page-container {
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+h2 { margin-bottom: 20px; }
+
+.divider {
+    width: 120px;
+    height: 2px;
+    background-color: #ffd700;
+    margin: 15px auto 30px;
+}
+
+/* inputs */
+label { display: block; text-align: left; margin-bottom: 5px; }
+
+input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    background: transparent;
+    border: 2px solid #ffd700;
+    border-radius: 25px; /* makes the container have rounded corners */
+    color: #f7f014;
+}
+
+/* button that color-shifts when there's interaction */
+.btn {
+    width: 100%;
+    padding: 12px;
+    background: transparent;
+    border: 2px solid #ffd700;
+    color: #ffd700;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    /* smooth color transition when cursor touches */
+    transition: all 0.3s ease;
+}
+
+/* color shift effect */
+.btn:hover, .btn:active {
+    background-color: #ffd700;
+    color: #000;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-bottom: 20px;
+}
+
+a { color: #ffd700; text-decoration: underline; }
+
+.social-icons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 25px;
+}
+
+.icon {
+    border: 2px solid #ffd700;
+    padding: 8px 12px;
+    border-radius: 50%;
+    cursor: pointer;
+}

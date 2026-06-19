@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In - Kabakal Gym</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="page-container">
+        <h2>SIGN IN</h2>
+        <div class="divider"></div>
+
+        <form onsubmit="event.preventDefault(); alert('Signing In...');">
+            <label>Email / Phone Number</label>
+            <input type="text" required>
+            
+            <label>Password</label>
+            <input type="password" required>
+            
+            <div class="form-options">
+                <label><input type="checkbox" style="width: auto;"> Remember Me</label>
+                <a href="#">Forgot Password?</a>
+            </div>
+            
+            <button type="submit" class="btn">Sign In</button>
+        </form>
+
+        <p>Are you new? <a href="register.html">Register Here</a></p>
+
+        <div class="social-icons">
+            <span class="icon">G</span>
+            <span class="icon">f</span>
+            <span class="icon"></span>
+        </div>
+    </div>
+</body>
+</html>
