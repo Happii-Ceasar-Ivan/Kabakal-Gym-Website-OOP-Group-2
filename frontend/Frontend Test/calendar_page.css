@@ -1,0 +1,61 @@
+body {
+    background: radial-gradient(circle, #1a1a1a 0%, #0d0d0d 100%);
+    color: #f7f014;
+    font-family: system-ui, -apple-system, 'Fira Code', monospace;
+    padding-bottom: 100px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tabs-title, .calendar-month { text-align: center; text-transform: uppercase; }
+
+/* date buttons */
+.date-selector { display: flex; gap: 10px; justify-content: center; margin: 20px 0; }
+.date-item {
+    background: transparent;
+    border: 2px solid #f7f014;
+    color: #f7f014;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.date-item.active, .date-item:hover { background: #f7f014; color: #060407; }
+
+.log-card, .session-item, .alert-container {
+    border: 2px solid #f7f014;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 15px;
+    width: 340px;
+}
+
+.status-badge { font-size: 0.7rem; background: #228B22; color: #fff; padding: 2px 8px; border-radius: 10px; }
+
+/* subscription button */
+.cta-button {
+    background-color: #f7f014;
+    color: #060407;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.cta-button:hover { background-color: #595326; color: #f7f014; }
+
+/* navigation */
+.bottom-nav-bar {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 60px;
+    display: flex; justify-content: space-around; align-items: center;
+    background: linear-gradient(to bottom, #595326, #f7f014);
+    z-index: 1000; padding-bottom: env(safe-area-inset-bottom);
+}
+.nav-items { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: #060407; }
+.nav-logo-badge { width: 62px; height: 62px; border-radius: 50%; margin-top: -30px; border: 2px solid #060407; }
+.icon { height: 24px; }
+.icon-label { font-size: 10px; font-weight: bold; }
