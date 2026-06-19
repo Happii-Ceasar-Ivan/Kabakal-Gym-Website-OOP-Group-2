@@ -25,10 +25,10 @@ public class UploadController : ControllerBase
 
     /// <summary>
     /// Returns a time-limited signature so the frontend can upload directly to Cloudinary.
-    /// Only authenticated Admins can generate upload signatures.
+    /// Any authenticated user can generate upload signatures.
     /// </summary>
     [HttpGet("signature")]
-    [Authorize(Roles = UserRoles.Admin)]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     public IActionResult GetSignature()
