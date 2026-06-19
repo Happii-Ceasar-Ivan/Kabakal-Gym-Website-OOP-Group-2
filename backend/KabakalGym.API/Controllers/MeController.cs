@@ -50,7 +50,10 @@ public class MeController : ControllerBase
     public async Task<IActionResult> UpdateProfileSettings([FromBody] UpdateProfileSettingsDto dto)
     {
         var userId = User.GetUserId();
-        var user = await _context.Users.FindAsync(userId);
+        var user = await _context.Users
+            .AsTracking()
+            .FirstOrDefaultAsync(u => u.UserId == userId);
+        
         if (user == null)
             return NotFound(new { error = "User not found." });
 
