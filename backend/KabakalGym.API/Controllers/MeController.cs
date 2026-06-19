@@ -73,6 +73,96 @@ public class MeController : ControllerBase
 
         return Ok(new { message = "Profile picture updated successfully." });
     }
+
+    /// <summary>
+    /// Computes the user's weekly attendance and current week-streak based on their CheckIn history.
+    /// </summary>
+    [HttpGet("stats")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMyStats()
+    {
+        var userId = User.GetUserId();
+        
+        var visits = await _context.Visits
+            .Where(v => v.UserId == userId && v.IsApproved)
+            .OrderByDescending(v => v.CheckIn)
+            .Select(v => v.CheckIn)
+            .ToListAsync();
+
+        var now = DateTime.UtcNow;
+        var diff = (7 + (now.DayOfWeek - DayOfWeek.Monday)) % 7;
+        var startOfThisWeek = now.AddDays(-1 * diff).Date;
+
+        int attendedThisWeek = visits.Count(v => v >= startOfThisWeek);
+
+        var activeWeeks = visits
+            .Select(v => 
+            {
+                var d = (7 + (v.DayOfWeek - DayOfWeek.Monday)) % 7;
+                return v.AddDays(-1 * d).Date;
+            })
+            .Distinct()
+            .OrderByDescending(d => d)
+            .ToList();
+
+        int streak = 0;
+        var checkWeek = startOfThisWeek;
+
+        if (activeWeeks.Contains(checkWeek))
+        {
+            foreach (var week in activeWeeks)
+            {
+                if (week == checkWeek)
+                {
+                    streak++;
+                    checkWeek = checkWeek.AddDays(-7);
+                }
+                else break;
+            }
+        }
+        else if (activeWeeks.Contains(checkWeek.AddDays(-7)))
+        {
+            checkWeek = checkWeek.AddDays(-7);
+            foreach (var week in activeWeeks)
+            {
+                if (week == checkWeek)
+                {
+                    streak++;
+                    checkWeek = checkWeek.AddDays(-7);
+                }
+                else break;
+            }
+        }
+
+        return Ok(new 
+        {
+            attendedThisWeek,
+            weekStreak = streak
+        });
+    }
+
+    /// <summary>
+    /// Gets the most recently saved routine for the current user.
+    /// </summary>
+    [HttpGet("latest-routine")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetLatestRoutine()
+    {
+        var userId = User.GetUserId();
+        
+        var routine = await _context.Routines
+            .Where(r => r.UserId == userId)
+            .OrderByDescending(r => r.DateAssigned)
+            .Select(r => new { r.RoutineId, r.DayLabel, r.FocusArea })
+            .FirstOrDefaultAsync();
+
+        if (routine == null)
+        {
+            return Ok(new { hasRoutine = false });
+        }
+
+        return Ok(new { hasRoutine = true, routine });
+    }
 }
 
 public class UpdateProfilePictureDto

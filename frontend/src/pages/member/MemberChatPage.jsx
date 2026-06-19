@@ -1,8 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { sendChatMessage } from '../../services/api';
 import styles from './MemberChat.module.css';
 
 const MemberChatPage = () => {
+  const navigate = useNavigate();
   // Start fully blank as requested
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
@@ -50,6 +52,12 @@ const MemberChatPage = () => {
     <div className={styles.chatContainer}>
       <div className={styles.chatHeader}>
         <h1 className={styles.headerTitle}>KG Coach</h1>
+        <button 
+          onClick={() => navigate('/member/workout-generator')}
+          className={styles.generateWorkoutBtn}
+        >
+          Generate me a workout
+        </button>
       </div>
 
       {error && <div className={styles.errorBanner}>{error}</div>}

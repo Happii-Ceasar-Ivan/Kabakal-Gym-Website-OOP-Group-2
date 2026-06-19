@@ -5,13 +5,17 @@ import styles from './MemberLayout.module.css';
 const MemberLayout = () => {
   return (
     <div className={styles.appContainer}>
-      <div className={styles.mobileWrapper}>
+      
+      {/* Navigation (Sidebar on Desktop, Bottom Bar on Mobile) */}
+      <nav className={styles.navBar}>
         
-        {/* Main Content Rendered Here */}
-        <Outlet />
+        {/* Desktop Header */}
+        <div className={styles.navHeaderDesktop}>
+          <h2 className={styles.sidebarTitle}>Member Panel</h2>
+          <p className={styles.sidebarSubtitle}>Kabakal Gym</p>
+        </div>
 
-        {/* Bottom Navigation Bar */}
-        <nav className={styles.bottomNavBar}>
+        <div className={styles.navLinksContainer}>
           <NavLink 
             to="/member/dashboard" 
             className={({ isActive }) => isActive ? `${styles.navItems} ${styles.active}` : styles.navItems}
@@ -45,9 +49,14 @@ const MemberLayout = () => {
             <img src="/assets/Profile_Icon.png" alt="Profile" className={styles.navIcon} />
             <span className={styles.iconLabel}>PROFILE</span>
           </NavLink>
-        </nav>
+        </div>
+      </nav>
 
-      </div>
+      {/* Main Content Rendered Here */}
+      <main className={styles.mainContent}>
+        <Outlet />
+      </main>
+
     </div>
   );
 };

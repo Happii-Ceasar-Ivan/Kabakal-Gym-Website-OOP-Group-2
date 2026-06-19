@@ -1,0 +1,242 @@
+.container {
+  padding: 40px 20px;
+  background-color: #060407;
+  color: #f7f014;
+  font-family: system-ui, -apple-system, 'Fira Code', monospace;
+  min-height: calc(100vh - 80px);
+}
+
+.headerTitle {
+  font-family: 'Archive', sans-serif;
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.subtitle {
+  text-align: center;
+  margin-bottom: 40px;
+  color: #a0a0a0;
+}
+
+.section {
+  max-width: 800px;
+  margin: 0 auto 40px;
+}
+
+.sectionTitle {
+  font-family: 'Archive', sans-serif;
+  font-size: 20px;
+  margin-bottom: 20px;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(247, 240, 20, 0.2);
+  padding-bottom: 10px;
+}
+
+/* Button Grids */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.optionBtn {
+  background: transparent;
+  border: 2px solid #595326;
+  color: #a0a0a0;
+  padding: 15px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: bold;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.optionBtn:hover {
+  border-color: #f7f014;
+  color: #f7f014;
+}
+
+.optionBtn.active {
+  background: #f7f014;
+  border-color: #f7f014;
+  color: #060407;
+}
+
+/* Slider */
+.sliderContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sliderLabels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  color: #a0a0a0;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+.sliderInput {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 6px;
+  background: #1a1a1a;
+  border-radius: 3px;
+  outline: none;
+}
+
+.sliderInput::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f7f014;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(247, 240, 20, 0.5);
+}
+
+.sliderInput::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f7f014;
+  cursor: pointer;
+  border: none;
+}
+
+/* Submit Button */
+.generateBtn {
+  display: block;
+  width: 100%;
+  max-width: 400px;
+  margin: 40px auto 0;
+  background: #f7f014;
+  color: #060407;
+  border: none;
+  padding: 18px;
+  border-radius: 999px;
+  font-family: 'Archive', sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 0 15px rgba(247, 240, 20, 0.2);
+}
+
+.generateBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(247, 240, 20, 0.4);
+}
+
+.generateBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.errorBanner {
+  background-color: #ff3333;
+  color: white;
+  text-align: center;
+  padding: 15px;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  max-width: 800px;
+  margin: 0 auto 20px;
+}
+
+/* Results Screen */
+.routineCard {
+  background: #1a1a1a;
+  border: 1px solid rgba(247, 240, 20, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.routineTitle {
+  font-family: 'Archive', sans-serif;
+  color: #f7f014;
+  font-size: 24px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+}
+
+.routineDesc {
+  color: #a0a0a0;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.dayCard {
+  background: #252525;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-left: 4px solid #f7f014;
+}
+
+.dayTitle {
+  font-family: 'Archive', sans-serif;
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.exerciseList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.exerciseItem {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.exerciseItem:last-child {
+  border-bottom: none;
+}
+
+.exerciseName {
+  font-weight: bold;
+  color: #f7f014;
+}
+
+.exerciseSets {
+  color: #a0a0a0;
+}
+
+.actionButtons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.secondaryBtn {
+  background: transparent;
+  border: 2px solid #595326;
+  color: #a0a0a0;
+  padding: 12px 24px;
+  border-radius: 999px;
+  font-family: 'Archive', sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.secondaryBtn:hover {
+  border-color: #fff;
+  color: #fff;
+}

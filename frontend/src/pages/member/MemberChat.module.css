@@ -15,6 +15,9 @@
   background: 
     linear-gradient(#060407, #060407) padding-box,
     linear-gradient(to right, #595326, #f7f014) border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .headerTitle {
@@ -24,6 +27,25 @@
   font-size: 20px;
   margin: 0;
   letter-spacing: 1px;
+}
+
+.generateWorkoutBtn {
+  background: transparent;
+  border: 1px solid #f7f014;
+  color: #f7f014;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-family: 'Archive', sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.2s;
+}
+
+.generateWorkoutBtn:hover {
+  background: #f7f014;
+  color: #060407;
 }
 
 .messagesContainer {

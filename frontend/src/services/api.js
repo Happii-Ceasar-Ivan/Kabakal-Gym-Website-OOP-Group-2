@@ -129,10 +129,18 @@ export async function getMyProfile() {
   return request('/me');
 }
 
-export async function updateProfilePicture(url) {
+export async function getMyStats() {
+  return request('/me/stats');
+}
+
+export async function getMyLatestRoutine() {
+  return request('/me/latest-routine');
+}
+
+export async function updateProfilePicture(profilePictureUrl) {
   return request('/me/profile-picture', {
     method: 'PATCH',
-    body: JSON.stringify({ profilePictureUrl: url }),
+    body: JSON.stringify({ profilePictureUrl }),
   });
 }
 
@@ -159,7 +167,7 @@ export async function processPayment(paymentData) {
 }
 
 // -----------------------------------------------------------------------------
-// AI Chat Endpoints
+// AI Chat & Routine Endpoints
 // -----------------------------------------------------------------------------
 
 export async function sendChatMessage(message) {
@@ -168,6 +176,24 @@ export async function sendChatMessage(message) {
     body: JSON.stringify({ message }),
   });
 }
+
+export async function generateRoutine(data) {
+  return request('/ai/generate-routine', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+export async function saveRoutine(data) {
+  return request('/ai/save-routine', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
+
+// -----------------------------------------------------------------------------
+// Check-in & Gym Status Endpoints
+// -----------------------------------------------------------------------------
 
 export async function createEquipment(equipmentData) {
   return request('/equipment', {
