@@ -120,12 +120,15 @@ public class XenditService : IPaymentGatewayService
         {
             if (user.Subscription == null)
             {
-                user.Subscription = new Subscription
+                var newSub = new Subscription
                 {
                     UserId = user.UserId,
                     PaymentStatus = "Paid",
                     ExpirationDate = DateTime.UtcNow.AddDays(30)
                 };
+                
+                user.Subscription = newSub; // Update navigation property
+                _context.Subscriptions.Add(newSub); // EXPLICITLY track it for Insert
             }
             else
             {

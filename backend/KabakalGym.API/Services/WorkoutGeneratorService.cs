@@ -108,6 +108,18 @@ public class WorkoutGeneratorService : IWorkoutGeneratorService
 
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
 
+        // CLEAR EXISTING UPCOMING ROUTINES
+        // Prevent overlapping/stacked routines when saving a new one
+        var existingRoutines = await _db.Routines
+            .Where(r => r.UserId == userId && r.DateAssigned >= today)
+            .ToListAsync();
+
+        if (existingRoutines.Any())
+        {
+            _db.Routines.RemoveRange(existingRoutines);
+            await _db.SaveChangesAsync();
+        }
+
         // Create Routine entries for each day
         var routineIds = new List<Guid>();
         foreach (var day in request.Days)

@@ -73,12 +73,18 @@ const MemberSavedRoutinePage = () => {
                     <span className={styles.exerciseName} style={{ color: '#888' }}>Rest & Recovery</span>
                   </li>
                 ) : (
-                  day.exercises && day.exercises.map((ex, exIdx) => (
-                    <li key={exIdx} className={styles.exerciseItem}>
-                      <span className={styles.exerciseName}>{ex.exerciseName}</span>
-                      <span className={styles.exerciseSets}>{ex.sets} sets x {ex.reps}</span>
+                  (day.exercises && day.exercises.length > 0) ? (
+                    day.exercises.map((ex, exIdx) => (
+                      <li key={exIdx} className={styles.exerciseItem}>
+                        <span className={styles.exerciseName}>{ex.exerciseName}</span>
+                        <span className={styles.exerciseSets}>{ex.sets} sets x {ex.reps}</span>
+                      </li>
+                    ))
+                  ) : (
+                    <li className={styles.exerciseItem}>
+                      <span className={styles.exerciseName} style={{ color: '#666', fontStyle: 'italic' }}>No exercises listed</span>
                     </li>
-                  ))
+                  )
                 )}
               </ul>
             </div>

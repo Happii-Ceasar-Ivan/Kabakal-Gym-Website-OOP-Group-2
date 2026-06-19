@@ -67,13 +67,18 @@ public class PaymentController : ControllerBase
 
         try
         {
-            // 2. Extract necessary fields from Xendit's JSON payload
-            var invoiceId = payload.GetProperty("id").GetString();
-            var externalId = payload.GetProperty("external_id").GetString();
-            var status = payload.GetProperty("status").GetString();
+            // 2. Extract necessary fields from Xendit's JSON payload safely
+            string invoiceId = null;
+            string externalId = null;
+            string status = null;
 
-            if (invoiceId == null || externalId == null || status == null)
+            if (payload.TryGetProperty("id", out var idProp)) invoiceId = idProp.GetString();
+            if (payload.TryGetProperty("external_id", out var extIdProp)) externalId = extIdProp.GetString();
+            if (payload.TryGetProperty("status", out var statusProp)) status = statusProp.GetString();
+
+            if (string.IsNullOrEmpty(invoiceId) || string.IsNullOrEmpty(externalId) || string.IsNullOrEmpty(status))
             {
+                _logger.LogWarning("Webhook missing required fields. Payload: {Payload}", payload.ToString());
                 return BadRequest("Malformed webhook payload.");
             }
 
