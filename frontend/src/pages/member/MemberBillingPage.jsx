@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { processPayment, getMyProfile, forceActivate } from '../../services/api';
+import { processPayment, getMyProfile } from '../../services/api';
 import toast from 'react-hot-toast';
 
 const MemberBillingPage = () => {
@@ -54,19 +54,6 @@ const MemberBillingPage = () => {
     }
   };
 
-  const handleForceActivate = async () => {
-    setLoading(true);
-    try {
-      const response = await forceActivate();
-      toast.success(response.message || "Force activated successfully!");
-      // Reload the page to refresh profile
-      setTimeout(() => window.location.reload(), 1500);
-    } catch (err) {
-      toast.error(err.message || "Failed to force activate.");
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const activeSub = profile?.paymentStatus === 'Paid' && profile?.isExpired === false;
   
@@ -336,27 +323,6 @@ const MemberBillingPage = () => {
               {loading ? 'PROCESSING...' : 'SUBSCRIBE NOW'}
             </button>
 
-            <button 
-              onClick={handleForceActivate} 
-              disabled={loading}
-              style={{
-                width: '100%',
-                padding: '10px',
-                marginTop: '16px',
-                backgroundColor: 'transparent',
-                color: '#888',
-                border: '1px dashed #333',
-                borderRadius: '4px',
-                fontFamily: "'Archive', sans-serif",
-                fontSize: '11px',
-                cursor: loading ? 'not-allowed' : 'pointer',
-                transition: 'all 250ms cubic-bezier(0.32, 0.72, 0, 1)'
-              }}
-              onMouseOver={(e) => !loading && (e.target.style.color = '#fff')}
-              onMouseOut={(e) => !loading && (e.target.style.color = '#888')}
-            >
-              FORCE ACTIVATE (DEV BYPASS)
-            </button>
 
             <div style={{ marginTop: '24px', fontSize: '10px', color: '#555', textAlign: 'center', letterSpacing: '1px' }}>
               SECURED AND PROCESSED VIA XENDIT GATEWAY

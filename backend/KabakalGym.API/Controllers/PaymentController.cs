@@ -101,34 +101,5 @@ public class PaymentController : ControllerBase
         }
     }
 
-    [HttpGet("force-activate")]
-    [Authorize]
-    public async Task<IActionResult> ForceActivate()
-    {
-        var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (!Guid.TryParse(userIdString, out var userId)) return Unauthorized("Invalid token");
 
-        var user = await _context.Users.Include(u => u.Subscription).FirstOrDefaultAsync(u => u.UserId == userId);
-        if (user == null) return NotFound("User not found");
-
-        if (user.Subscription == null)
-        {
-            var newSub = new Subscription
-            {
-                UserId = user.UserId,
-                PaymentStatus = "Paid",
-                ExpirationDate = DateTime.UtcNow.AddDays(30)
-            };
-            user.Subscription = newSub;
-            _context.Subscriptions.Add(newSub);
-        }
-        else
-        {
-            user.Subscription.PaymentStatus = "Paid";
-            user.Subscription.ExpirationDate = DateTime.UtcNow.AddDays(30);
-        }
-        await _context.SaveChangesAsync();
-
-        return Ok(new { message = "BACKDOOR ACTIVATED: You are now premium. Refresh your dashboard!" });
-    }
 }
