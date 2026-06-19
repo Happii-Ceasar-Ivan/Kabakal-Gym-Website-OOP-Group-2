@@ -172,6 +172,25 @@ const MemberDashboardPage = () => {
         <div className={styles.chatBoxWrapper}>
           <div className={styles.chatBoxHeader}>
             <h2 className={styles.chatBoxTitle}>KABAKAL COACH</h2>
+            <button
+              onClick={() => navigate('/member/workout-generator')}
+              style={{
+                background: '#f7f014',
+                border: 'none',
+                color: '#060407',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontFamily: "'Archive', sans-serif",
+                cursor: 'pointer',
+                fontSize: '11px',
+                textTransform: 'uppercase',
+                transition: 'transform 0.2s cubic-bezier(0.32, 0.72, 0, 1)'
+              }}
+              onMouseOver={(e) => { e.target.style.transform = 'scale(1.05)'; }}
+              onMouseOut={(e) => { e.target.style.transform = 'scale(1)'; }}
+            >
+              Generate Workout
+            </button>
           </div>
 
           <div className={styles.chatBoxContent}>
@@ -179,24 +198,6 @@ const MemberDashboardPage = () => {
               <div className={styles.emptyState}>
                 <p style={{ color: '#f7f014', margin: '5px 0' }}>Start a conversation with KG Coach!</p>
                 <p style={{ fontSize: '12px', margin: 0, marginBottom: '15px' }}>Ask for fitness advice, nutrition tips, or daily motivation.</p>
-                <button
-                  onClick={() => navigate('/member/workout-generator')}
-                  style={{
-                    background: 'transparent',
-                    border: '1px solid #f7f014',
-                    color: '#f7f014',
-                    padding: '8px 16px',
-                    borderRadius: '8px',
-                    fontFamily: "'Archive', sans-serif",
-                    cursor: 'pointer',
-                    fontSize: '12px',
-                    textTransform: 'uppercase'
-                  }}
-                  onMouseOver={(e) => { e.target.style.background = '#f7f014'; e.target.style.color = '#060407'; }}
-                  onMouseOut={(e) => { e.target.style.background = 'transparent'; e.target.style.color = '#f7f014'; }}
-                >
-                  Generate Workout
-                </button>
               </div>
             )}
 
