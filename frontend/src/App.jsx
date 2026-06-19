@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from 'react-hot-toast';
 import LandingPage from './pages/LandingPage';
@@ -65,7 +65,7 @@ function App() {
           <Route path="/verify" element={<VerifyPage />} />
           
           {/* Protected Member Routes */}
-          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/dashboard" element={<Navigate to="/member/dashboard" replace />} />
           <Route path="/member" element={<MemberLayout />}>
             <Route path="dashboard" element={<MemberDashboardPage />} />
             <Route path="calendar" element={<MemberCalendarPage />} />

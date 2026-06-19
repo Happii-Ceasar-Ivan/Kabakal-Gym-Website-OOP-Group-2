@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './MemberBilling.module.css';
-import QRCode from 'react-qr-code'; // Need to make sure react-qr-code is installed or just use an image
 
 const MemberBillingPage = () => {
     const navigate = useNavigate();
