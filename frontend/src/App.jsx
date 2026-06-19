@@ -21,6 +21,14 @@ const AdminEquipmentManagementPage = lazy(() => import('./pages/admin/AdminEquip
 const GateKioskPage = lazy(() => import('./pages/kiosk/GateKioskPage'));
 const StaffDashboard = lazy(() => import('./pages/staff/StaffDashboard'));
 
+// Lazy load Member routes
+const MemberLayout = lazy(() => import('./components/MemberLayout'));
+const MemberDashboardPage = lazy(() => import('./pages/member/MemberDashboardPage'));
+const MemberCalendarPage = lazy(() => import('./pages/member/MemberCalendarPage'));
+const MemberBillingPage = lazy(() => import('./pages/member/MemberBillingPage'));
+const MemberProfilePage = lazy(() => import('./pages/member/MemberProfilePage'));
+const WorkoutGeneratorPage = lazy(() => import('./pages/member/WorkoutGeneratorPage'));
+
 function App() {
   return (
     <Router>
@@ -56,8 +64,15 @@ function App() {
           <Route path="/reset-password" element={<ResetPasswordPage />} />
           <Route path="/verify" element={<VerifyPage />} />
           
-          {/* Protected Member Route */}
+          {/* Protected Member Routes */}
           <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/member" element={<MemberLayout />}>
+            <Route path="dashboard" element={<MemberDashboardPage />} />
+            <Route path="calendar" element={<MemberCalendarPage />} />
+            <Route path="billing" element={<MemberBillingPage />} />
+            <Route path="profile" element={<MemberProfilePage />} />
+            <Route path="workout-generator" element={<WorkoutGeneratorPage />} />
+          </Route>
 
           {/* New Sprint 5 Routes */}
           <Route path="/kiosk" element={<GateKioskPage />} />

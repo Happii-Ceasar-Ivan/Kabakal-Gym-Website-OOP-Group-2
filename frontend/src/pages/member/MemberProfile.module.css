@@ -1,0 +1,263 @@
+/* Member Profile CSS */
+.profileContainer {
+    width: 100%;
+    max-width: 412px;
+    margin: 0 auto;
+    min-height: 100vh;
+    background-color: #060407;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.headerBackground {
+    position: relative;
+    height: 350px;
+    background:
+        linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.85)),
+        url('https://images.unsplash.com/photo-1502082553048-f009c37129b9?q=80&w=600') center/cover no-repeat;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    padding-bottom: 20px;
+}
+
+.headerArrowContainer {
+    position: absolute;
+    top: 35px;
+    left: 35px;   
+}
+
+.headerArrow {
+    position: relative;
+    width: 20px;
+    height: 20px;
+}
+
+.headerArrow::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -14px;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 13px solid #f7f014;
+    transform: rotate(45px);
+}
+
+.avatarWrapper {
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.avatarCircle {
+    width: 100px;
+    height: 100px;
+    border: 4px solid #f7f014;
+    border-radius: 50%;
+    background-color: #060407;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.avatarIcon {
+    width: 85%;
+    height: 85%;
+    /* We'll pass a dynamic background image directly in JSX, or use a default */
+    background-color: #888;
+    border-radius: 50%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.cameraBadge {
+    position: absolute;
+    bottom: -5px;
+    right: 2px;
+    background-color: #060407;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid #f7f014;
+}
+
+.cameraIcon {
+    font-size: 12px;
+    color: #f7f014;
+}
+
+.profileName {
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+    text-transform: uppercase;
+}
+
+.profileSubtextQuote {
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-size: 11px;
+    text-align: center;
+    line-height: 1.4;
+    font-weight: normal;
+    text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.settingContent {
+    flex: 1;
+    background-color: #060407;
+    padding: 25px 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 2px solid #f7f014;
+    border-radius: 20px;
+    margin: -10px 10px 10px 10px; /* Overlap the header slightly */
+    z-index: 10;
+}
+
+.settingGroup {
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.settingGroupTitle {
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 15px 10px 10px 10px;
+    text-transform: uppercase;
+    border-bottom: 1px solid #f7f014; 
+    margin-bottom: 15px;
+}
+
+.settingGroupBody {
+    padding: 0 10px;
+    background-color: #060407;
+}
+
+.infoRow {
+    margin-bottom: 12px;
+    font-family: 'Fira Code', monospace;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.infoRow:last-child {
+    margin-bottom: 0;
+}
+
+.inlineRow {
+    display: flex;
+    align-items: center;
+}
+
+.divider {
+    margin: 0 20px;
+    color: #f7f014;
+}
+
+.label {
+    color: #f7f014;
+    margin-right: 10px;
+}
+
+.value {
+    color: #f7f014;
+}
+
+.asterisks {
+    letter-spacing: 2px;
+}
+
+.statusBadge {
+    background-color: #228B22;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 5px;
+}
+
+.statusBadgeInactive {
+    background-color: #8B0000;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 5px;
+}
+
+.menuList {
+    padding: 5px 15px;
+    border: 1px solid #f7f014;
+    border-radius: 8px;
+    background-color: #060407;
+}
+
+.menuItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 0;
+    text-decoration: none;
+    color: #f7f014;
+    font-family: 'Fira Code', monospace;
+    font-size: 15px;
+    font-weight: normal;
+    border-bottom: 1px solid #f7f014;
+    cursor: pointer;
+}
+
+.menuItem:last-child {
+    border-bottom: none;
+}
+
+.menuItem::after {
+    content: "";
+    display: inline-block;
+    width: 0;
+    height: 0; 
+    border-top: 6px solid transparent;
+    border-bottom: 6px solid transparent;
+    border-left: 10px solid #f7f014;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+
+.logoutBtn {
+    margin-top: auto;
+    width: 80%;
+    background: transparent;
+    border: 2px solid #f7f014;
+    color: #f7f014;
+    padding: 12px 0;
+    border-radius: 25px;
+    font-family: 'Archive', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    margin-bottom: 20px;
+}
+
+.logoutBtn:hover {
+    background-color: #f7f014;
+    color: #060407;
+}

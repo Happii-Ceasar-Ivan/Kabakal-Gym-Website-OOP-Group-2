@@ -1,0 +1,155 @@
+/* Member Calendar CSS */
+.pageContainer {
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 2rem;
+}
+
+.tabsTitle {
+    text-align: center;
+    text-transform: uppercase;
+    font-family: 'Archive', sans-serif;
+    color: #f7f014;
+    font-size: 1.2rem;
+    margin-bottom: 5px;
+}
+
+.calendarMonth {
+    text-align: center;
+    text-transform: uppercase;
+    color: #aaa;
+    margin: 0 0 20px 0;
+    font-size: 1rem;
+    letter-spacing: 1px;
+}
+
+.dateSelector {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin: 10px 0 20px 0;
+}
+
+.dateItem {
+    background: transparent;
+    border: 2px solid #f7f014;
+    color: #f7f014;
+    padding: 10px 15px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-weight: bold;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+
+.navArrow {
+    background: transparent;
+    border: none;
+    color: #f7f014;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.dateItem.active, .dateItem:hover {
+    background: #f7f014;
+    color: #060407;
+}
+
+.sectionText {
+    width: 100%;
+    margin-bottom: 5px;
+}
+
+.sectionText h4 {
+    margin: 0;
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    letter-spacing: 1px;
+}
+
+.logCard, .sessionItem, .alertContainer {
+    border: 2px solid #f7f014;
+    padding: 15px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    width: 340px;
+    background-color: #060407;
+}
+
+.logHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 0.9rem;
+}
+
+.statusBadge {
+    font-size: 0.7rem;
+    background: #228B22;
+    color: #fff;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.logTimes {
+    font-size: 0.8rem;
+    color: #ccc;
+}
+
+.sessionItem {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.sessionNumber {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+}
+
+.sessionInfo {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    color: #ccc;
+}
+
+.sessionInfo strong {
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.alertContainer {
+    text-align: center;
+    border-color: #ff4444; /* Red border for alerts */
+}
+
+.alertContainer p {
+    color: #ff4444;
+    margin-top: 0;
+    font-weight: bold;
+}
+
+.ctaButton {
+    background-color: #f7f014;
+    color: #060407;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 20px;
+    width: 100%;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ctaButton:hover {
+    background-color: #595326;
+    color: #f7f014;
+}

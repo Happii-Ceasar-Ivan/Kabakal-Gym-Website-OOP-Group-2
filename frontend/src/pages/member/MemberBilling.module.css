@@ -1,0 +1,227 @@
+/* Member Billing CSS */
+.pageContainer {
+    width: 100%;
+    max-width: 450px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.tabsTitle {
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 40px auto 20px auto;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+}
+
+.tabsTitle::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -8px;
+    width: 120px;
+    height: 4px;
+    background: #f7f014;
+    border-radius: 10px;
+}
+
+.sectionText {
+    width: 100%;
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+
+.sectionText h4 {
+    font-family: 'Archive', sans-serif;
+    color: #f7f014;
+    font-size: 1.5rem;
+    letter-spacing: 2px;
+    margin: 0;
+    text-transform: uppercase;
+    text-align: left;
+}
+
+.paymentMethodGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    border-radius: 16px;
+    border: 2px solid transparent;
+    background:
+        linear-gradient(#060407, #060407) padding-box,
+        linear-gradient(to bottom, #595326, #f7f014) border-box;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.paymentBtn {
+    background: #f7f014;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-weight: 600;
+    font-size: 12px;
+    color: #060407;
+    white-space: nowrap;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15), 0 0 4px rgba(247, 240, 20, 0.3);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.paymentBtn:hover {
+    background-color: #060407;
+    color: #f7f014;
+}
+
+.invoiceHistoryContainer {
+    background-color: #060407;
+    padding: 10px 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    max-height: 400px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.invoiceCard {
+    font-family: 'Fira Code', monospace;
+    border: 2px solid transparent;
+    background: 
+        linear-gradient(#060407, #060407) padding-box,
+        linear-gradient(to bottom, #595326, #f7f014) border-box;
+    border-radius: 16px;
+    padding: 20px;
+    width: 100%;
+    box-sizing: border-box;
+    color: #f7f014;
+    text-transform: uppercase;
+}
+
+.invoiceHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.invoiceDate {
+    font-size: 1.1rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.invoiceStatusBadge {
+    background-color: #228B22;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+}
+
+.invoiceTimes {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-size: 0.9rem;
+    margin-bottom: 18px;
+    color: #f7f014;
+}
+
+.invoiceDivider {
+    border: none;
+    border-top: 2px dashed #f7f014;
+    margin: 15px 0;
+    opacity: 1.0;
+    width: 100%;
+}
+
+.invoiceDetails {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    row-gap: 8px;
+    font-size: 0.95rem;
+    margin-top: 15px;
+}
+
+.invoiceLabel {
+    text-align: left;
+    font-weight: bold;
+}
+
+.invoiceValue {
+    text-align: right;
+    font-weight: bold;
+}
+
+.promoBannerContainer {
+    background-color: #060407;
+    border: 2px solid #f7f014;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 20px auto;
+}
+
+.promoBannerText {
+    color: #f7f014;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    margin: 0 0 18px 0;
+}
+
+.ctaButton {
+    background-color: #f7f014;
+    color: #060407;
+    font-family: 'Fira Code', monospace;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 36px;
+    width: 100%;
+    box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.15), 0 0 4px rgba(247, 240, 20, 0.3);
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+}
+
+.ctaButton:hover {
+    background-color: #060407;
+    color: #f7f014;
+}
+
+.qrCodeWrapper {
+    border: 4px solid #f7f014;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin: 10px auto 40px auto;
+    padding: 10px;
+    background: #fff;
+}
+
+.qrCode {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    width: 200px;
+    height: 200px;
+}
