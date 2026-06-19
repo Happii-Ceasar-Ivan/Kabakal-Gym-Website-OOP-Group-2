@@ -114,17 +114,29 @@ public class XenditService : IPaymentGatewayService
         // Update the transaction status
         transaction.Status = "Paid";
 
-        // Extend the user's subscription mathematically (stacking days)
-        var sub = transaction.User?.Subscription;
-        if (sub != null)
+        // Extend or Create the user's subscription mathematically (stacking days)
+        var user = transaction.User;
+        if (user != null)
         {
-            var today = DateTime.UtcNow;
-            var currentExpiry = sub.ExpirationDate.HasValue && sub.ExpirationDate.Value > today 
-                                ? sub.ExpirationDate.Value 
-                                : today;
-            
-            sub.ExpirationDate = currentExpiry.AddDays(30); // Monthly payment logic
-            sub.PaymentStatus = "Paid";
+            if (user.Subscription == null)
+            {
+                user.Subscription = new Subscription
+                {
+                    UserId = user.UserId,
+                    PaymentStatus = "Paid",
+                    ExpirationDate = DateTime.UtcNow.AddDays(30)
+                };
+            }
+            else
+            {
+                var today = DateTime.UtcNow;
+                var currentExpiry = user.Subscription.ExpirationDate.HasValue && user.Subscription.ExpirationDate.Value > today 
+                                    ? user.Subscription.ExpirationDate.Value 
+                                    : today;
+                
+                user.Subscription.ExpirationDate = currentExpiry.AddDays(30);
+                user.Subscription.PaymentStatus = "Paid";
+            }
         }
 
         // ATOMIC COMMIT: The transaction status AND the subscription update are saved together.
