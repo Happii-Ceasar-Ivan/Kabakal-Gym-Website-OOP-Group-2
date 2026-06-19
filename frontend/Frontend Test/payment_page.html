@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kabakal Gym - Billing Page</title>
+    <link rel="stylesheet" href="step10.css">
+</head>
+
+<body class="body">
+
+    <h3 class="tabs-title">HERE'S YOUR TAB, USER!</h3>
+
+    <section class="payment-method-section">
+        <div class="payment-method-text">
+            <h4>CHOOSE PAYMENT METHOD</h4>
+        </div>
+        <div class="payment-method-grid">
+            <button type="button">GCASH</button>
+            <button type="button">QR-CODE</button>
+            <button type="button">CASH</button>
+            <button type="button">CREDIT CARD</button>
+        </div>
+    </section>
+
+    <section class="invoice-history-section">
+        <div class="invoice-history-text">
+            <h4>Invoice History</h4>
+        </div>
+        <div class="invoice-history-container">
+            <div class="invoice-history-card">
+                <div class="invoice-header">
+                    <div class="invoice-day-and-date">
+                        <span class="invoice-date">DAY, MM DD, YYYY</span>
+                    </div>
+                    <span class="invoice-status-badge">Logged-in via QR CODE</span>
+                </div>
+                
+                <div class="invoice-times">
+                    <span>CHECK-IN: 00:00 AM/PM</span>
+                    <span>CHECK-OUT: 00:00 AM/PM</span>
+                </div>
+
+                <hr class="invoice-divider">
+
+                <div class="invoice-details">
+                    <div class="invoice-label">PAYMENT METHOD</div>
+                    <div class="invoice-value">(?)</div>
+                    
+                    <div class="invoice-label">TOTAL</div>
+                    <div class="invoice-value">₱00.00</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="promo-section">
+        <div class="promo-banner-container">
+            <p class="promo-banner-text">TRY OUT OUR GYM MEMBERSHIP NOW!</p>
+            <button type="button" class="cta-button">TAP TO PAY SUBSCRIPTION</button>
+        </div>
+    </section>
+    
+    <section class="check-in-section">
+        <div class="check-in-text">
+            <h4>SCAN QR-CODE TO CHECK IN</h4>
+        </div>
+        <div class="qr-code-wrapper">
+            <div class="qr-code">
+                <img src="(No image)" alt="QR Code">
+            </div>
+        </div>
+    </section>
+
+    <nav class="bottom-nav-bar">
+        <a href="#" class="nav-items">
+            <img src="../assets/home-logo.png" alt="Home" class="icon">
+            <span class="icon-label">HOME</span>
+        </a>
+
+        <a href="#" class="nav-items">
+            <img src="../assets/calendar-logo.png" alt="Calendar" class="icon">
+            <span class="icon-label">CALENDAR</span>
+        </a>
+
+        <img class="nav-logo-badge" src="../assets/kabakal-gym-logo.png" alt="Kabakal Gym Logo">
+
+        <a href="#" class="nav-items nav-item active">
+            <img src="../assets/bell-logo.png" alt="Bell" class="icon">
+            <span class="icon-label">BILLING</span>
+        </a>
+
+        <a href="../Step_11/step11.html" class="nav-items">
+            <img src="../assets/profile-logo.png" alt="Profile" class="icon">
+            <span class="icon-label">PROFILE</span>
+        </a>
+    </nav>
+
+</body>
+</html>
