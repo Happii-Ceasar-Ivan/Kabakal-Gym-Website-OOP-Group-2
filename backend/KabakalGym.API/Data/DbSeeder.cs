@@ -10,57 +10,72 @@ public static class DbSeeder
         using var scope = serviceProvider.CreateScope();
         var context = scope.ServiceProvider.GetRequiredService<KabakalDbContext>();
         var hasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher<User>>();
+        var config = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-        var adminEmail = "KabakalJhayar@admin.com".ToLower();
+        // Safely pull from Environment Variables or AppSettings (Azure configures these)
+        var adminEmail = config["AdminEmail"]?.ToLower();
+        var adminPassword = config["AdminPassword"];
 
-        if (!context.Users.Any(u => u.Email == adminEmail))
+        if (!string.IsNullOrEmpty(adminEmail) && !string.IsNullOrEmpty(adminPassword))
         {
-            var adminUser = new User
+            if (!context.Users.Any(u => u.Email == adminEmail))
             {
-                UserId = Guid.NewGuid(),
-                Email = adminEmail,
-                FirstName = "Jhayar",
-                LastName = "Kabakal",
-                Role = UserRoles.Admin,
-                IsActive = true,
-                IsVerified = true
-            };
-            adminUser.PasswordHash = hasher.HashPassword(adminUser, "KabakalAkoBro123!");
-            context.Users.Add(adminUser);
+                var adminUser = new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Email = adminEmail,
+                    FirstName = "Jhayar",
+                    LastName = "Kabakal",
+                    Role = UserRoles.Admin,
+                    IsActive = true,
+                    IsVerified = true
+                };
+                adminUser.PasswordHash = hasher.HashPassword(adminUser, adminPassword);
+                context.Users.Add(adminUser);
+            }
         }
 
-        var kioskEmail = "kiosk@kabakalgym.com";
-        if (!context.Users.Any(u => u.Email == kioskEmail))
-        {
-            var kioskUser = new User
-            {
-                UserId = Guid.NewGuid(),
-                Email = kioskEmail,
-                FirstName = "Gate",
-                LastName = "Kiosk",
-                Role = UserRoles.GateKiosk,
-                IsActive = true,
-                IsVerified = true
-            };
-            kioskUser.PasswordHash = hasher.HashPassword(kioskUser, "KabakalKiosk123!");
-            context.Users.Add(kioskUser);
-        }
+        var kioskEmail = config["KioskEmail"]?.ToLower();
+        var kioskPassword = config["KioskPassword"];
 
-        var staffEmail = "staff@kabakalgym.com";
-        if (!context.Users.Any(u => u.Email == staffEmail))
+        if (!string.IsNullOrEmpty(kioskEmail) && !string.IsNullOrEmpty(kioskPassword))
         {
-            var staffUser = new User
+            if (!context.Users.Any(u => u.Email == kioskEmail))
             {
-                UserId = Guid.NewGuid(),
-                Email = staffEmail,
-                FirstName = "Front",
-                LastName = "Desk",
-                Role = UserRoles.Staff,
-                IsActive = true,
-                IsVerified = true
-            };
-            staffUser.PasswordHash = hasher.HashPassword(staffUser, "KabakalStaff123!");
-            context.Users.Add(staffUser);
+                var kioskUser = new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Email = kioskEmail,
+                    FirstName = "Gate",
+                    LastName = "Kiosk",
+                    Role = UserRoles.GateKiosk,
+                    IsActive = true,
+                    IsVerified = true
+                };
+                kioskUser.PasswordHash = hasher.HashPassword(kioskUser, kioskPassword);
+                context.Users.Add(kioskUser);
+            }
+        }
+        var staffEmail = config["StaffEmail"]?.ToLower();
+        var staffPassword = config["StaffPassword"];
+        
+        if (!string.IsNullOrEmpty(staffEmail) && !string.IsNullOrEmpty(staffPassword))
+        {
+            if (!context.Users.Any(u => u.Email == staffEmail))
+            {
+                var staffUser = new User
+                {
+                    UserId = Guid.NewGuid(),
+                    Email = staffEmail,
+                    FirstName = "Staff",
+                    LastName = "Member",
+                    Role = UserRoles.Staff,
+                    IsActive = true,
+                    IsVerified = true
+                };
+                staffUser.PasswordHash = hasher.HashPassword(staffUser, staffPassword);
+                context.Users.Add(staffUser);
+            }
         }
 
         await context.SaveChangesAsync();
