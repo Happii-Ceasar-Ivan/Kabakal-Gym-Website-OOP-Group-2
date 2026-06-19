@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kabakal Gym - Workout Generator</title>
+    <link rel="stylesheet" href="step7.css">
+</head>
+<body>
+
+    <h1 class="workout-generator-title">WORKOUT GENERATOR</h1>
+
+    <div class="fitness-goals-title">A. SELECT FITNESS GOALS</div>
+    <div class="fitness-goals-grid">
+        <button type="button">(Fitness 1)</button>
+        <button type="button">(Fitness 2)</button>
+        <button type="button">(Fitness 3)</button>
+        <button type="button">(Fitness 4)</button>
+    </div>
+
+    <div class="target-split-title">B. TARGET SPLIT ROUTINE</div>
+    <div class="target-split-grid">
+        <button type="button">(Target 1)</button>
+        <button type="button">(Target 2)</button>
+        <button type="button">(Target 3)</button>
+        <button type="button">(Target 4)</button>
+    </div>
+
+    <div class="training-details-title">C. TRAINING DETAILS</div>
+    <div class="session-card">
+        
+        <label for="session-time">AVAILABLE SESSION TIME</label>
+        <div class="dropdown-wrapper">
+            <select id="session-time">
+                <option value="00">(00 Minutes)</option>
+                <option value="00" selected>(00 Minutes)</option>
+            </select>
+        </div>
+
+        <label class="experience-label">EXPERIENCE LABEL</label>
+        
+        <div class="level-selector">
+            <span class="level-text">BEGINNER</span>
+
+            <div class="level-dots">
+                <button class="level-dot active"></button>  <!--Active button can be changed, this is for visualization-->
+                <button class="level-dot"></button>
+                <button class="level-dot"></button>
+                <button class="level-dot"></button>
+                <button class="level-dot"></button>
+            </div>
+            <span class="level-text">PRO</span>
+        </div>
+ 
+    <!--Only add the GENERATE button html code. Keep its CSS design.-->
+
+</body>
+</html>

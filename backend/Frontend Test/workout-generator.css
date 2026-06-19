@@ -1,0 +1,298 @@
+/*All will be fixed by Pingol*/
+/*Started by Alonzo*/
+
+/*For whole body page*/
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0 15px 100px 15px;
+    overflow-x: hidden;
+    font-family: system-ui, -apple-system, 'Fira Code', monospace;
+    font-size: 16px;
+    line-height: 1.5;
+    background-color: #060407;
+    color: #f7f014;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/*For top text: WORKOUT GENERATOR*/
+.workout-generator-title {
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 40px auto 20px auto;
+    position: relative;
+    display: inline-block;
+    text-align: center;
+}
+
+/*For select fitness goals: a container and items*/
+.fitness-goals-title {    /*A. SELECT FITNESS GOALS text*/
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 15px 10px 10px 10px;
+    text-transform: uppercase;
+}
+
+/*Select fitness goals: container*/
+.fitness-goals-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 16px;
+
+    /*border line*/
+    border: 2px solid transparent;
+    background:
+        linear-gradient(#060407, #060407) padding-box, /*Background color inside grid*/
+        linear-gradient(to bottom, #595326, #f7f014) border-box; /*Border line*/
+
+    width: 100%;
+    max-width: 405px;
+    box-sizing: border-box;
+    margin: 20px auto; /*Centers grid horizontal*/
+}
+
+/*Buttons*/
+.fitness-goals-grid button {
+    background: #f7f014;
+    border: none;
+    padding: 16px 24px;
+    border-radius: 999px; /*Pill shape buttons*/
+
+    font-weight: 600;
+    font-size: 14px;
+    color:#060407;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+
+    box-shadow: /*Inner shadow for depth effect and outer glow for emphasis on buttons*/
+        inset 0 -2px 0 rgba(0, 0, 0, 0.15),
+        0 0 4px rgba(247, 240, 20, 0.3);
+
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.fitness-goals-grid button:hover {
+    background-color: #060407;
+    color: #f7f014;
+}
+
+
+/*For target split routine: a container and items*/
+.target-split-title {    /*B. TARGET SPLIT ROUTINE text*/
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 15px 10px 10px 10px;
+    text-transform: uppercase;
+}
+
+/*Target split routine: container*/
+.target-split-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* 1fr: each column takes equal space */
+    gap: 15px;
+    padding: 20px;
+    border-radius: 16px;
+
+    /*border line*/
+    border: 2px solid transparent;
+    background:
+        linear-gradient(#060407, #060407) padding-box, /*Background color inside grid*/
+        linear-gradient(to bottom, #595326, #f7f014) border-box; /*Border line*/
+
+    width: 100%;
+    max-width: 405px;
+    box-sizing: border-box;
+    margin: 20px auto; /*Centers grid horizontal*/
+}
+
+/*Buttons*/
+.target-split-grid button {
+    background: #f7f014;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 999px; /*Pill shape buttons*/
+
+    font-weight: 600;
+    font-size: 12px;
+    color:#060407;
+    white-space: nowrap; /*Firms text on button across different screen size*/
+
+    box-shadow: /*Inner shadow for depth effect and outer glow for emphasis on buttons*/
+        inset 0 -2px 0 rgba(0, 0, 0, 0.15),
+        0 0 4px rgba(247, 240, 20, 0.3);
+
+    transition: all 0.2s ease-in-out;
+}
+
+.target-split-grid button:hover {
+    background-color: #060407;
+    color: #f7f014;
+}
+
+
+/*For training details: a container, drop down button, radio button*/
+.training-details-title {    /*C. TRAINING DETAILS text*/
+    color: #f7f014;
+    font-family: 'Archive', sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    padding: 15px 10px 10px 10px;
+    text-transform: uppercase;
+}
+
+/*Training details: container "Session"*/
+.session-card {
+    background: #060407;
+    border: 2px solid transparent;
+    border-radius: 18px;
+    padding: 18px 25px;
+    width: 340px;
+    font-family: 'Archive', sans-serif;
+    color: #f7f014;
+
+    background:
+        linear-gradient(#060407, #060407) padding-box,
+        linear-gradient(to bottom, #595326, #f7f014) border-box;
+}
+
+/*Main labels inside container: AVAILABLE SESSION TIME, EXPERIENCE LABEL text*/
+/*Labels*/
+.session-card label {
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    letter-spacing: 1px;
+}
+
+/*For Dropdown, under Available session time*/
+.session-card select {
+    width: 100%;
+    background: #f7f014;
+    color: #060407;
+    border: none;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Fira Code', monospace;
+    cursor: pointer;
+    appearance: none;
+    position: relative;
+}
+
+/*Dropdown wrapper*/
+.dropdown-wrapper {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.dropdown-wrapper::after {
+    content: "▼";
+    position: absolute;
+    right: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #060407;
+    font-size: 16px;
+    pointer-events: none;
+}
+
+
+/*For Radiobutton, under Experience label. And other needs*/
+.experience-label {
+    margin-bottom: 10px;    /*Positioning purposes*/
+}
+
+/*Level row*/
+.level-selector {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    background: #060407;
+    padding: 15px;
+    font-family: 'Fira Code', monospace;
+}
+
+/*BEGINNER, PRO text*/
+.level-text {
+    color: #f7f014;
+    font-size: 13px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+/*Container for circles*/
+.level-dots {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+/*Radio circles*/
+.level-dot {
+    cursor: pointer;
+    width: 22px;
+    height: 22px;
+    border: 2px solid #f7f014;
+    border-radius: 50%;
+    background: transparent;
+    padding: 0;
+    position: relative;
+    transition: all 0.2s ease;
+}
+
+.level-dot:hover {
+    box-shadow: 0 0 6px #f7f014;
+}
+
+/*Active radiobutton circle*/
+.level-dot.active::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    background: #f7f014;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 0 0 10px #f7f014;
+}
+
+/*Generate button*/
+.generate-btn {
+    margin-top: 30px;
+    width: 25%;
+    background: transparent;
+    border: 2px solid #f7f014;
+    color: #f7f014; /*GENERATE text*/
+    padding: 12px 0;
+    border-radius: 25px;
+    font-family: 'Archive', sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.generate-btn:hover {
+    background-color: #f7f014;
+    color: #060407;
+}
