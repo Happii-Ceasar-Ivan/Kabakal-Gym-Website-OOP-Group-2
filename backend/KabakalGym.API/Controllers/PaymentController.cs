@@ -49,7 +49,7 @@ public class PaymentController : ControllerBase
         catch (Exception ex)
         {
             _logger.LogError(ex, "Failed to create checkout.");
-            return StatusCode(500, "Payment gateway error.");
+            return StatusCode(500, new { error = ex.Message, inner = ex.InnerException?.Message });
         }
     }
 

@@ -61,8 +61,8 @@ public class XenditService : IPaymentGatewayService
             amount = amount,
             payer_email = email,
             description = $"Kabakal Gym Subscription - {planType}",
-            success_redirect_url = "https://kabakal-gym.vercel.app/member/billing?success=true",
-            failure_redirect_url = "https://kabakal-gym.vercel.app/member/billing?success=false",
+            success_redirect_url = "https://kabakal-gym-website-oop-group-2.vercel.app/member/billing?success=true",
+            failure_redirect_url = "https://kabakal-gym-website-oop-group-2.vercel.app/member/billing?success=false",
             currency = "PHP"
         };
 
@@ -73,7 +73,7 @@ public class XenditService : IPaymentGatewayService
         {
             var error = await response.Content.ReadAsStringAsync();
             _logger.LogError("Xendit API Error: {Error}", error);
-            throw new Exception("Failed to generate Xendit checkout invoice.");
+            throw new Exception($"Failed to generate Xendit checkout invoice. Reason: {error}");
         }
 
         var responseData = await response.Content.ReadFromJsonAsync<JsonElement>();
