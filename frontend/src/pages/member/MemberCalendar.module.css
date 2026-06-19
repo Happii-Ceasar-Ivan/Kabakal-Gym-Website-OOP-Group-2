@@ -1,37 +1,36 @@
-/* Member Calendar CSS */
-.pageContainer {
-    width: 100%;
-    max-width: 400px;
-    margin: 0 auto;
+.calendarContainer {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 2rem;
+    color: #f7f014;
+    padding: 20px 15px;
+}
+
+.tabsTitle, .calendarMonth { 
+    text-align: center; 
+    text-transform: uppercase; 
+    font-family: 'Archive', sans-serif;
+    margin: 5px 0;
 }
 
 .tabsTitle {
-    text-align: center;
-    text-transform: uppercase;
-    font-family: 'Archive', sans-serif;
-    color: #f7f014;
     font-size: 1.2rem;
-    margin-bottom: 5px;
+    color: #f7f014;
 }
 
 .calendarMonth {
-    text-align: center;
-    text-transform: uppercase;
-    color: #aaa;
-    margin: 0 0 20px 0;
     font-size: 1rem;
-    letter-spacing: 1px;
+    font-weight: normal;
+    color: #fff;
 }
 
-.dateSelector {
-    display: flex;
-    gap: 10px;
-    justify-content: center;
-    margin: 10px 0 20px 0;
+/* Date Buttons */
+.dateSelector { 
+    display: flex; 
+    gap: 10px; 
+    justify-content: center; 
+    align-items: center;
+    margin: 20px 0; 
 }
 
 .dateItem {
@@ -41,9 +40,14 @@
     padding: 10px 15px;
     border-radius: 20px;
     cursor: pointer;
-    transition: all 0.2s ease;
     font-weight: bold;
-    font-family: system-ui, -apple-system, sans-serif;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.dateItem.active, .dateItem:hover { 
+    background: #f7f014; 
+    color: #060407; 
 }
 
 .navArrow {
@@ -52,56 +56,58 @@
     color: #f7f014;
     font-size: 1.5rem;
     cursor: pointer;
+    padding: 0 10px;
 }
 
-.dateItem.active, .dateItem:hover {
-    background: #f7f014;
-    color: #060407;
-}
-
-.sectionText {
+/* Sections */
+.logSection, .sessionSection, .alertSection {
     width: 100%;
-    margin-bottom: 5px;
+    max-width: 380px;
+    margin-bottom: 25px;
 }
 
 .sectionText h4 {
-    margin: 0;
-    color: #f7f014;
     font-family: 'Archive', sans-serif;
+    margin-bottom: 10px;
+    color: #fff;
+    font-size: 14px;
     letter-spacing: 1px;
 }
 
+/* Cards */
 .logCard, .sessionItem, .alertContainer {
     border: 2px solid #f7f014;
     padding: 15px;
     border-radius: 16px;
-    margin-bottom: 20px;
-    width: 340px;
+    margin-bottom: 15px;
     background-color: #060407;
 }
 
+/* Gate Log */
 .logHeader {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 10px;
     font-weight: bold;
-    font-size: 0.9rem;
+    font-size: 13px;
 }
 
-.statusBadge {
-    font-size: 0.7rem;
-    background: #228B22;
-    color: #fff;
-    padding: 2px 8px;
-    border-radius: 10px;
+.statusBadge { 
+    font-size: 0.7rem; 
+    background: #228B22; 
+    color: #fff; 
+    padding: 4px 8px; 
+    border-radius: 10px; 
 }
 
 .logTimes {
-    font-size: 0.8rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 12px;
     color: #ccc;
 }
 
+/* Today's Session */
 .sessionItem {
     display: flex;
     align-items: center;
@@ -109,32 +115,31 @@
 }
 
 .sessionNumber {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #f7f014;
     font-family: 'Archive', sans-serif;
+    font-size: 24px;
+    color: #f7f014;
 }
 
 .sessionInfo {
-    font-size: 0.8rem;
+    font-size: 13px;
     line-height: 1.4;
-    color: #ccc;
 }
 
 .sessionInfo strong {
     color: #fff;
-    font-size: 0.9rem;
 }
 
+/* Alert Section */
 .alertContainer {
+    border-color: #ff3333;
     text-align: center;
-    border-color: #ff4444; /* Red border for alerts */
 }
 
 .alertContainer p {
-    color: #ff4444;
-    margin-top: 0;
+    color: #ff3333;
     font-weight: bold;
+    margin-bottom: 15px;
+    line-height: 1.5;
 }
 
 .ctaButton {
@@ -146,10 +151,11 @@
     width: 100%;
     font-weight: bold;
     cursor: pointer;
+    font-family: 'Archive', sans-serif;
     transition: all 0.2s ease;
 }
 
-.ctaButton:hover {
-    background-color: #595326;
-    color: #f7f014;
+.ctaButton:hover { 
+    background-color: #595326; 
+    color: #f7f014; 
 }

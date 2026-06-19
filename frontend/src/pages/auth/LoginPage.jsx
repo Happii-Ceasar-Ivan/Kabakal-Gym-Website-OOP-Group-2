@@ -38,7 +38,7 @@ export default function LoginPage() {
       } else if (data.role === 'GateKiosk') {
         navigate('/kiosk');
       } else {
-        navigate('/member/dashboard');
+        navigate('/dashboard');
       }
     } catch (err) {
       setError(err.message);

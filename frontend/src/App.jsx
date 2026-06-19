@@ -1,5 +1,5 @@
 import { Suspense, lazy } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
 import { Toaster } from 'react-hot-toast';
 import LandingPage from './pages/LandingPage';
@@ -13,6 +13,13 @@ const ForgotPasswordPage = lazy(() => import('./pages/auth/ForgotPasswordPage'))
 const ResetPasswordPage = lazy(() => import('./pages/auth/ResetPasswordPage'));
 const VerifyPage = lazy(() => import('./pages/auth/VerifyPage'));
 
+// Lazy load Member routes
+const MemberLayout = lazy(() => import('./components/MemberLayout'));
+const MemberDashboardPage = lazy(() => import('./pages/member/MemberDashboardPage'));
+const MemberCalendarPage = lazy(() => import('./pages/member/MemberCalendarPage'));
+const MemberBillingPage = lazy(() => import('./pages/member/MemberBillingPage'));
+const MemberProfilePage = lazy(() => import('./pages/member/MemberProfilePage'));
+
 // Lazy load roles
 const AdminLayout = lazy(() => import('./components/AdminLayout'));
 const AdminDashboardPage = lazy(() => import('./pages/admin/AdminDashboardPage'));
@@ -20,14 +27,6 @@ const AdminMemberManagementPage = lazy(() => import('./pages/admin/AdminMemberMa
 const AdminEquipmentManagementPage = lazy(() => import('./pages/admin/AdminEquipmentManagementPage'));
 const GateKioskPage = lazy(() => import('./pages/kiosk/GateKioskPage'));
 const StaffDashboard = lazy(() => import('./pages/staff/StaffDashboard'));
-
-// Lazy load Member routes
-const MemberLayout = lazy(() => import('./components/MemberLayout'));
-const MemberDashboardPage = lazy(() => import('./pages/member/MemberDashboardPage'));
-const MemberCalendarPage = lazy(() => import('./pages/member/MemberCalendarPage'));
-const MemberBillingPage = lazy(() => import('./pages/member/MemberBillingPage'));
-const MemberProfilePage = lazy(() => import('./pages/member/MemberProfilePage'));
-const WorkoutGeneratorPage = lazy(() => import('./pages/member/WorkoutGeneratorPage'));
 
 function App() {
   return (
@@ -65,13 +64,11 @@ function App() {
           <Route path="/verify" element={<VerifyPage />} />
           
           {/* Protected Member Routes */}
-          <Route path="/dashboard" element={<Navigate to="/member/dashboard" replace />} />
           <Route path="/member" element={<MemberLayout />}>
             <Route path="dashboard" element={<MemberDashboardPage />} />
             <Route path="calendar" element={<MemberCalendarPage />} />
             <Route path="billing" element={<MemberBillingPage />} />
             <Route path="profile" element={<MemberProfilePage />} />
-            <Route path="workout-generator" element={<WorkoutGeneratorPage />} />
           </Route>
 
           {/* New Sprint 5 Routes */}

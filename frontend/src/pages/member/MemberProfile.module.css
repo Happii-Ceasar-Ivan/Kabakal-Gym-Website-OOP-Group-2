@@ -1,15 +1,4 @@
-/* Member Profile CSS */
-.profileContainer {
-    width: 100%;
-    max-width: 412px;
-    margin: 0 auto;
-    min-height: 100vh;
-    background-color: #060407;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-}
-
+/* For upper header 1: Bg picture, Back button at top left */
 .headerBackground {
     position: relative;
     height: 350px;
@@ -23,31 +12,17 @@
     padding-bottom: 20px;
 }
 
-.headerArrowContainer {
-    position: absolute;
-    top: 35px;
-    left: 35px;   
-}
-
-.headerArrow {
+.profileContainer {
+    width: 100%;
+    background-color: #060407;
+    border-radius: 16px;
+    display: flex;
+    flex-direction: column;
     position: relative;
-    width: 20px;
-    height: 20px;
+    padding-bottom: 20px;
 }
 
-.headerArrow::after {
-    content: '';
-    position: absolute;
-    top: -6px;
-    left: -14px;
-    width: 0;
-    height: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 13px solid #f7f014;
-    transform: rotate(45px);
-}
-
+/* Avatar profile */
 .avatarWrapper {
     position: relative;
     margin-bottom: 15px;
@@ -62,36 +37,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 }
 
 .avatarIcon {
-    width: 85%;
-    height: 85%;
-    /* We'll pass a dynamic background image directly in JSX, or use a default */
-    background-color: #888;
-    border-radius: 50%;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-}
-
-.cameraBadge {
-    position: absolute;
-    bottom: -5px;
-    right: 2px;
-    background-color: #060407;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 1px solid #f7f014;
-}
-
-.cameraIcon {
-    font-size: 12px;
-    color: #f7f014;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .profileName {
@@ -115,6 +67,7 @@
     text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.8);
 }
 
+/* Main settings below (after profile) */
 .settingContent {
     flex: 1;
     background-color: #060407;
@@ -124,10 +77,10 @@
     align-items: center;
     border: 2px solid #f7f014;
     border-radius: 20px;
-    margin: -10px 10px 10px 10px; /* Overlap the header slightly */
-    z-index: 10;
+    margin: 0 15px; /* Spacing from edges */
 }
 
+/* Sections, titles */
 .settingGroup {
     width: 100%;
     margin-bottom: 20px;
@@ -150,38 +103,32 @@
     background-color: #060407;
 }
 
+/* Sub section: Member profile */
 .infoRow {
     margin-bottom: 12px;
     font-family: 'Fira Code', monospace;
     font-size: 13px;
     font-weight: bold;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .infoRow:last-child {
     margin-bottom: 0;
 }
 
-.inlineRow {
-    display: flex;
-    align-items: center;
-}
-
 .divider {
-    margin: 0 20px;
     color: #f7f014;
 }
 
 .label {
     color: #f7f014;
-    margin-right: 10px;
 }
 
 .value {
     color: #f7f014;
-}
-
-.asterisks {
-    letter-spacing: 2px;
 }
 
 .statusBadge {
@@ -191,19 +138,9 @@
     font-weight: bold;
     padding: 2px 8px;
     border-radius: 6px;
-    margin-left: 5px;
 }
 
-.statusBadgeInactive {
-    background-color: #8B0000;
-    color: #ffffff;
-    font-size: 11px;
-    font-weight: bold;
-    padding: 2px 8px;
-    border-radius: 6px;
-    margin-left: 5px;
-}
-
+/* Sub section: Account settings */
 .menuList {
     padding: 5px 15px;
     border: 1px solid #f7f014;
@@ -241,8 +178,9 @@
     vertical-align: middle;
 }
 
+/* Logout button */
 .logoutBtn {
-    margin-top: auto;
+    margin-top: 20px;
     width: 80%;
     background: transparent;
     border: 2px solid #f7f014;
@@ -254,7 +192,6 @@
     font-weight: bold;
     transition: all 0.2s ease;
     cursor: pointer;
-    margin-bottom: 20px;
 }
 
 .logoutBtn:hover {
