@@ -285,6 +285,54 @@ public class MeController : ControllerBase
             routine
         });
     }
+
+    /// <summary>
+    /// Gets all routines for the current user from today up to the next 7 days, grouped into a consolidated plan.
+    /// </summary>
+    [HttpGet("my-routine-plan")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetMyRoutinePlan()
+    {
+        var userId = User.GetUserId();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var endDate = today.AddDays(7);
+
+        var routines = await _context.Routines
+            .AsNoTracking()
+            .Include(r => r.RoutineLists)
+                .ThenInclude(rl => rl.Exercise)
+            .Where(r => r.UserId == userId && r.DateAssigned >= today && r.DateAssigned < endDate)
+            .OrderBy(r => r.DateAssigned)
+            .ToListAsync();
+
+        if (!routines.Any())
+            return Ok(new { hasRoutine = false });
+
+        var days = routines.Select(r => new
+        {
+            r.RoutineId,
+            dayLabel = r.DayLabel,
+            focusArea = r.FocusArea,
+            isRestDay = r.IsRestDay,
+            isCompleted = r.IsCompleted,
+            date = r.DateAssigned.ToString("yyyy-MM-dd"),
+            exercises = r.RoutineLists.OrderBy(rl => rl.OrderIndex).Select(rl => new
+            {
+                exerciseName = rl.Exercise.ExerciseName,
+                sets = rl.Sets,
+                reps = rl.Reps,
+                startingWeight = rl.StartingWeight
+            }).ToList()
+        }).ToList();
+
+        return Ok(new
+        {
+            hasRoutine = true,
+            title = "YOUR CURRENT ROUTINE PLAN",
+            description = "Stay consistent and crush your goals. Here is your schedule for the upcoming week.",
+            days
+        });
+    }
 }
 
 public class UpdateProfilePictureDto

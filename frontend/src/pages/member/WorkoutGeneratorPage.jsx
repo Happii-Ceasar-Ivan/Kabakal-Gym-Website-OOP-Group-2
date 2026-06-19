@@ -78,7 +78,7 @@ const WorkoutGeneratorPage = () => {
       };
       await saveRoutine(payload);
       alert("Routine saved successfully to your profile!");
-      navigate('/member/dashboard');
+      navigate('/member/my-routine');
     } catch (err) {
       console.error(err);
       alert(err.message || "Failed to save routine.");

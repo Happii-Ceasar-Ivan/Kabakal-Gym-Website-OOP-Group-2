@@ -96,12 +96,13 @@ const MemberDashboardPage = () => {
     try {
       const res = await getMyLatestRoutine();
       if (res && res.hasRoutine) {
-        navigate('/member/calendar'); // Assuming calendar shows the routine
+        navigate('/member/my-routine'); 
       } else {
-        toast.error('No workout saved!');
+        alert("You haven't generated a routine yet!");
+        navigate('/member/workout-generator');
       }
     } catch (err) {
-      toast.error('Could not verify your workouts.');
+      console.error(err);
     }
   };
 

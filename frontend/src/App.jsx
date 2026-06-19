@@ -21,6 +21,7 @@ const MemberBillingPage = lazy(() => import('./pages/member/MemberBillingPage'))
 const MemberProfilePage = lazy(() => import('./pages/member/MemberProfilePage'));
 const MemberChatPage = lazy(() => import('./pages/member/MemberChatPage'));
 const WorkoutGeneratorPage = lazy(() => import('./pages/member/WorkoutGeneratorPage'));
+const MemberSavedRoutinePage = lazy(() => import('./pages/member/MemberSavedRoutinePage'));
 
 // Lazy load roles
 const AdminLayout = lazy(() => import('./components/AdminLayout'));
@@ -73,6 +74,7 @@ function App() {
             <Route path="profile" element={<MemberProfilePage />} />
             <Route path="chat" element={<MemberChatPage />} />
             <Route path="workout-generator" element={<WorkoutGeneratorPage />} />
+            <Route path="my-routine" element={<MemberSavedRoutinePage />} />
           </Route>
 
           {/* New Sprint 5 Routes */}

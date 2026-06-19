@@ -141,6 +141,10 @@ export async function getMyLatestRoutine() {
   return request('/me/latest-routine');
 }
 
+export async function getMyRoutinePlan() {
+  return request('/me/my-routine-plan');
+}
+
 export async function updateProfilePicture(profilePictureUrl) {
   return request('/me/profile-picture', {
     method: 'PATCH',
