@@ -1,16 +1,13 @@
 namespace KabakalGym.API.Common;
 
 /// <summary>
-/// ServiceResult&lt;T&gt;
-/// Discriminated-union-style return type for service methods.
+/// Generic service result type for business operations.
 ///
-/// Replaces throwing exceptions for expected business-logic failure cases
-/// (e.g. "email already taken", "invalid credentials"). Exceptions should
-/// only propagate for truly unexpected infrastructure failures (DB down, etc.)
-/// which the global exception handler in Program.cs catches and converts to
-/// a clean 500 JSON response.
+/// Use for expected failures like "email already taken" or "invalid credentials"
+/// instead of throwing exceptions. Unexpected infrastructure errors still throw
+/// and are handled by the global exception middleware.
 ///
-/// Controller pattern:
+/// Example:
 ///   var result = await _authService.RegisterAsync(dto);
 ///   if (!result.IsSuccess) return Conflict(new { error = result.ErrorMessage });
 ///   return Created(..., result.Data);
