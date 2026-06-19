@@ -19,7 +19,7 @@ const MemberDashboardPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const [chatError, setChatError] = useState(null);
-  
+
   const messagesEndRef = useRef(null);
 
   // Modal State
@@ -42,7 +42,7 @@ const MemberDashboardPage = () => {
           getLiveCapacity(),
           getMyStats()
         ]);
-        
+
         setProfile(profileData);
         setCapacity(typeof capacityData === 'number' ? capacityData : (capacityData?.capacity || 0));
         setStats(statsData);
@@ -107,7 +107,7 @@ const MemberDashboardPage = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      
+
       {/* 1. Very Top Capsule: Live Gym Load */}
       <div className={styles.liveGymCapsule}>
         <div className={styles.liveDot}></div>
@@ -124,10 +124,10 @@ const MemberDashboardPage = () => {
           </h1>
           <p className={styles.subtitle}>To Kabakal Gym, where your routines, your records, and your community—all in one place.</p>
         </div>
-        <img 
-          src={profile?.profilePictureUrl || "/assets/placeholderforpfp.png"} 
-          alt="Profile" 
-          className={styles.profileCircle} 
+        <img
+          src={profile?.profilePictureUrl || "/assets/placeholderforpfp.png"}
+          alt="Profile"
+          className={styles.profileCircle}
           onClick={() => navigate('/member/profile')}
         />
       </div>
@@ -143,7 +143,7 @@ const MemberDashboardPage = () => {
             <div className={styles.statLabel}>Sessions This Week</div>
           </div>
         </div>
-        
+
         <div className={styles.statPanel}>
           <svg className={styles.statIcon} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path>
@@ -167,11 +167,11 @@ const MemberDashboardPage = () => {
 
       {/* 5. Massive Desktop Grid */}
       <div className={styles.splitGrid}>
-        
+
         {/* Left Side: AI CHATBOT */}
         <div className={styles.chatBoxWrapper}>
           <div className={styles.chatBoxHeader}>
-            <h2 className={styles.chatBoxTitle}>AI CHATBOT</h2>
+            <h2 className={styles.chatBoxTitle}>KABAKAL COACH</h2>
           </div>
 
           <div className={styles.chatBoxContent}>
@@ -179,7 +179,7 @@ const MemberDashboardPage = () => {
               <div className={styles.emptyState}>
                 <p style={{ color: '#f7f014', margin: '5px 0' }}>Start a conversation with KG Coach!</p>
                 <p style={{ fontSize: '12px', margin: 0, marginBottom: '15px' }}>Ask for fitness advice, nutrition tips, or daily motivation.</p>
-                <button 
+                <button
                   onClick={() => navigate('/member/workout-generator')}
                   style={{
                     background: 'transparent',
@@ -207,7 +207,7 @@ const MemberDashboardPage = () => {
                 </div>
               </div>
             ))}
-            
+
             {chatLoading && (
               <div className={styles.typingIndicator}>KG Coach is thinking...</div>
             )}
@@ -215,10 +215,10 @@ const MemberDashboardPage = () => {
           </div>
 
           <form className={styles.chatBoxInputArea} onSubmit={handleSendChat}>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className={styles.chatInput}
-              placeholder="Ask me anything..." 
+              placeholder="Ask me anything..."
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               disabled={chatLoading}
@@ -252,9 +252,9 @@ const MemberDashboardPage = () => {
       </div>
 
       {/* QR CODE SCANNER MODAL */}
-      <QRScannerModal 
-        isOpen={showQRModal} 
-        onClose={() => setShowQRModal(false)} 
+      <QRScannerModal
+        isOpen={showQRModal}
+        onClose={() => setShowQRModal(false)}
       />
     </div>
   );

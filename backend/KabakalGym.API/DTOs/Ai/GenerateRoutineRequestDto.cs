@@ -9,16 +9,11 @@ namespace KabakalGym.API.DTOs.Ai;
 public class GenerateRoutineRequestDto
 {
     [Required]
-    [RegularExpression(@"^(Build Muscle|Lose Weight|General Fitness|Strength Training)$",
-        ErrorMessage = "Goal must be one of: Build Muscle, Lose Weight, General Fitness, Strength Training")]
-    public string Goal { get; set; } = string.Empty;
+    public string FitnessGoal { get; set; } = string.Empty;
 
     [Required]
-    [RegularExpression(@"^(Beginner|Intermediate|Advanced)$",
-        ErrorMessage = "Fitness level must be one of: Beginner, Intermediate, Advanced")]
-    public string FitnessLevel { get; set; } = string.Empty;
+    public string TargetSplit { get; set; } = string.Empty;
 
     [Required]
-    [Range(3, 6, ErrorMessage = "Days per week must be between 3 and 6")]
-    public int DaysPerWeek { get; set; }
+    public string ExperienceLevel { get; set; } = string.Empty;
 }

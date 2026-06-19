@@ -82,11 +82,11 @@ const WorkoutGeneratorPage = () => {
             
             {routine.days && routine.days.map((day, idx) => (
               <div key={idx} className={styles.dayCard}>
-                <h3 className={styles.dayTitle}>{day.dayName}</h3>
+                <h3 className={styles.dayTitle}>{day.dayLabel}</h3>
                 <ul className={styles.exerciseList}>
                   {day.exercises.map((ex, exIdx) => (
                     <li key={exIdx} className={styles.exerciseItem}>
-                      <span className={styles.exerciseName}>{ex.name}</span>
+                      <span className={styles.exerciseName}>{ex.exerciseName}</span>
                       <span className={styles.exerciseSets}>{ex.sets} sets x {ex.reps}</span>
                     </li>
                   ))}
