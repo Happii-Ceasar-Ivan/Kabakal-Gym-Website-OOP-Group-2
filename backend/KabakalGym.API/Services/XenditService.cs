@@ -45,7 +45,7 @@ public class XenditService : IPaymentGatewayService
             TransactionId = Guid.NewGuid(),
             UserId = userId,
             AmountPaid = amount,
-            PaymentMethod = "Xendit-Online",
+            PaymentMethod = "Card",
             Status = "Pending",
             ExternalInvoiceId = externalId,
             // Timestamp defaults to NOW() via Postgres
