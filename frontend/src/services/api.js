@@ -192,6 +192,12 @@ export async function processPayment() {
   });
 }
 
+export async function forceActivate() {
+  return request('/payment/force-activate', {
+    method: 'GET'
+  });
+}
+
 // -----------------------------------------------------------------------------
 // AI Chat & Routine Endpoints
 // -----------------------------------------------------------------------------
