@@ -125,6 +125,17 @@ export async function getMember(id) {
   return request(`/members/${id}`);
 }
 
+export async function getMyProfile() {
+  return request('/me');
+}
+
+export async function updateProfilePicture(url) {
+  return request('/me/profile-picture', {
+    method: 'PATCH',
+    body: JSON.stringify({ profilePictureUrl: url }),
+  });
+}
+
 export async function updateMember(id, data) {
   return request(`/members/${id}`, {
     method: 'PUT',
@@ -138,6 +149,24 @@ export async function getEquipment(page = 1, pageSize = 20, search = '') {
   const params = new URLSearchParams({ page, pageSize });
   if (search) params.append('search', search);
   return request(`/equipment?${params.toString()}`);
+}
+
+export async function processPayment(paymentData) {
+  return request('/payments/process', {
+    method: 'POST',
+    body: JSON.stringify(paymentData),
+  });
+}
+
+// -----------------------------------------------------------------------------
+// AI Chat Endpoints
+// -----------------------------------------------------------------------------
+
+export async function sendChatMessage(message) {
+  return request('/ai/chat', {
+    method: 'POST',
+    body: JSON.stringify({ message }),
+  });
 }
 
 export async function createEquipment(equipmentData) {

@@ -16,7 +16,7 @@ const AdminLayout = () => {
     const role = decoded.role || decoded['http://schemas.microsoft.com/ws/2008/06/identity/claims/role'];
     
     if (role !== 'Admin') {
-      return <Navigate to="/dashboard" replace />;
+      return <Navigate to="/member/dashboard" replace />;
     }
   } catch (err) {
     return <Navigate to="/login" replace />;

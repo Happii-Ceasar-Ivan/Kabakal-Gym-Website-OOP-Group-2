@@ -19,6 +19,19 @@ export function useCloudinaryUpload() {
    * @returns {Promise<string>} The secure_url of the uploaded image on Cloudinary's CDN.
    */
   async function upload(file) {
+    // 1. Frontend Security Checks
+    if (!file) throw new Error("No file selected");
+      
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        throw new Error("Invalid file type. Only JPG, PNG, and WEBP are allowed.");
+    }
+
+    const MAX_SIZE = 5 * 1024 * 1024; // 5 MB
+    if (file.size > MAX_SIZE) {
+        throw new Error("File is too large. Maximum size is 5MB.");
+    }
+
     setUploading(true);
     setError(null);
 

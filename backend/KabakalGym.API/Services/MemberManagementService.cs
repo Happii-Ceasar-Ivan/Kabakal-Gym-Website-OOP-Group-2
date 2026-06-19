@@ -38,7 +38,8 @@ public sealed class MemberManagementService : IMemberManagementService
             user.Subscription?.ExpirationDate,
             user.Subscription == null 
                 || user.Subscription.PaymentStatus != PaymentStatuses.Paid 
-                || (user.Subscription.ExpirationDate.HasValue && user.Subscription.ExpirationDate.Value < DateTime.UtcNow)
+                || (user.Subscription.ExpirationDate.HasValue && user.Subscription.ExpirationDate.Value < DateTime.UtcNow),
+            user.ProfilePictureUrl
         );
 
         return ServiceResult<MemberProfileDto>.Success(dto);

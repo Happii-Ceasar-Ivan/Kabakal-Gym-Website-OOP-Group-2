@@ -62,6 +62,11 @@ public class User
     /// </summary>
     public DateTime? VerificationTokenExpiresAt { get; set; }
 
+    /// <summary>
+    /// Optional URL for the user's profile picture, hosted on Cloudinary.
+    /// </summary>
+    public string? ProfilePictureUrl { get; set; }
+
     // ── Navigation ─────────────────────────────────────────────────────────
     public Subscription? Subscription { get; set; }
     public ICollection<Transaction> Transactions { get; set; } = new List<Transaction>();

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getMember } from '../../services/api';
+import { getMyProfile } from '../../services/api';
 import styles from './MemberCalendar.module.css';
 
 const MemberCalendarPage = () => {
@@ -18,16 +18,7 @@ const MemberCalendarPage = () => {
 
   const fetchData = async () => {
     try {
-      const token = localStorage.getItem('kabakal_token');
-      if (!token) {
-        navigate('/login');
-        return;
-      }
-      
-      const payload = JSON.parse(atob(token.split('.')[1]));
-      const userId = payload['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier'] || payload.sub;
-      
-      const data = await getMember(userId);
+      const data = await getMyProfile();
       setProfile(data);
     } catch (err) {
       console.error('Failed to load profile for calendar', err);

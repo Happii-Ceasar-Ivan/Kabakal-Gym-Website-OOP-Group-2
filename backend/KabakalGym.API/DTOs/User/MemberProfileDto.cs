@@ -32,5 +32,10 @@ public sealed record MemberProfileDto(
     /// True if the subscription is expired or unpaid.
     /// Computed server-side for direct binding to the admin UI badge color.
     /// </summary>
-    bool      IsExpired
+    bool      IsExpired,
+
+    /// <summary>
+    /// Optional URL for the user's profile picture, hosted on Cloudinary.
+    /// </summary>
+    string?   ProfilePictureUrl
 );
