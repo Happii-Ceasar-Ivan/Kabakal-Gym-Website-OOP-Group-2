@@ -177,7 +177,8 @@ export default function LandingPage() {
             <div className={styles.planPrice}>₱50</div>
             <ul className={styles.planFeatures}>
               <li><span className={styles.check}>✓</span> Single Entry Access</li>
-              <li><span className={styles.check}>✓</span> Standard Locker Use</li>
+              <li><span className={styles.check}>✓</span> 5 Ai Prompt per 30 minutes</li>
+              <li><span className={styles.check}>✓</span> Ai Workout Generator 1x per week!</li>
             </ul>
             <Link to="/register" className={styles.planBtnOutline}>Get Started</Link>
           </div>
@@ -189,8 +190,8 @@ export default function LandingPage() {
             <div className={styles.planPrice}>₱699</div>
             <ul className={styles.planFeatures}>
               <li><span className={styles.check}>✓</span> 30 Days Unlimited Access</li>
-              <li><span className={styles.check}>✓</span> Automated Workout Generator</li>
-              <li><span className={styles.check}>✓</span> Business Analytics Portal</li>
+              <li><span className={styles.check}>✓</span> Increased Ai Prompts!</li>
+              <li><span className={styles.check}>✓</span> Ai Workout Generator 3x a week!</li>
             </ul>
             <Link to="/register" className={styles.planBtnFilled}>Subscribe Now</Link>
           </div>
