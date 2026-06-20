@@ -5,7 +5,7 @@ import {
   Tooltip as RechartsTooltip, ResponsiveContainer
 } from 'recharts';
 import toast from 'react-hot-toast';
-import { getDashboardAnalytics, getHistoricalRevenue, exportAndArchiveData } from '../../services/api';
+import { getDashboardAnalytics, getHistoricalRevenue, exportAndArchiveData, exportData } from '../../services/api';
 import adminStyles from './Admin.module.css';
 import styles from './AdminDashboard.module.css';
 
@@ -58,6 +58,19 @@ const AdminDashboardPage = () => {
       fetchData(); // Refresh to reflect new database state
     } catch (err) {
       toast.error('Failed to export and archive data.', { id: loadingToast });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const handleExportOnly = async () => {
+    setIsExporting(true);
+    const loadingToast = toast.loading('Exporting data...');
+    try {
+      await exportData(3);
+      toast.success('Data exported successfully!', { id: loadingToast });
+    } catch (err) {
+      toast.error('Failed to export data.', { id: loadingToast });
     } finally {
       setIsExporting(false);
     }
@@ -147,13 +160,23 @@ const AdminDashboardPage = () => {
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(e.target.value)}
           />
-          <button 
-            className={styles.archiveBtn} 
-            onClick={handleExportAndArchive}
-            disabled={isExporting}
-          >
-            {isExporting ? 'Processing...' : '📥 Export & Delete 3-Month Data'}
-          </button>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button 
+              className={styles.archiveBtn} 
+              onClick={handleExportOnly}
+              disabled={isExporting}
+              style={{ background: 'var(--accent-green, #44ff44)', color: '#1a1a1a' }}
+            >
+              {isExporting ? 'Processing...' : '📥 Export Only'}
+            </button>
+            <button 
+              className={styles.archiveBtn} 
+              onClick={handleExportAndArchive}
+              disabled={isExporting}
+            >
+              {isExporting ? 'Processing...' : '⚠️ Export & Delete 3-Month Data'}
+            </button>
+          </div>
         </div>
       </div>
 

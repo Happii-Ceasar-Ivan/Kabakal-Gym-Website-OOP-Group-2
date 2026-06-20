@@ -209,4 +209,46 @@ public class AnalyticsService : IAnalyticsService
 
         return sb.ToString();
     }
+
+    public async Task<string> ExportDataAsync(int monthsAgo)
+    {
+        var cutoffDate = DateTime.UtcNow.AddMonths(-monthsAgo);
+
+        // Retrieve old data for CSV
+        var oldTransactions = await _context.Transactions
+            .AsNoTracking()
+            .Include(t => t.User)
+            .Where(t => t.Timestamp < cutoffDate)
+            .ToListAsync();
+
+        var oldVisits = await _context.Visits
+            .AsNoTracking()
+            .Include(v => v.User)
+            .Where(v => v.CheckIn < cutoffDate)
+            .ToListAsync();
+
+        // Build CSV
+        var sb = new StringBuilder();
+        sb.AppendLine("=== EXPORTED DATA REPORT ===");
+        sb.AppendLine($"Export Date: {DateTime.UtcNow:yyyy-MM-dd HH:mm:ss} UTC");
+        sb.AppendLine($"Cutoff Date: {cutoffDate:yyyy-MM-dd HH:mm:ss} UTC");
+        sb.AppendLine();
+        
+        sb.AppendLine("--- TRANSACTIONS ---");
+        sb.AppendLine("TransactionId,UserId,UserEmail,AmountPaid,PaymentMethod,Status,Timestamp");
+        foreach (var t in oldTransactions)
+        {
+            sb.AppendLine($"{t.TransactionId},{t.UserId},{t.User?.Email},{t.AmountPaid},{t.PaymentMethod},{t.Status},{t.Timestamp:yyyy-MM-dd HH:mm:ss}");
+        }
+
+        sb.AppendLine();
+        sb.AppendLine("--- VISITS ---");
+        sb.AppendLine("VisitId,UserId,UserEmail,CheckIn,IsApproved");
+        foreach (var v in oldVisits)
+        {
+            sb.AppendLine($"{v.VisitId},{v.UserId},{v.User?.Email},{v.CheckIn:yyyy-MM-dd HH:mm:ss},{v.IsApproved}");
+        }
+
+        return sb.ToString();
+    }
 }

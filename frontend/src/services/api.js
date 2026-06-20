@@ -121,6 +121,29 @@ export async function exportAndArchiveData(monthsAgo = 3) {
   window.URL.revokeObjectURL(url);
 }
 
+export async function exportData(monthsAgo = 3) {
+  const token = localStorage.getItem('kabakal_token');
+  const response = await fetch(`${BASE_URL}/api/analytics/export?monthsAgo=${monthsAgo}`, {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to export data.');
+  }
+
+  // Handle file download directly
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kabakal_export_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
 export async function getMember(id) {
   return request(`/members/${id}`);
 }
