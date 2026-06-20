@@ -322,5 +322,6 @@ await db.Database.MigrateAsync();
 
 // ── 7. SEED INITIAL DATA ───────────────────────────────────────────────────────────
 await DbSeeder.SeedAdminAsync(app.Services);
+await DbSeeder.SeedDummyAnalyticsDataAsync(app.Services);
 
 app.Run();
