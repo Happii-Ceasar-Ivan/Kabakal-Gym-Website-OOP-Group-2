@@ -106,7 +106,7 @@ public class AnalyticsService : IAnalyticsService
             PeakUsageHours = fullHistogram
         };
 
-        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(15));
+        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(1));
         return result;
     }
 
