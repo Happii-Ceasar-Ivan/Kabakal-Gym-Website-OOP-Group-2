@@ -1,7 +1,7 @@
 // Central API service for all backend calls.
 // Base URL points to the .NET backend running on localhost.
 // If your backend runs on a different port, update this URL.
-export const BASE_URL = 'https://kabakalgym-api-gndmbwczhre4crb0.southeastasia-01.azurewebsites.net';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://kabakalgym-api-gndmbwczhre4crb0.southeastasia-01.azurewebsites.net';
 const API_BASE = `${BASE_URL}/api`;
 
 /**
