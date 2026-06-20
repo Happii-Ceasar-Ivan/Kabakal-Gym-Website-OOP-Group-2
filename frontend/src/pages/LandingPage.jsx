@@ -108,11 +108,11 @@ export default function LandingPage() {
             </div>
             <div className={styles.contactRow}>
               <span className={styles.icon}>📞</span>
-              <span>0917 123 4567</span>
+              <span>09632722445</span>
             </div>
             <div className={styles.contactRow}>
               <span className={styles.icon}>⏰</span>
-              <span>Open Daily: 6:00 AM - 10:00 PM</span>
+              <span>Open Daily: 7:00 AM - 11:00 PM</span>
             </div>
           </div>
         </div>
@@ -132,34 +132,34 @@ export default function LandingPage() {
         <div className={styles.carouselWrapper}>
           <div className={styles.carouselTrack}>
             {equipmentItems.length === 0 ? (
-               <div style={{ color: '#888', padding: '2rem' }}>Loading equipment...</div>
+              <div style={{ color: '#888', padding: '2rem' }}>Loading equipment...</div>
             ) : (
-               [...equipmentItems, ...equipmentItems].map((item, idx) => (
-                 <div key={idx} className={styles.arsenalCard}>
-                   {item.imageUrl ? (
-                     <div 
-                       className={styles.arsenalImageBg} 
-                       style={{ backgroundImage: `url(${item.imageUrl.startsWith('http') ? item.imageUrl : BASE_URL + item.imageUrl})` }}
-                     >
-                       <div className={styles.arsenalCardContentOverlay}>
-                         <span className={styles.arsenalName}>
-                           {item.equipmentName} {item.count > 1 && <span style={{color: 'var(--accent-yellow)', marginLeft: '4px'}}>x{item.count}</span>}
-                         </span>
-                         <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
-                       </div>
-                     </div>
-                   ) : (
-                     <div className={styles.arsenalPlaceholder}>
-                       <div className={styles.arsenalCardContent}>
-                         <span className={styles.arsenalName}>
-                           {item.equipmentName} {item.count > 1 && <span style={{color: 'var(--accent-yellow)', marginLeft: '4px'}}>x{item.count}</span>}
-                         </span>
-                         <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
-                       </div>
-                     </div>
-                   )}
-                 </div>
-               ))
+              [...equipmentItems, ...equipmentItems].map((item, idx) => (
+                <div key={idx} className={styles.arsenalCard}>
+                  {item.imageUrl ? (
+                    <div
+                      className={styles.arsenalImageBg}
+                      style={{ backgroundImage: `url(${item.imageUrl.startsWith('http') ? item.imageUrl : BASE_URL + item.imageUrl})` }}
+                    >
+                      <div className={styles.arsenalCardContentOverlay}>
+                        <span className={styles.arsenalName}>
+                          {item.equipmentName} {item.count > 1 && <span style={{ color: 'var(--accent-yellow)', marginLeft: '4px' }}>x{item.count}</span>}
+                        </span>
+                        <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className={styles.arsenalPlaceholder}>
+                      <div className={styles.arsenalCardContent}>
+                        <span className={styles.arsenalName}>
+                          {item.equipmentName} {item.count > 1 && <span style={{ color: 'var(--accent-yellow)', marginLeft: '4px' }}>x{item.count}</span>}
+                        </span>
+                        <span className={styles.arsenalDesc}>{item.equipmentStatus}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ))
             )}
           </div>
         </div>
