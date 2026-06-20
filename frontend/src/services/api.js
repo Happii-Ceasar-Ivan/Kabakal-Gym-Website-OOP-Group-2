@@ -127,6 +127,7 @@ export async function getMember(id) {
 
 export async function getMyProfile() {
   return request('/me', {
+    cache: 'no-store',
     headers: {
       'Cache-Control': 'no-cache',
       'Pragma': 'no-cache'
