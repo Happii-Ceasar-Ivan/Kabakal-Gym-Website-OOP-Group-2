@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import styles from './LandingPage.module.css';
 import SkeletonLoader from '../components/SkeletonLoader';
 import { wakeupServer, getEquipment, BASE_URL } from '../services/api';
+import heroImage from '../assets/landing-hero.jpeg';
 
 export default function LandingPage() {
   const [loading, setLoading] = useState(true);
@@ -119,7 +120,7 @@ export default function LandingPage() {
 
         <div className={styles.heroImageContainer}>
           <img
-            src="https://i.imgur.com/HX3M0j0.jpeg"
+            src={heroImage}
             alt="Kabakal Gym Interior"
             className={styles.heroImage}
           />
