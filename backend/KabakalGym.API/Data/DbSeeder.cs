@@ -105,11 +105,8 @@ public static class DbSeeder
                 PasswordHash = "dummy_hash", // Doesn't matter, won't log in
                 Subscription = new Subscription
                 {
-                    SubscriptionId = Guid.NewGuid(),
-                    PlanType = "Monthly",
-                    StartDate = DateTime.UtcNow.AddDays(-10),
-                    ExpirationDate = DateTime.UtcNow.AddDays(20),
-                    IsActive = true
+                    PaymentStatus = PaymentStatuses.Paid,
+                    ExpirationDate = DateTime.UtcNow.AddDays(20)
                 }
             };
             context.Users.Add(dummyUser);
