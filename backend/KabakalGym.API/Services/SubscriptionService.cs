@@ -140,6 +140,7 @@ public sealed class SubscriptionService : ISubscriptionService
 
         // Re-query with tracking so EF can issue an UPDATE
         var subscription = await _context.Subscriptions
+            .AsTracking()
             .FirstOrDefaultAsync(s => s.UserId == userId);
 
         if (subscription is null)

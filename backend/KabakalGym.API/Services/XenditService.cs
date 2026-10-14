@@ -90,8 +90,9 @@ public class XenditService : IPaymentGatewayService
             return;
         }
 
-        // Fetch our pending transaction
+        // CRITICAL FIX: Add .AsTracking() because global NoTracking is enabled in Program.cs
         var transaction = await _context.Transactions
+            .AsTracking()
             .Include(t => t.User)
             .ThenInclude(u => u.Subscription)
             .FirstOrDefaultAsync(t => t.ExternalInvoiceId == externalId);

@@ -98,6 +98,7 @@ public sealed class TransactionService : ITransactionService
 
         // 2. Load the target user + their subscription (tracked — we will UPDATE subscription)
         var user = await _context.Users
+            .AsTracking()
             .Include(u => u.Subscription)
             .FirstOrDefaultAsync(u => u.UserId == dto.UserId);
 

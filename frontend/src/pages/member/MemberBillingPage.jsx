@@ -18,6 +18,19 @@ const MemberBillingPage = () => {
       try {
         const data = await getMyProfile();
         setProfile(data);
+
+        // If returning from Xendit checkout, poll once more after 2.5s 
+        // in case the Xendit webhook took a moment to finish in the background
+        if (isSuccess && (data?.paymentStatus !== 'Paid' || data?.isExpired)) {
+          setTimeout(async () => {
+            try {
+              const refreshed = await getMyProfile();
+              setProfile(refreshed);
+            } catch (e) {
+              console.error("Retry profile fetch failed:", e);
+            }
+          }, 2500);
+        }
       } catch (err) {
         console.error("Failed to load profile:", err);
       } finally {
@@ -25,7 +38,7 @@ const MemberBillingPage = () => {
       }
     };
     fetchProfile();
-  }, []);
+  }, [isSuccess]);
 
   const handleSubscribeClick = () => {
     setShowConfirm(true);
