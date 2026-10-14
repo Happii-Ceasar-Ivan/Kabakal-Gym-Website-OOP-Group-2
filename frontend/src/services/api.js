@@ -1,7 +1,7 @@
 // Central API service for all backend calls.
 // Base URL points to the .NET backend running on localhost.
 // If your backend runs on a different port, update this URL.
-export const BASE_URL = 'https://kabakalgym-api-gndmbwczhre4crb0.southeastasia-01.azurewebsites.net';
+export const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'https://kabakalgym-api-gndmbwczhre4crb0.southeastasia-01.azurewebsites.net';
 const API_BASE = `${BASE_URL}/api`;
 
 /**
@@ -115,6 +115,29 @@ export async function exportAndArchiveData(monthsAgo = 3) {
   const a = document.createElement('a');
   a.href = url;
   a.download = `kabakal_archive_${new Date().toISOString().split('T')[0]}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+export async function exportData(monthsAgo = 3) {
+  const token = localStorage.getItem('kabakal_token');
+  const response = await fetch(`${BASE_URL}/api/analytics/export?monthsAgo=${monthsAgo}`, {
+    method: 'GET',
+    headers: { 'Authorization': `Bearer ${token}` }
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to export data.');
+  }
+
+  // Handle file download directly
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `kabakal_export_${new Date().toISOString().split('T')[0]}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();

@@ -56,4 +56,19 @@ public class AnalyticsController : ControllerBase
         
         return File(bytes, "text/csv", fileName);
     }
+
+    [HttpGet("export")]
+    public async Task<IActionResult> ExportData([FromQuery] int monthsAgo = 3)
+    {
+        if (monthsAgo < 1)
+        {
+            return BadRequest(new { Message = "Must export data at least 1 month old." });
+        }
+
+        var csvData = await _analyticsService.ExportDataAsync(monthsAgo);
+        var bytes = System.Text.Encoding.UTF8.GetBytes(csvData);
+        var fileName = $"Kabakal_Export_{DateTime.UtcNow:yyyyMMdd_HHmmss}.csv";
+        
+        return File(bytes, "text/csv", fileName);
+    }
 }
